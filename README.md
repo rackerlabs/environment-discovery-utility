@@ -1,2 +1,1 @@
-# EnvironmentDiscoveryUtility
-EnvironmentDiscoveryUtility
+# Environment Discovery Utility
