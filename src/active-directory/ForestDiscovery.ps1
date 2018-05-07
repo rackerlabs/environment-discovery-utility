@@ -33,7 +33,6 @@ Function Get-ADDomainDetails
     $domainDetails.InfrastructureRoleOwner = $domain.InfrastructureRoleOwner.Name.ToString()
     $domainDetails.Children = $childDomains
     $domainDetails.Parent = $parentDomain
-    #$domainDetails.DomainControllers
     
     return $domainDetails
 }
@@ -76,9 +75,9 @@ Function Get-ADSiteLinkDetails
     $siteLinkDetails.NotificationEnabled = $siteLink.NotificationEnabled
     $siteLinkDetails.DataCompressionEnabled = $siteLink.DataCompressionEnabled
     
-    if(-not $($SiteLinks | ?{$_.Name -like $siteLinkDetails.Name}))
+    if(-not $($Script:SiteLinks | ?{$_.Name -like $siteLinkDetails.Name}))
     {
-        $SiteLinks += $siteLinkDetails.Name
+        $Script:SiteLinks += $siteLinkDetails
     }
     
     return $siteLinkDetails
@@ -107,7 +106,8 @@ Function Get-ADSiteDetails
     
     foreach($siteLink in $site.SiteLinks)
     {
-        $siteLinks += Get-ADSiteLinkDetails $siteLink
+        $siteLink = Get-ADSiteLinkDetails $siteLink
+        $siteLinks += $siteLink.Name
     }
     
     $siteDetails.Name = $site.Name
@@ -157,7 +157,7 @@ Function Get-ADForestDetails
     $forestDetails.NamingRoleOwner = $forest.NamingRoleOwner.ToString()
     $forestDetails.Domains = $domains
     $forestDetails.Sites = $sites
-    $forestDetails.SiteLinks = $SiteLinks
+    $forestDetails.SiteLinks = $Script:SiteLinks
     $forestDetails.ApplicationPartitions = $applicationPartitions
     
     return $forestDetails
@@ -167,6 +167,7 @@ Function Get-ADForestDetails
 
 #region Main Script
 
+[array] $Script:SiteLinks = @()
 $forestDetails = Get-ADForestDetails -Forest (Get-ADCurrentForest)
 return $forestDetails
 
