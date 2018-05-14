@@ -44,3 +44,7 @@ Additionally implement the following rules:
 #### Scopes
 
 Please be sure to scope ($Global:, $Script:, etc) your variable correctly.  Refer to [this article](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6&viewFallbackFrom=powershell-Microsoft.PowerShell.Core) for details
+
+## Additional Notes
+
+These guidelines are open for changes, please feel free to contribute to the style guide itself.
