@@ -61,7 +61,7 @@ Several editors default to tabs for indentations rather than spaces, which cause
 
 #### Scopes
 
-Please be sure to scope ($Global:, $Script:, etc) your variable correctly.  Refer to [this article](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6&viewFallbackFrom=powershell-Microsoft.PowerShell.Core) for details
+Please be sure to scope ($Global:, $Script:, etc) your variables correctly.  Refer to [this article](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6&viewFallbackFrom=powershell-Microsoft.PowerShell.Core) for details
 
 ## Project Structure
 
@@ -76,6 +76,9 @@ root<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Start-EnvironmentDiscovery.ps1<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> manifest.json<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> ext<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> NLog.dll<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Json.Net.dll<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> common<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> [area]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
@@ -87,12 +90,13 @@ root<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> script1.ps1<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> script2.ps1<br>
 
-| Name           | Description     |
-|:------------- |:------------- |
-| **Run-Discovery.ps1**      | Arbitrary name, entry point for all operations. |
-| **manifest.json**      | Tracks location of everything, used by all scripts for location references. |
-| **common**      | Shared scripts used throughout the code base. |
-| **[areas]**    | Scripts grouped by functionality, for example "active-directory" or "exchange". |
+| Name           | Description   |
+|:-------------- |:------------- |
+| **Run-Discovery.ps1** | Arbitrary name, entry point for all operations. |
+| **manifest.json** | Tracks location of everything, used by all scripts for location references. |
+| **common** | Shared scripts used throughout the code base. |
+| **ext** | External binaries and libraries, for example Nlog or Json.Net. |
+| **[areas]** | Scripts grouped by functionality, for example "active-directory" or "exchange". |
 
 ## Additional Notes
 
