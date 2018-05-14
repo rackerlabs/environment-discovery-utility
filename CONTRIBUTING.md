@@ -1,7 +1,7 @@
 
 # Contributing to Environment Discovery Utility (EDU)
 
-The following is a quick set of guidelines for contributing to EDU.
+The following is a set of guidelines for contributing to EDU.
 
 ## Github
 
