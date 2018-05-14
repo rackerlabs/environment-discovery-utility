@@ -45,11 +45,11 @@ If a particular matter is not address by the PoshCode style guide, we fall back 
 
 [Strongly Encouraged Development Guidelines](https://msdn.microsoft.com/en-us/library/dd878270%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396)
 
-#### Additional Guidelines
+### Additional PowerShell Guidelines
 
 Highlighted standards or anything not covered by the preceding guidelines.
 
-##### Scopes
+#### Scopes
 
 Please be sure to scope ($Global:, $Script:, etc) your variable correctly.  Refer to [this article](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6&viewFallbackFrom=powershell-Microsoft.PowerShell.Core) for details
 
@@ -86,4 +86,4 @@ root<br>
 
 ## Additional Notes
 
-These guidelines are open for changes, please feel free to contribute to the style guide itself.
+This document is open for changes, please feel free to contribute to the style guide itself.
