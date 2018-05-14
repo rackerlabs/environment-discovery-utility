@@ -1,4 +1,4 @@
-# Environment Discovery Utility
+# Environment Discovery Utility (EDU)
 
 A set of powershell scripts used to gather information about Active Directory and Exchange.
 
