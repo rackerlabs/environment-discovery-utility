@@ -19,7 +19,7 @@ The following is a quick set of guidelines for contributing to EDU.
 
 ## Styleguides
 
-### Powershell QuickStart
+### PowerShell Quick Start
 
 | Identifier            | Camel   | Lower  | Pascal | Examples and Notes |
 |:--------------------- |:-------:|:------:|:------:|:------------------ |
@@ -39,7 +39,7 @@ The following is a quick set of guidelines for contributing to EDU.
 
 We draw heavily from the [The PowerShell Best Practices and Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle).  Please review this documentation, in particular the [Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle/blob/master/Style-Guide/Introduction.md) sections.
 
-Additionally implement the following rules:
+Additionally, we implement the following:
 
 #### Scopes
 
