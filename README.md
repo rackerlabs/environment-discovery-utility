@@ -18,4 +18,4 @@ A set of powershell scripts used to gather information about Active Directory an
   
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/CONTRIBUTING.md) for details.
+Please read [CONTRIBUTING.md](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/blob/master/CONTRIBUTING.md) for details.
