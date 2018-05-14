@@ -133,7 +133,7 @@ function ConvertTo-JsonInternal {
 			{
                 Write-Verbose -Message "Found array, hash table or custom PowerShell object inside array."
 
-                " " * ((4 * ($WhiteSpacePad / 4)) + 4) + (ConvertToJsonInternal -InputObject $_ -WhiteSpacePad ($WhiteSpacePad + 4)) -replace '\s*,\s*$' #-replace '\ {4}]', ']'
+                " " * ((4 * ($WhiteSpacePad / 4)) + 4) + (ConvertTo-JsonInternal -InputObject $_ -WhiteSpacePad ($WhiteSpacePad + 4)) -replace '\s*,\s*$' #-replace '\ {4}]', ']'
             }
             else 
 			{
@@ -180,7 +180,7 @@ function ConvertTo-JsonInternal {
                 Write-Verbose -Message "Input object's value for key '$key' is a hash table or custom PowerShell object."
 
                 $json += " " * ($WhiteSpacePad + 4) + """$key"":`n$(" " * ($WhiteSpacePad + 4))"
-                $json += ConvertToJsonInternal -InputObject $InputObject.$Key -WhiteSpacePad ($WhiteSpacePad + 4)
+                $json += ConvertTo-JsonInternal -InputObject $InputObject.$Key -WhiteSpacePad ($WhiteSpacePad + 4)
             }
             elseif ($InputObject.$Key.GetType().Name -match '\[\]|Array') {
                 Write-Verbose -Message "Input object's value for key '$key' has a type that appears to be a collection/array."
@@ -209,7 +209,7 @@ function ConvertTo-JsonInternal {
 					{
                         Write-Verbose -Message "Found array, hash table or custom PowerShell object inside inside array."
 
-                        " " * ((4 * ($WhiteSpacePad / 4)) + 8) + (ConvertToJsonInternal -InputObject $_ -WhiteSpacePad ($WhiteSpacePad + 8)) -replace '\s*,\s*$'
+                        " " * ((4 * ($WhiteSpacePad / 4)) + 8) + (ConvertTo-JsonInternal -InputObject $_ -WhiteSpacePad ($WhiteSpacePad + 8)) -replace '\s*,\s*$'
                     }
                     else 
 					{
@@ -275,11 +275,11 @@ function SerializeTo-Json {
 		{
             Write-Verbose -Message "Collection count: $($Collection.Count), type of first object: $($Collection[0].GetType().FullName)."
 
-            $JsonOutput = ConvertToJsonInternal -InputObject ($Collection | ForEach-Object { $_ })
+            $JsonOutput = ConvertTo-JsonInternal -InputObject ($Collection | ForEach-Object { $_ })
         }
         else 
 		{
-            $JsonOutput = ConvertToJsonInternal -InputObject $InputObject
+            $JsonOutput = ConvertTo-JsonInternal -InputObject $InputObject
         }
 
         if ($null -eq $JsonOutput) 

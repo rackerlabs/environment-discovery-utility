@@ -1,0 +1,13 @@
+{
+  "module": "Environment Discovery Utility",
+  "libraries": [
+    {
+	    "friendlyName": "Active Directory Forest Discovery",
+      "path": "\\active-directory\\ForestDiscovery.ps1"
+    },
+    {
+	    "friendlyName": "Active Directory Forest Discovery",
+      "path": "\\common\\SerializeTo-Json.ps1"
+    }
+  ]
+}

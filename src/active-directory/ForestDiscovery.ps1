@@ -1,31 +1,38 @@
-﻿#region Functions
+﻿#region Script Variables
 
-Function Get-ADCurrentForest
+[array] $Script:siteLinks = @()
+
+#endregion
+
+#region Functions
+
+function Get-ADCurrentForest
 {
     $forestDetails = [System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest()
-    return $forestDetails
+    $forestDetails
 }
 
-Function Get-ADDomainDetails
+function Get-ADDomainDetails
 {
-    Param (
-        [System.DirectoryServices.ActiveDirectory.ActiveDirectoryPartition] $domain
+    param (
+        [System.DirectoryServices.ActiveDirectory.ActiveDirectoryPartition]
+        $domain
     )
     
     $childDomains = @()
     $parentDomain = $null
     
-    foreach($childDomain in $domain.Children)
+    foreach ($childDomain in $domain.Children)
     {
         $childDomains += $childDomain.Name
     }
     
-    if($domain.Parent -ne $null)
+    if ($domain.Parent -ne $null)
     {
         $parentDomain = $domain.Parent.Name
     }
     
-    $domainDetails = "" | select Name,DomainMode,PdcRoleOwner,RidRoleOwner,InfrastructureRoleOwner,Parent,Children,DomainControllers
+    $domainDetails = "" | Select-Object Name,DomainMode,PdcRoleOwner,RidRoleOwner,InfrastructureRoleOwner,Parent,Children,DomainControllers
     $domainDetails.Name = $domain.Name
     $domainDetails.DomainMode = $domain.DomainMode.ToString()
     $domainDetails.PdcRoleOwner = $domain.PdcRoleOwner.Name.ToString()
@@ -34,34 +41,37 @@ Function Get-ADDomainDetails
     $domainDetails.Children = $childDomains
     $domainDetails.Parent = $parentDomain
     
-    return $domainDetails
+    $domainDetails
 }
 
-Function Get-ADForestDomains
+function Get-ADForestDomains
 {
-    Param (
-        [System.DirectoryServices.ActiveDirectory.DomainCollection] $domains
+    param (
+        [System.DirectoryServices.ActiveDirectory.DomainCollection]
+        $domains
     )
     
-    $processedDomains = @()
-    foreach($domain in $domains)
+    $forestDomains = @()
+
+    foreach ($domain in $domains)
     {
-        $processedDomains += Get-ADDomainDetails $domain
+        $forestDomains += Get-ADDomainDetails $domain
     }
     
-    return $processedDomains
+    $forestDomains
 }
 
-Function Get-ADSiteLinkDetails
+function Get-ADSiteLinkDetails
 {
-    Param (
-        [System.DirectoryServices.ActiveDirectory.ActiveDirectorySiteLink] $siteLink
+    param (
+        [System.DirectoryServices.ActiveDirectory.ActiveDirectorySiteLink]
+        $siteLink
     )
     
-    $siteLinkDetails = "" | select Name,TransportType,Cost,Sites,ReplicationInterval,ReciprocalReplicationEnabled,NotificationEnabled,DataCompressionEnabled
+    $siteLinkDetails = "" | Select-Object Name,TransportType,Cost,Sites,ReplicationInterval,ReciprocalReplicationEnabled,NotificationEnabled,DataCompressionEnabled
     $sites = @()
 
-    foreach($site in $siteLink.Sites)
+    foreach ($site in $siteLink.Sites)
     {
         $sites += $site.Name
     }
@@ -75,36 +85,37 @@ Function Get-ADSiteLinkDetails
     $siteLinkDetails.NotificationEnabled = $siteLink.NotificationEnabled
     $siteLinkDetails.DataCompressionEnabled = $siteLink.DataCompressionEnabled
     
-    if(-not $($Script:SiteLinks | ?{$_.Name -like $siteLinkDetails.Name}))
+    if (-not $( $Script:siteLinks | Where-Object{$_.Name -like $siteLinkDetails.Name} ))
     {
-        $Script:SiteLinks += $siteLinkDetails
+        $Script:siteLinks += $siteLinkDetails
     }
     
-    return $siteLinkDetails
+    $siteLinkDetails
 }
 
-Function Get-ADSiteDetails
+function Get-ADSiteDetails
 {
-    Param (
-        [System.DirectoryServices.ActiveDirectory.ActiveDirectorySite] $site
+    param (
+        [System.DirectoryServices.ActiveDirectory.ActiveDirectorySite]
+        $site
     )
      
-    $siteDetails = "" | select Name,AdjacentSites,SiteLinks,Subnets
+    $siteDetails = "" | Select-Object Name,AdjacentSites,SiteLinks,Subnets
     $adjacentSites = @()
     $subnets = @()
     $siteLinks = @()
     
-    foreach($adjacentSite in $site.AdjacentSites)
+    foreach ($adjacentSite in $site.AdjacentSites)
     {
         $adjacentSites += $adjacentSite.Name
     }
     
-    foreach($subnet in $site.Subnets)
+    foreach ($subnet in $site.Subnets)
     {
         $subnets += $subnet.Name.ToString()
     }
     
-    foreach($siteLink in $site.SiteLinks)
+    foreach ($siteLink in $site.SiteLinks)
     {
         $siteLink = Get-ADSiteLinkDetails $siteLink
         $siteLinks += $siteLink.Name
@@ -115,40 +126,37 @@ Function Get-ADSiteDetails
     $siteDetails.Subnets = $subnets
     $siteDetails.SiteLinks = $siteLinks
     
-    return $siteDetails
+    $siteDetails
 }
 
-Function Get-ADForestSites
+function Get-ADForestSites
 {
-    Param (
+    param (
         [System.DirectoryServices.ActiveDirectory.ReadOnlySiteCollection] $sites
     )
     
     $processedSites = @()
-    foreach($site in $sites)
+    foreach ($site in $sites)
     {
         $processedSites += Get-ADSiteDetails $site
     }
     
-    return $processedSites
+    $processedSites
 }
 
-Function Get-ADForestDetails
+function Get-ADForestDetails
 {
-    Param (
-        [System.DirectoryServices.ActiveDirectory.Forest] $forest
-    )
-    
+    $forest = Get-ADCurrentForest
     $domains = Get-ADForestDomains $forest.Domains
     $sites = Get-ADForestSites $forest.Sites
     $applicationPartitions = @()
     
-    foreach($applicationPartition in $forest.ApplicationPartitions)
+    foreach ($applicationPartition in $forest.ApplicationPartitions)
     {
         $applicationPartitions += $applicationPartition.Name
     }
     
-    $forestDetails = "" | select Name,ForestMode,RootDomain,SchemaRoleOwner,NamingRoleOwner,Schema,ApplicationPartitions,SiteLinks,Domains,Sites
+    $forestDetails = "" | Select-Object Name,ForestMode,RootDomain,SchemaRoleOwner,NamingRoleOwner,Schema,ApplicationPartitions,SiteLinks,Domains,Sites
     $forestDetails.Name = $forest.Name
     $forestDetails.ForestMode = $forest.ForestMode.ToString()
     $forestDetails.RootDomain = $forest.RootDomain.ToString()
@@ -157,18 +165,10 @@ Function Get-ADForestDetails
     $forestDetails.NamingRoleOwner = $forest.NamingRoleOwner.ToString()
     $forestDetails.Domains = $domains
     $forestDetails.Sites = $sites
-    $forestDetails.SiteLinks = $Script:SiteLinks
+    $forestDetails.SiteLinks = $Script:siteLinks
     $forestDetails.ApplicationPartitions = $applicationPartitions
     
-    return $forestDetails
+    $forestDetails
 }
-
-#endregion
-
-#region Main Script
-
-[array] $Script:SiteLinks = @()
-$forestDetails = Get-ADForestDetails -Forest (Get-ADCurrentForest)
-return $forestDetails
 
 #endregion
