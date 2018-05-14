@@ -9,7 +9,7 @@ The following is a quick set of guidelines for contributing to EDU.
 
 * Search for the issue or feature in the issues list on GitHub.
 * If there is no existing issue, create an issue with a descriptive subject and description.  Non-descriptive issues will be closed.
-* Use existing labels when possible.
+* Use existing labels when possible and assign the issue to the correct person performing the work.
 * Get feedback on the request in the issue you created.
 * Create a branch using the following format: descriptive-feature-name
 * Once ready to merge, initiate a pull request.
