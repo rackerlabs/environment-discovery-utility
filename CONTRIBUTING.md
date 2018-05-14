@@ -39,9 +39,17 @@ The following is a quick set of guidelines for contributing to EDU.
 
 We draw heavily from the [The PowerShell Best Practices and Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle).  Please review this documentation, in particular the [Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle/blob/master/Style-Guide/Introduction.md) sections.
 
-Additionally, we implement the following:
+If a particular matter is not address by the PoshCode style guide, we fall back to .Net coding guidelines.
 
-#### Scopes
+[Capitalization Conventions](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/capitalization-conventions)
+
+[Strongly Encouraged Development Guidelines](https://msdn.microsoft.com/en-us/library/dd878270%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396)
+
+#### Additional Guidelines
+
+Highlighted standards or anything not covered by the preceding guidelines.
+
+##### Scopes
 
 Please be sure to scope ($Global:, $Script:, etc) your variable correctly.  Refer to [this article](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6&viewFallbackFrom=powershell-Microsoft.PowerShell.Core) for details
 
