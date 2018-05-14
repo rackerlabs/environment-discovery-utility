@@ -49,6 +49,16 @@ If a particular matter is not address by the PoshCode style guide, we fall back 
 
 Highlighted standards or anything not covered by the preceding guidelines.
 
+#### Spaces vs Tabs
+
+Several editors default to tabs for indentations rather than spaces, which causes display problems when viewing code on Github.  Please be sure to "untabify" your code before checking in.
+
+* Visual Studio
+  * Highlight all your code, go to Edit -> Advanced -> Untabify select lines
+  
+* Notepad++
+  * Go to Edit -> Blank Operations -> TAB to space
+
 #### Scopes
 
 Please be sure to scope ($Global:, $Script:, etc) your variable correctly.  Refer to [this article](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6&viewFallbackFrom=powershell-Microsoft.PowerShell.Core) for details
