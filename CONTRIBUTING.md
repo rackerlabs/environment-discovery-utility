@@ -49,6 +49,47 @@ If a particular matter is not address by the PoshCode style guide, we fall back 
 
 Highlighted standards or anything not covered by the preceding guidelines.
 
+#### Comment Based Help
+
+All scripts should be written with the appropriate inline documentation, please refer to this template when adding help to your script.
+
+```powershell
+<#
+
+.SYNOPSIS
+    A brief description of the function or script.
+
+.DESCRIPTION
+    A longer description.
+
+.PARAMETER FirstParameter
+    Description of each of the parameters
+    Note:
+    To make it easier to keep the comments synchronized with changes to the parameters, 
+    the preferred location for parameter documentation comments is not here, 
+    but within the param block, directly above each parameter.
+
+.PARAMETER SecondParameter
+    Description of each of the parameters
+
+.INPUTS
+    Description of objects that can be piped to the script
+
+.OUTPUTS
+    Description of objects that are output by the script
+
+.EXAMPLE
+    Example of how to run the script
+
+.LINK
+    Links to further documentation
+
+.NOTES
+    Detail on what the script does, if this is needed
+
+#>
+```
+
 #### Curly Braces
 
 Curly braces should go on their own line to help improve readability.
