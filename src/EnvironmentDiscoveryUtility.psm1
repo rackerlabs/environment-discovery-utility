@@ -91,9 +91,9 @@ function Start-EnvironmentDiscovery
                     $libraryPath = ConverRelativePathToLiteralPath -RelativePath $library.path
                     $scriptFiles = Get-ChildItem -Path $libraryPath *.ps1
                     
-                    foreach ($path in $scriptFiles.FullName)
+                    foreach ($scriptFile in $scriptFiles)
                     {
-                        . "$($path)" > $null
+                        . "$($scriptFile.FullName)" > $null
                     }
                 }
             }
