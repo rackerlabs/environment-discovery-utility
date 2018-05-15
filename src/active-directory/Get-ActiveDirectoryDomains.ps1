@@ -1,6 +1,6 @@
 #region Functions
 
-function Get-ADDomainDetails
+function Get-ActiveDirectoryDomainDetails
 {
     param (
         [System.DirectoryServices.ActiveDirectory.ActiveDirectoryPartition]
@@ -32,7 +32,7 @@ function Get-ADDomainDetails
     $domainDetails
 }
 
-function Get-ADForestDomains
+function Get-ActiveDirectoryDomains
 {
     param (
         [System.DirectoryServices.ActiveDirectory.DomainCollection]
@@ -43,7 +43,7 @@ function Get-ADForestDomains
 
     foreach ($domain in $domains)
     {
-        $forestDomains += Get-ADDomainDetails $domain
+        $forestDomains += Get-ActiveDirectoryDomainDetails $domain
     }
     
     $forestDomains

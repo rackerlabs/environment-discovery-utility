@@ -2,6 +2,8 @@
 
 function GetLibraryManifest
 {
+    [CmdletBinding()]
+    Param()
     $libraryManifestPath = "$(split-path $SCRIPT:MyInvocation.MyCommand.Path -parent)\library-manifest.json"
 
     if (-not $( Test-Path $libraryManifestPath ))
@@ -28,12 +30,13 @@ function GetLibraryManifest
 
 function ConvertRelativePathToLiteralPath
 {
+    [CmdletBinding()]
     Param (
         [String]
-        $RelativePath
+        $relativePath
     )
 
-    $literalPath = "$(split-path $SCRIPT:MyInvocation.MyCommand.Path -parent)$( $RelativePath )"
+    $literalPath = "$(split-path $SCRIPT:MyInvocation.MyCommand.Path -parent)$( $relativePath )"
 
     $literalPath
 }
@@ -60,7 +63,7 @@ function Start-EnvironmentDiscovery
         Start-EnvironmentDiscovery -Modules Exchange,AD
 
     #>
-
+    [CmdletBinding()]
     Param (
         # An array of strings indicating which modules the Environment Discovery Utility should run.  Possible values: AD, Exchange, All.  This defaults to 'All'
         [ValidateSet("ad","exchange","all")] 
@@ -102,7 +105,7 @@ function Start-EnvironmentDiscovery
     }
     PROCESS
     {
-        $forestDetails = Get-ADForestDetails | SerializeTo-Json
+        $forestDetails = Start-ActiveDirectoryDiscovery | SerializeTo-Json
     }
     END
     {

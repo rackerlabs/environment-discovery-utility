@@ -1,17 +1,13 @@
 #region Functions
 
-function Get-ADCurrentForest
+function Start-ActiveDirectoryDiscovery
 {
-    $currentForest = [System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest()
-    
-    $currentForest
-}
+    [CmdletBinding()]
+    Param ()
 
-function Get-ADForestDetails
-{
-    $forest = Get-ADCurrentForest
-    $domains = Get-ADForestDomains $forest.Domains
-    $sites = Get-ADForestSites $forest.Sites
+    $forest = Get-ActiveDirectoryCurrentForest
+    $domains = Get-ActiveDirectoryDomains $forest.Domains
+    $sites = Get-ActiveDirectorySites $forest.Sites
     $applicationPartitions = @()
     
     foreach ($applicationPartition in $forest.ApplicationPartitions)

@@ -5,7 +5,7 @@
 #endregion
 
 #region Functions
-function Get-ADSiteLinkDetails
+function Get-ActiveDirectorySiteLinkDetails
 {
     param (
         [System.DirectoryServices.ActiveDirectory.ActiveDirectorySiteLink]
@@ -37,7 +37,7 @@ function Get-ADSiteLinkDetails
     $siteLinkDetails
 }
 
-function Get-ADSiteDetails
+function Get-ActiveDirectorySiteDetails
 {
     param (
         [System.DirectoryServices.ActiveDirectory.ActiveDirectorySite]
@@ -73,16 +73,17 @@ function Get-ADSiteDetails
     $siteDetails
 }
 
-function Get-ADForestSites
+function Get-ActiveDirectorySites
 {
     param (
-        [System.DirectoryServices.ActiveDirectory.ReadOnlySiteCollection] $sites
+        [System.DirectoryServices.ActiveDirectory.ReadOnlySiteCollection]
+        $sites
     )
     
     $processedSites = @()
-    foreach ($site in $sites)
+    foreach ($site in $Sites)
     {
-        $processedSites += Get-ADSiteDetails $site
+        $processedSites += Get-ActiveDirectorySiteDetails $site
     }
     
     $processedSites
