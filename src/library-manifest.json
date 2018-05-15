@@ -2,9 +2,17 @@
   "module": "Environment Discovery Utility",
   "libraries": [
     {
+      "shortName": "AD",
 	    "friendlyName": "Active Directory Forest Discovery",
-      "path": "\\active-directory\\ForestDiscovery.ps1"
+      "path": "\\active-directory"
     },
+    {
+      "shortName": "Exchange",
+	    "friendlyName": "Exchange Discovery",
+      "path": "\\exchange"
+    }  
+  ],
+  "scripts": [
     {
 	    "friendlyName": "Active Directory Forest Discovery",
       "path": "\\common\\SerializeTo-Json.ps1"
