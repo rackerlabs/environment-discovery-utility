@@ -3,12 +3,12 @@
   "libraries": [
     {
       "shortName": "AD",
-	    "friendlyName": "Active Directory Forest Discovery",
+      "friendlyName": "Active Directory Forest Discovery",
       "path": "\\active-directory"
     },
     {
       "shortName": "Exchange",
-	    "friendlyName": "Exchange Discovery",
+      "friendlyName": "Exchange Discovery",
       "path": "\\exchange"
     }  
   ],
