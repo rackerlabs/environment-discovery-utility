@@ -49,6 +49,39 @@ If a particular matter is not address by the PoshCode style guide, we fall back 
 
 Highlighted standards or anything not covered by the preceding guidelines.
 
+#### Curly Braces
+
+Curly braces should go on their own line to help improve readability.
+
+Correct:
+
+```powershell
+function Get-Noun
+{
+    if ($Wide)
+    {
+        Get-Command | Sort-Object Noun -Unique | Format-Wide Noun
+    }
+    else
+    {
+        Get-Command | Sort-Object Noun -Unique | Select-Object -Expand Noun
+    }
+}
+```
+
+Incorrect:
+
+```powershell
+function Get-Noun {
+    if ($Wide) {
+        Get-Command | Sort-Object Noun -Unique | Format-Wide Noun
+    }
+    else {
+        Get-Command | Sort-Object Noun -Unique | Select-Object -Expand Noun
+    }
+}
+```
+
 #### Spaces vs Tabs
 
 Several editors default to tabs for indentations rather than spaces, which causes display problems when viewing code on Github.  Please be sure to "untabify" your code before checking in.
