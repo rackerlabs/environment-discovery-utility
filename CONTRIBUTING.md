@@ -105,30 +105,32 @@ root<br>
 -> CONTRIBUTING.md<br>
 -> src<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Start-EnvironmentDiscovery.ps1<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> manifest.json<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> EnvironmentDiscoveryUtility.psd1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> EnvironmentDiscoveryUtility.psm1<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> ext<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> NLog.dll<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Json.Net.dll<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> common<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Common.psd1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Common.psm1<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> [area]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> script1.ps1<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> script2.ps1<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> script3.ps1<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> [another area]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> ActiveDirectory.psd1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> ActiveDirectory.psm1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> [area]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> script1.ps1<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> script2.ps1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Exchange.psd1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Exchange.psm1<br>
 
 | Name           | Description   |
 |:-------------- |:------------- |
-| **Run-Discovery.ps1** | Arbitrary name, entry point for all operations. |
-| **manifest.json** | Tracks location of everything, used by all scripts for location references. |
+| **EnvironmentDiscoveryUtility.psm1** | Main module which loads all other modules and scripts. |
+| **EnvironmentDiscoveryUtility.psd1** | Manifest file. |
 | **common** | Shared scripts used throughout the code base. |
 | **ext** | External binaries and libraries, for example Nlog or Json.Net. |
-| **[areas]** | Scripts grouped by functionality, for example "active-directory" or "exchange". |
+| **[area]** | Scripts grouped by functionality, for example [area] would be "active-directory" or "exchange". |
 
 ## Additional Notes
 
