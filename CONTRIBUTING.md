@@ -93,8 +93,7 @@ Several editors default to tabs for indentations rather than spaces, which cause
   * Go to Edit -> Blank Operations -> TAB to space
 
 #### Scopes
-
-Please be sure to scope ($Global:, $Script:, etc) your variables correctly.  Refer to [this article](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6&viewFallbackFrom=powershell-Microsoft.PowerShell.Core) for details
+When explicitly scoping variables ($Global:, $Script:, etc) please do so correctly.  Refer to [this article](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6&viewFallbackFrom=powershell-Microsoft.PowerShell.Core) for details
 
 ## Project Structure
 
