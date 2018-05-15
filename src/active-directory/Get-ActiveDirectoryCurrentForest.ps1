@@ -1,9 +1,9 @@
 function Get-ActiveDirectoryCurrentForest
 {
     [CmdletBinding()]
-    Param ()
-    
+    param ()
+
     $currentForest = [System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest()
-    
+
     $currentForest
 }

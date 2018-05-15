@@ -1,49 +1,6 @@
-﻿#region Functions
-
-function GetLibraryManifest
+﻿function Start-EnvironmentDiscovery
 {
-    [CmdletBinding()]
-    Param()
-    $libraryManifestPath = "$(split-path $SCRIPT:MyInvocation.MyCommand.Path -parent)\library-manifest.json"
-
-    if (-not $( Test-Path $libraryManifestPath ))
-    {
-        Throw "Failed to find library manifest at $libraryManifestPath"
-    }
-
-    [System.Reflection.Assembly]::LoadWithPartialName("System.Web.Extensions") | Out-Null
-    
-    $serializer = New-Object System.Web.Script.Serialization.JavaScriptSerializer
-    $rawLibraryManifest = Get-Content $libraryManifestPath
-    
-    try
-    {
-        $libraryManifest = $serializer.DeserializeObject($rawLibraryManifest)
-    }
-    catch
-    {
-        throw "Failed to deserialize library manifest file. $error"
-    }
-
-    $libraryManifest
-}
-
-function ConvertRelativePathToLiteralPath
-{
-    [CmdletBinding()]
-    Param (
-        [String]
-        $relativePath
-    )
-
-    $literalPath = "$(split-path $SCRIPT:MyInvocation.MyCommand.Path -parent)$( $relativePath )"
-
-    $literalPath
-}
-
-function Start-EnvironmentDiscovery
-{
-        <#
+    <#
     .SYNOPSIS
         This cmdlet will start a run of the Environment Discovery Utility.  
 
@@ -63,54 +20,18 @@ function Start-EnvironmentDiscovery
         Start-EnvironmentDiscovery -Modules Exchange,AD
 
     #>
+
     [CmdletBinding()]
-    Param (
+    param (
         # An array of strings indicating which modules the Environment Discovery Utility should run.  Possible values: AD, Exchange, All.  This defaults to 'All'
         [ValidateSet("ad","exchange","all")] 
         [String] 
-        $Modules 
+        $modules
     )
-    
-    BEGIN
+    process
     {
-        $manifest = GetLibraryManifest
-    
-        foreach ($script in $manifest.scripts)
-        {
-            $path = ConvertRelativePathToLiteralPath -RelativePath $script.path
-            . "$($path)" > $null
-        }
+        $activeDirectoryObject = Start-ActiveDirectoryDiscovery | SerializeTo-Json
 
-        if($Modules -like 'All')
-        {
-            $Modules = $manifest.libaries.ShortName
-        }
-        
-        foreach($module in $modules)
-        {
-            if($Modules -contains $module.ToLower())
-            {
-                foreach ($library in $manifest.libraries)
-                {
-                    $libraryPath = ConvertRelativePathToLiteralPath -RelativePath $library.path
-                    $scriptFiles = Get-ChildItem -Path $libraryPath *.ps1
-                    
-                    foreach ($scriptFile in $scriptFiles)
-                    {
-                        . "$($scriptFile.FullName)" > $null
-                    }
-                }
-            }
-        }
-    }
-    PROCESS
-    {
-        $forestDetails = Start-ActiveDirectoryDiscovery | SerializeTo-Json
-    }
-    END
-    {
-        $forestDetails
+        $activeDirectoryObject
     }
 }
-
-#endregion
