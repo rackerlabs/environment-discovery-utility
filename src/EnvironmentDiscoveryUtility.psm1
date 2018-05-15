@@ -26,7 +26,7 @@ function GetLibraryManifest
     $libraryManifest
 }
 
-function ConverRelativePathToLiteralPath
+function ConvertRelativePathToLiteralPath
 {
     Param (
         [String]
@@ -34,6 +34,7 @@ function ConverRelativePathToLiteralPath
     )
 
     $literalPath = "$(split-path $SCRIPT:MyInvocation.MyCommand.Path -parent)$( $RelativePath )"
+
     $literalPath
 }
 
@@ -73,7 +74,7 @@ function Start-EnvironmentDiscovery
     
         foreach ($script in $manifest.scripts)
         {
-            $path = ConverRelativePathToLiteralPath -RelativePath $script.path
+            $path = ConvertRelativePathToLiteralPath -RelativePath $script.path
             . "$($path)" > $null
         }
 
@@ -88,7 +89,7 @@ function Start-EnvironmentDiscovery
             {
                 foreach ($library in $manifest.libraries)
                 {
-                    $libraryPath = ConverRelativePathToLiteralPath -RelativePath $library.path
+                    $libraryPath = ConvertRelativePathToLiteralPath -RelativePath $library.path
                     $scriptFiles = Get-ChildItem -Path $libraryPath *.ps1
                     
                     foreach ($scriptFile in $scriptFiles)

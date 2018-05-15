@@ -2,8 +2,9 @@
 
 function Get-ADCurrentForest
 {
-    $forestDetails = [System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest()
-    $forestDetails
+    $currentForest = [System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest()
+    
+    $currentForest
 }
 
 function Get-ADForestDetails
