@@ -23,27 +23,23 @@
     [CmdletBinding()]
     param (
         # An array of strings indicating which modules the Environment Discovery Utility should run.  Possible values: AD, Exchange, All.  This defaults to 'All'
-        [ValidateSet("ad","exchange","all")] 
+        [ValidateSet("ad","exchange","all")]
         [array]
-        $modules = @('all')
+        $Modules = @('all')
     )
-    begin
+
+    $allModules = @('ad','exchange')
+
+    foreach ($module in $allModules)
     {
-        $allModules = @('ad','exchange')
-    }
-    process
-    {
-        foreach ($module in $allModules)
+        if(($Modules -like 'all') -or ($Modules -contains $module))
         {
-            if(($modules -like 'all') -or ($modules -contains $module))
+            switch ($module)
             {
-                switch ($module)
+                'ad'
                 {
-                    'ad'
-                    {
-                        $activeDirectoryObject = Start-ActiveDirectoryDiscovery | SerializeTo-Json
-                        $activeDirectoryObject
-                    }
+                    $activeDirectoryObject = Start-ActiveDirectoryDiscovery | SerializeTo-Json
+                    $activeDirectoryObject
                 }
             }
         }

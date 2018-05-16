@@ -16,34 +16,32 @@ function Start-ActiveDirectoryDiscovery
 
     [CmdletBinding()]
     param ()
-    process
+
+    $forest = Get-ActiveDirectoryCurrentForest
+
+    if ($forest)
     {
-        $forest = Get-ActiveDirectoryCurrentForest
+        $domains = Get-ActiveDirectoryDomains $forest.Domains
+        $sites = Get-ActiveDirectorySites $forest.Sites
+        $applicationPartitions = @()
 
-        if ($forest)
+        foreach ($applicationPartition in $forest.ApplicationPartitions)
         {
-            $domains = Get-ActiveDirectoryDomains $forest.Domains
-            $sites = Get-ActiveDirectorySites $forest.Sites
-            $applicationPartitions = @()
-
-            foreach ($applicationPartition in $forest.ApplicationPartitions)
-            {
-                $applicationPartitions += $applicationPartition.Name
-            }
-
-            $forestDetails = "" | Select-Object Name,ForestMode,RootDomain,SchemaRoleOwner,NamingRoleOwner,Schema,ApplicationPartitions,SiteLinks,Domains,Sites
-            $forestDetails.Name = $forest.Name
-            $forestDetails.ForestMode = $forest.ForestMode.ToString()
-            $forestDetails.RootDomain = $forest.RootDomain.ToString()
-            $forestDetails.Schema = $forest.Schema.ToString()
-            $forestDetails.SchemaRoleOwner = $forest.SchemaRoleOwner.ToString()
-            $forestDetails.NamingRoleOwner = $forest.NamingRoleOwner.ToString()
-            $forestDetails.Domains = $domains
-            $forestDetails.Sites = $sites
-            $forestDetails.SiteLinks = $Script:siteLinks
-            $forestDetails.ApplicationPartitions = $applicationPartitions
+            $applicationPartitions += $applicationPartition.Name
         }
 
-        $forestDetails
+        $forestDetails = "" | Select-Object Name,ForestMode,RootDomain,SchemaRoleOwner,NamingRoleOwner,Schema,ApplicationPartitions,SiteLinks,Domains,Sites
+        $forestDetails.Name = $forest.Name
+        $forestDetails.ForestMode = $forest.ForestMode.ToString()
+        $forestDetails.RootDomain = $forest.RootDomain.ToString()
+        $forestDetails.Schema = $forest.Schema.ToString()
+        $forestDetails.SchemaRoleOwner = $forest.SchemaRoleOwner.ToString()
+        $forestDetails.NamingRoleOwner = $forest.NamingRoleOwner.ToString()
+        $forestDetails.Domains = $domains
+        $forestDetails.Sites = $sites
+        $forestDetails.SiteLinks = $Script:siteLinks
+        $forestDetails.ApplicationPartitions = $applicationPartitions
     }
+
+    $forestDetails
 }

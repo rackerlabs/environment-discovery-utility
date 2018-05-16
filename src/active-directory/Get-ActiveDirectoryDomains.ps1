@@ -3,36 +3,32 @@ function Get-ActiveDirectoryDomainDetails
     [CmdletBinding()]
     param (
         [System.DirectoryServices.ActiveDirectory.ActiveDirectoryPartition]
-        $domain
+        $Domain
     )
-    begin
+
+    $childDomains = @()
+    $parentDomain = $null
+
+    foreach ($childDomain in $Domain.Children)
     {
-        $childDomains = @()
-        $parentDomain = $null
+        $childDomains += $childDomain.Name
     }
-    process
+
+    if ($Domain.Parent -ne $null)
     {
-        foreach ($childDomain in $domain.Children)
-        {
-            $childDomains += $childDomain.Name
-        }
-
-        if ($domain.Parent -ne $null)
-        {
-            $parentDomain = $domain.Parent.Name
-        }
-
-        $domainDetails = "" | Select-Object Name,DomainMode,PdcRoleOwner,RidRoleOwner,InfrastructureRoleOwner,Parent,Children,DomainControllers
-        $domainDetails.Name = $domain.Name
-        $domainDetails.DomainMode = $domain.DomainMode.ToString()
-        $domainDetails.PdcRoleOwner = $domain.PdcRoleOwner.Name.ToString()
-        $domainDetails.RidRoleOwner = $domain.RidRoleOwner.Name.ToString()
-        $domainDetails.InfrastructureRoleOwner = $domain.InfrastructureRoleOwner.Name.ToString()
-        $domainDetails.Children = $childDomains
-        $domainDetails.Parent = $parentDomain
-
-        $domainDetails
+        $parentDomain = $domain.Parent.Name
     }
+
+    $domainDetails = "" | Select-Object Name,DomainMode,PdcRoleOwner,RidRoleOwner,InfrastructureRoleOwner,Parent,Children,DomainControllers
+    $domainDetails.Name = $Domain.Name
+    $domainDetails.DomainMode = $Domain.DomainMode.ToString()
+    $domainDetails.PdcRoleOwner = $Domain.PdcRoleOwner.Name.ToString()
+    $domainDetails.RidRoleOwner = $Domain.RidRoleOwner.Name.ToString()
+    $domainDetails.InfrastructureRoleOwner = $Domain.InfrastructureRoleOwner.Name.ToString()
+    $domainDetails.Children = $childDomains
+    $domainDetails.Parent = $parentDomain
+
+    $domainDetails
 }
 
 function Get-ActiveDirectoryDomains
@@ -40,19 +36,14 @@ function Get-ActiveDirectoryDomains
     [CmdletBinding()]
     param (
         [System.DirectoryServices.ActiveDirectory.DomainCollection]
-        $domains
+        $Domains
     )
-    begin
-    {
-        $forestDomains = @()
-    }
-    process
-    {
-        foreach ($domain in $domains)
-        {
-            $forestDomains += Get-ActiveDirectoryDomainDetails $domain
-        }
 
-        $forestDomains
+    $forestDomains = @()
+    foreach ($domain in $Domains)
+    {
+        $forestDomains += Get-ActiveDirectoryDomainDetails $domain
     }
+
+    $forestDomains
 }

@@ -5,29 +5,29 @@ function Get-ActiveDirectorySiteLinkDetails
     [CmdletBinding()]
     param (
         [System.DirectoryServices.ActiveDirectory.ActiveDirectorySiteLink]
-        $siteLink
+        $SiteLink
     )
 
     $siteLinkDetails = "" | Select-Object Name,TransportType,Cost,Sites,ReplicationInterval,ReciprocalReplicationEnabled,NotificationEnabled,DataCompressionEnabled
     $sites = @()
 
-    foreach ($site in $siteLink.Sites)
+    foreach ($site in $SiteLink.Sites)
     {
         $sites += $site.Name
     }
 
-    $siteLinkDetails.Name = $siteLink.Name
-    $siteLinkDetails.TransportType = $siteLink.TransportType.ToString()
+    $siteLinkDetails.Name = $SiteLink.Name
+    $siteLinkDetails.TransportType = $SiteLink.TransportType.ToString()
     $siteLinkDetails.Sites = $sites
-    $siteLinkDetails.Cost = $siteLink.Cost
-    $siteLinkDetails.ReplicationInterval = $siteLink.ReplicationInterval.ToString()
-    $siteLinkDetails.ReciprocalReplicationEnabled = $siteLink.ReciprocalReplicationEnabled
-    $siteLinkDetails.NotificationEnabled = $siteLink.NotificationEnabled
-    $siteLinkDetails.DataCompressionEnabled = $siteLink.DataCompressionEnabled
+    $siteLinkDetails.Cost = $SiteLink.Cost
+    $siteLinkDetails.ReplicationInterval = $SiteLink.ReplicationInterval.ToString()
+    $siteLinkDetails.ReciprocalReplicationEnabled = $SiteLink.ReciprocalReplicationEnabled
+    $siteLinkDetails.NotificationEnabled = $SiteLink.NotificationEnabled
+    $siteLinkDetails.DataCompressionEnabled = $SiteLink.DataCompressionEnabled
 
-    if (-not $( $Script:siteLinks | Where-Object{$_.Name -like $siteLinkDetails.Name} ))
+    if (-not $( $Script:SiteLinks | Where-Object{$_.Name -like $siteLinkDetails.Name} ))
     {
-        $Script:siteLinks += $siteLinkDetails
+        $Script:SiteLinks += $siteLinkDetails
     }
 
     $siteLinkDetails
@@ -38,7 +38,7 @@ function Get-ActiveDirectorySiteDetails
     [CmdletBinding()]
     param (
         [System.DirectoryServices.ActiveDirectory.ActiveDirectorySite]
-        $site
+        $Site
     )
 
     $siteDetails = "" | Select-Object Name,AdjacentSites,SiteLinks,Subnets
@@ -46,23 +46,23 @@ function Get-ActiveDirectorySiteDetails
     $subnets = @()
     $siteLinks = @()
 
-    foreach ($adjacentSite in $site.AdjacentSites)
+    foreach ($adjacentSite in $Site.AdjacentSites)
     {
         $adjacentSites += $adjacentSite.Name
     }
 
-    foreach ($subnet in $site.Subnets)
+    foreach ($subnet in $Site.Subnets)
     {
         $subnets += $subnet.Name.ToString()
     }
 
-    foreach ($siteLink in $site.SiteLinks)
+    foreach ($siteLink in $Site.SiteLinks)
     {
         $siteLink = Get-ActiveDirectorySiteLinkDetails $siteLink
         $siteLinks += $siteLink.Name
     }
 
-    $siteDetails.Name = $site.Name
+    $siteDetails.Name = $Site.Name
     $siteDetails.AdjacentSites = $adjacentSites
     $siteDetails.Subnets = $subnets
     $siteDetails.SiteLinks = $siteLinks
@@ -75,7 +75,7 @@ function Get-ActiveDirectorySites
     [CmdletBinding()]
     param (
         [System.DirectoryServices.ActiveDirectory.ReadOnlySiteCollection]
-        $sites
+        $Sites
     )
 
     $processedSites = @()

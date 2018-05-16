@@ -2,6 +2,7 @@ function Get-ActiveDirectoryCurrentForest
 {
     [CmdletBinding()]
     param ()
+
     try
     {
         $currentForest = [System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest()
