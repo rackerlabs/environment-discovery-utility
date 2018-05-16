@@ -1,4 +1,5 @@
-﻿function Start-EnvironmentDiscovery
+﻿
+function Start-EnvironmentDiscovery
 {
     <#
     .SYNOPSIS
@@ -25,13 +26,28 @@
     param (
         # An array of strings indicating which modules the Environment Discovery Utility should run.  Possible values: AD, Exchange, All.  This defaults to 'All'
         [ValidateSet("ad","exchange","all")] 
-        [String] 
-        $modules
+        [array]
+        $modules = @('all')
     )
+    begin
+    {
+        $allModules = @('ad','exchange')
+    }
     process
     {
-        $activeDirectoryObject = Start-ActiveDirectoryDiscovery | SerializeTo-Json
-
-        $activeDirectoryObject
+        foreach ($module in $allModules)
+        {
+            if(($modules -like 'all') -or ($modules -contains $module))
+            {
+                switch ($module)
+                {
+                    'ad'
+                    {
+                        $activeDirectoryObject = Start-ActiveDirectoryDiscovery | SerializeTo-Json
+                        $activeDirectoryObject
+                    }
+                }
+            }
+        }
     }
 }
