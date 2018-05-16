@@ -1,5 +1,4 @@
-﻿
-function Start-EnvironmentDiscovery
+﻿function Start-EnvironmentDiscovery
 {
     <#
     .SYNOPSIS
@@ -19,7 +18,6 @@ function Start-EnvironmentDiscovery
 
     .EXAMPLE
         Start-EnvironmentDiscovery -Modules Exchange,AD
-
     #>
 
     [CmdletBinding()]
