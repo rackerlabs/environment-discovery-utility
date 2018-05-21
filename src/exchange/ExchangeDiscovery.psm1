@@ -2,19 +2,22 @@ function Start-ExchangeDiscovery
 {
     <#
     .SYNOPSIS
-        This cmdlet will return information related to the current Active Directory Forest as well as its Domains and Sites.
+        This cmdlet will return information related to the configuration and state of Exchange in the environment.
 
     .DESCRIPTION
-        This cmdlet will return information related to the current Active Directory Forest as well as its Domains and Sites.  This is not meant to be run independently and is part of the Environment Discovery Utility package.
+        This cmdlet will return information related to the configuration and state of Exchange in the environment.  This is not meant to be run independently and is part of the Environment Discovery Utility package.
 
     .OUTPUTS
-        A PSObject representation of the discovered Active Directory environment.
+        A PSObject representation of the discovered Exchange environment.
 
     .EXAMPLE
-        Start-ActiveDirectoryDiscovery
+        Start-ExchangeDiscovery
     #>
 
     [CmdletBinding()]
-    param ()
+    param (
 
+    )
+
+    Get-ExchangeServers
 }

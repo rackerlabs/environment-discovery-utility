@@ -41,6 +41,11 @@
                     $activeDirectoryObject = Start-ActiveDirectoryDiscovery | SerializeTo-Json
                     $activeDirectoryObject
                 }
+                'exchange'
+                {
+                    $exchangeObject = Start-ExchangeDiscovery | SerializeTo-Json
+                    $exchangeObject
+                }
             }
         }
     }

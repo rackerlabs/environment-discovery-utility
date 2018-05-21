@@ -20,39 +20,52 @@ function Search-Directory
         [string]
         $SearchScope = "SubTree"
     )
-
-    if ($Context)
+    process
     {
-        $root = New-Object System.DirectoryServices.DirectoryEntry $Context
+        $output = @()
+
+        if ($Context)
+        {
+            $nameSpace = New-Object System.DirectoryServices.DirectoryEntry $Context
+        }
+        else
+        {
+            $nameSpace = New-Object System.DirectoryServices.DirectoryEntry
+        }
+
+        $objSearcher = New-Object System.DirectoryServices.DirectorySearcher
+        $objsearcher.SearchRoot = $nameSpace
+
+        if ($PageSize)
+        {
+            $objSearcher.PageSize = $PageSize
+        }
+
+        if ($Filter)
+        {
+            $objSearcher.Filter = $Filter
+        }
+
+        $objSearcher.SearchScope = "Subtree"
+
+        foreach ($property in $properties)
+        {
+            $objSearcher.PropertiesToLoad.Add($property) | Out-Null
+        }
+
+        $results = $objSearcher.FindAll()
+
+        foreach ($result in $results)
+        {
+            $object = New-Object -TypeName PSObject
+            foreach ($adProperty in $result.Properties.PropertyNames)
+            {
+                $adProperty
+            $object | Add-Member -MemberType NoteProperty -Name $adProperty -Value $result.Properties[$adProperty]
+            }
+            $output += $object
+        }
+
+        $output
     }
-    else
-    {
-        $root = New-Object System.DirectoryServices.DirectoryEntry
-    }
-
-    $directorySearcher = New-Object System.DirectoryServices.DirectorySearcher
-
-    if ($SearchRoot)
-    {
-        $directorySearcher.SearchRoot = $SearchRoot
-    }
-
-    if ($PageSize)
-    {
-        $directorySearcher.PageSize = $PageSize
-    }
-
-    if ($Filter)
-    {
-        $directorySearcher.Filter = $Filter
-    }
-
-    $directorySearcher.SearchScope = $SearchScope
-
-    foreach ($property in $Properties)
-    {
-        $directorySearcher.PropertiesToLoad.Add($property) | Out-Null
-    }
-
-    $directorySearcher.FindAll()
 }
