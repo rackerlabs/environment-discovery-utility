@@ -15,9 +15,11 @@ function Start-ExchangeDiscovery
     #>
 
     [CmdletBinding()]
-    param (
+    param ()
 
-    )
+    $domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain()
+    $forestName = $domain.Forest.Name
+    $forestDN = "DC=$( $ForestName.Replace(".",",DC=") )"
 
-    Get-ExchangeServers
+    Get-ExchangeServers -Domain $forestDN
 }
