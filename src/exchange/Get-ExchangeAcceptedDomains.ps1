@@ -20,18 +20,17 @@ function ConvertTo-AcceptedDomainFlagNames
 
 function Get-ExchangeAcceptedDomains
 {
-    Param
-    (
+    param (
         [string]
         $DomainDN
     )
 
     $discoveredAcceptedDomains = @()
-    $baseDN = "CN=Configuration,$($DomainDN)"
+    $searchRoot = "CN=Configuration,$($DomainDN)"
     $ldapFilter = "(objectClass=msExchAcceptedDomain)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
     [array] $properties = "name", "msExchAcceptedDomainFlags"
-    $acceptedDomains = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $baseDN
+    $acceptedDomains = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
     foreach ($acceptedDomain in $acceptedDomains)
     {
