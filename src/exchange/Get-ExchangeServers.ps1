@@ -24,15 +24,15 @@ function Get-ExchangeServers
     [CmdletBinding()]
     param (
         [string]
-        $Domain
+        $DomainDN
     )
 
     $discoveredExchangeServers = @()
-    $baseDN = "CN=Configuration,$($Domain)"
-    $strFilter = "(&(objectClass=msExchExchangeServer)(msExchCurrentServerRoles=*)(!(objectClass=msExchExchangeTransportServer)))"
-    $context = "LDAP://CN=Configuration,$($Domain)"
+    $baseDN = "CN=Configuration,$($DomainDN)"
+    $ldapFilter = "(&(objectClass=msExchExchangeServer)(msExchCurrentServerRoles=*)(!(objectClass=msExchExchangeTransportServer)))"
+    $context = "LDAP://CN=Configuration,$($DomainDN)"
     [array] $properties = "name", "serialNumber", "msExchMDBAvailabilityGroupLink", "msExchCurrentServerRoles", "msExchServerSite", "whenCreated", "distinguishedName"
-    $exchangeServers = Search-Directory -context $context -Filter $strFilter -Properties $properties -SearchRoot $baseDN
+    $exchangeServers = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $baseDN
 
     foreach ($exchangeServer in $exchangeServers)
     {

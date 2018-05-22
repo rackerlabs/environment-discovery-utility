@@ -21,5 +21,6 @@ function Start-ExchangeDiscovery
     $forestName = $domain.Forest.Name
     $forestDN = "DC=$( $ForestName.Replace(".",",DC=") )"
 
-    Get-ExchangeServers -Domain $forestDN
+    Get-ExchangeServers -DomainDN $forestDN
+    Get-ExchangeAcceptedDomains -DomainDN $forestDN
 }
