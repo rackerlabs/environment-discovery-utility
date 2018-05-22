@@ -23,4 +23,5 @@ function Start-ExchangeDiscovery
 
     Get-ExchangeServers -DomainDN $forestDN
     Get-ExchangeAcceptedDomains -DomainDN $forestDN
+    Get-ExchangeVirtualDirectories -DomainDN $forestDN
 }
