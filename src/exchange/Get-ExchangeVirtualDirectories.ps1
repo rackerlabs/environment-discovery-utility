@@ -17,7 +17,7 @@ function Get-ExchangeVirtualDirectories
     {
         $computerName = ($virtualDirectory.distinguishedname | Select-Object -First 1).Split(",")[3]
         $computerName = $computerName.Split("=")[1]
-        $virtualDirectorySettings = "" | Select-Object ComputerName, Name, ExternalHostName, InternalHostName, ExternalAuthenticationMethods, InternalAuthenticationMethods, ObjectClasses
+        $virtualDirectorySettings = "" | Select-Object ComputerName, Name, ExternalHostName, InternalHostName, ExternalAuthenticationMethods, InternalAuthenticationMethods, ObjectClasses, DistinguishedName
         $virtualDirectorySettings.ComputerName = $computerName
         $virtualDirectorySettings.Name = $virtualDirectory.name | Select-Object -First 1
         $virtualDirectorySettings.ExternalAuthenticationMethods = $virtualDirectory.msExchExternalAuthenticationMethods | Select-Object -First 1
@@ -25,6 +25,7 @@ function Get-ExchangeVirtualDirectories
         $virtualDirectorySettings.ExternalHostName = $virtualDirectory.msExchExternalHostName | Select-Object -First 1
         $virtualDirectorySettings.InternalHostName = $virtualDirectory.msExchInternalHostName | Select-Object -First 1
         $virtualDirectorySettings.ObjectClasses = [array] $virtualDirectory.objectClass
+        $virtualDirectorySettings.DistinguishedName = $virtualDirectory.distinguishedName | Select-Object -First 1
 
         $discoveredVirtualDirectories += $virtualDirectorySettings
     }
