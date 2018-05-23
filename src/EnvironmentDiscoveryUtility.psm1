@@ -28,25 +28,38 @@
         $Modules = @('all')
     )
 
-    $allModules = @('ad','exchange')
-
-    foreach ($module in $allModules)
+    begin
     {
-        if(($Modules -like 'all') -or ($Modules -contains $module))
+        $environment = @{}
+        $environment.Add('SessionId', [GUID]::NewGuid())
+        $environment.Add('TimeStamp', $( ([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ") ))
+    }
+    process
+    {
+        $allModules = @('ad','exchange')
+
+        foreach ($module in $allModules)
         {
-            switch ($module)
+            if(($Modules -like 'all') -or ($Modules -contains $module))
             {
-                'ad'
+                switch ($module)
                 {
-                    $activeDirectoryObject = Start-ActiveDirectoryDiscovery | SerializeTo-Json
-                    $activeDirectoryObject
-                }
-                'exchange'
-                {
-                    $exchangeObject = Start-ExchangeDiscovery | SerializeTo-Json
-                    $exchangeObject
+                    'ad'
+                    {
+                        $activeDirectoryObject = Start-ActiveDirectoryDiscovery
+                        $environment.Add("Active-Directory",$activeDirectoryObject)
+                    }
+                    'exchange'
+                    {
+                        $exchangeObject = Start-ExchangeDiscovery
+                        $environment.Add("Exchange",$exchangeObject)
+                    }
                 }
             }
         }
+
+        $environment | SerializeTo-Json
     }
 }
+
+New-Alias -Name "sedu" -Value "Start-EnvironmentDiscovery" -Description "Alias for Start-EnvironmentDiscovery" -Scope Global

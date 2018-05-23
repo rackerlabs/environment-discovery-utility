@@ -1,23 +1,3 @@
-function ConvertTo-AcceptedDomainFlagNames
-{
-    [CmdletBinding()]
-    param (
-        [int]
-        $AcceptedDomainFlags
-    )
-    process
-    {
-        $flagMap = @{
-            1  = "ExternalRelay"
-            2  = "InternalRelay"
-            4 = "Default"
-            8 = "Authoritative"
-        }
-
-        $flagMap.Keys | Where-Object{$_ -bAnd $AcceptedDomainFlags} | ForEach-Object{$flagMap.Get_Item($_)}
-    }
-}
-
 function Get-ExchangeAcceptedDomains
 {
     param (
@@ -34,27 +14,9 @@ function Get-ExchangeAcceptedDomains
 
     foreach ($acceptedDomain in $acceptedDomains)
     {
-        $currentAcceptedDomain = "" | Select-Object Name,IsDefault,AcceptedDomainType
-        [int] $acceptedDomainFlagValue = $acceptedDomain.msExchAcceptedDomainFlags[0].ToString()
-        [array] $acceptedDomainFlags = ConvertTo-AcceptedDomainFlagNames $acceptedDomainFlagValue
-        $typeName = $acceptedDomainFlags | Where-Object {$_ -notlike 'Default'}
-
-        if (-not $typeName)
-        {
-            $typeName = "Authoritative"
-        }
-
+        $currentAcceptedDomain = "" | Select-Object Name,AcceptedDomainFlags
         $currentAcceptedDomain.Name = $acceptedDomain.name
-        $currentAcceptedDomain.AcceptedDomainType = $typeName
-
-        if ($acceptedDomainFlags -contains 'Default')
-        {
-            $currentAcceptedDomain.IsDefault = $true
-        }
-        else
-        {
-            $currentAcceptedDomain.IsDefault = $false
-        }
+        $currentAcceptedDomain.AcceptedDomainFlags = $acceptedDomain.msExchAcceptedDomainFlags | Select-Object -First 1
 
         $discoveredAcceptedDomains += $currentAcceptedDomain
     }

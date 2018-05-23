@@ -58,10 +58,12 @@ function Search-Directory
         foreach ($result in $results)
         {
             $object = New-Object -TypeName PSObject
+            
             foreach ($adProperty in $result.Properties.PropertyNames)
             {
                 $object | Add-Member -MemberType NoteProperty -Name $adProperty -Value $result.Properties[$adProperty]
             }
+
             $output += $object
         }
 

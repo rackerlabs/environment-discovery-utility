@@ -16,12 +16,19 @@ function Start-ExchangeDiscovery
 
     [CmdletBinding()]
     param ()
+    begin
+    {
+        $exchangeEnvironment = @{}
+    }
+    process
+    {
+        $domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain()
+        $forestName = $domain.Forest.Name
+        $forestDN = "DC=$( $ForestName.Replace(".",",DC=") )"
+        $exchangeEnvironment.Add("ExchangeServers", $( Get-ExchangeServers -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("ExchangeAcceptedDomains", $( Get-ExchangeAcceptedDomains -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("ExchangeVirtualDirectories", $( Get-ExchangeVirtualDirectories -DomainDN $forestDN ))
 
-    $domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain()
-    $forestName = $domain.Forest.Name
-    $forestDN = "DC=$( $ForestName.Replace(".",",DC=") )"
-
-    Get-ExchangeServers -DomainDN $forestDN
-    Get-ExchangeAcceptedDomains -DomainDN $forestDN
-    Get-ExchangeVirtualDirectories -DomainDN $forestDN
+        $exchangeEnvironment
+    }
 }
