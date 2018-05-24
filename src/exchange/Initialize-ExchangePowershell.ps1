@@ -19,10 +19,6 @@ function Initialize-ExchangePowershell
             Add-PSSnapIn Microsoft.Exchange.Management.PowerShell.Admin
             . 'C:\Program Files\Microsoft\Exchange Server\bin\Exchange.ps1' | Out-Null
         }
-        else
-        {
-            Throw 'Failed to initialize Exchange Powershell session.'
-        }
     }
 
     $testCommand = Get-Command Get-ExchangeServer -ErrorAction SilentlyContinue
