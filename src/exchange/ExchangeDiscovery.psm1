@@ -19,6 +19,7 @@ function Start-ExchangeDiscovery
     begin
     {
         $exchangeEnvironment = @{}
+        $exchangeShellConnected = Initialize-ExchangePowershell
     }
     process
     {
@@ -28,6 +29,16 @@ function Start-ExchangeDiscovery
         $exchangeEnvironment.Add("ExchangeServers", $( Get-ExchangeServers -DomainDN $forestDN ))
         $exchangeEnvironment.Add("ExchangeAcceptedDomains", $( Get-ExchangeAcceptedDomains -DomainDN $forestDN ))
         $exchangeEnvironment.Add("ExchangeVirtualDirectories", $( Get-ExchangeVirtualDirectories -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("ExchangeRecipients", $( Get-ExchangeRecipients -DomainDN $forestDN ))
+
+        if ($exchangeShellConnected)
+        {
+            Write-Host "Test"
+        }
+        else
+        {
+            Write-Host "Test2"
+        }
 
         $exchangeEnvironment
     }
