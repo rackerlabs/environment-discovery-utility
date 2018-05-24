@@ -31,8 +31,10 @@
     begin
     {
         $environment = @{}
-        $environment.Add('SessionId', [GUID]::NewGuid())
+        $sessionGuid = [GUID]::NewGuid()
+        $environment.Add('SessionId', $sessionGuid)
         $environment.Add('TimeStamp', $( ([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ") ))
+        $outPutPath = ".\environment-$sessionGuid.json"
     }
     process
     {
@@ -58,7 +60,7 @@
             }
         }
 
-        $environment | SerializeTo-Json
+        $environment | SerializeTo-Json | Set-Content -Path $outPutPath -Encoding UTF8 -Force
     }
 }
 
