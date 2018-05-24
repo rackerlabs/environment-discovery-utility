@@ -3,7 +3,10 @@ function Get-ExchangeRecipients
     [CmdletBinding()]
     param (
         [string]
-        $domainDN
+        $DomainDN,
+
+        [bool]
+        $IncludeStatistics
     )
 
     $discoveredRecipients = @()
@@ -24,9 +27,13 @@ function Get-ExchangeRecipients
         $currentRecipient.RemoteRecipientType = $recipient.msExchRemoteRecipientType | Select-Object -First 1
         $currentRecipient.RecipientDisplayType = $recipient.msexchRecipientDisplayType | Select-Object -First 1
         $currentRecipient.PrimaryMatchesUPN = $( $recipient.mail | Select-Object -First 1) -eq $( $recipient.userPrincipalName | Select-Object -First 1 )
-        $recipientStatistics = Get-ExchangeRecipientDataStatistics -Recipient $currentRecipient
-        $currentRecipient.TotalItemSizeKB = $recipientStatistics.TotalItemSize.Value.ToKB()
-        $currentRecipient.ItemCount = $recipientStatistics.itemCount
+
+        if ($IncludeStatistics)
+        {
+            $recipientStatistics = Get-ExchangeRecipientDataStatistics -Recipient $currentRecipient
+            $currentRecipient.TotalItemSizeKB = $recipientStatistics.TotalItemSize.Value.ToKB()
+            $currentRecipient.ItemCount = $recipientStatistics.itemCount
+        }
 
         $discoveredRecipients += $currentRecipient
     }

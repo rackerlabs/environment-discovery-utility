@@ -19,7 +19,7 @@ function Start-ExchangeDiscovery
     begin
     {
         $exchangeEnvironment = @{}
-        Initialize-ExchangePowershell
+        [bool] $exchangeShellConnected = Initialize-ExchangePowershell
     }
     process
     {
@@ -29,7 +29,8 @@ function Start-ExchangeDiscovery
         $exchangeEnvironment.Add("ExchangeServers", $( Get-ExchangeServers -DomainDN $forestDN ))
         $exchangeEnvironment.Add("ExchangeAcceptedDomains", $( Get-ExchangeAcceptedDomains -DomainDN $forestDN ))
         $exchangeEnvironment.Add("ExchangeVirtualDirectories", $( Get-ExchangeVirtualDirectories -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeRecipients", $( Get-ExchangeRecipients -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("ExchangeRecipients", $( Get-ExchangeRecipients -DomainDN $forestDN -IncludeStatistics $exchangeShellConnected ))
+
         $exchangeEnvironment
     }
 }
