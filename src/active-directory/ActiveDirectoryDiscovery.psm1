@@ -15,7 +15,10 @@ function Start-ActiveDirectoryDiscovery
     #>
 
     [CmdletBinding()]
-    param ()
+    param (
+        [int]
+        $ProgressId
+    )
     begin
     {
         $activeDirectoryEnvironment = @{}

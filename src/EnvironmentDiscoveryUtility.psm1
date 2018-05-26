@@ -30,8 +30,11 @@
 
     begin
     {
-        $environment = @{}
         $sessionGuid = [GUID]::NewGuid()
+        $logPath = ".\environment-$sessionGuid.log"
+        $Script:logFile = Enable-Logging -FilePath $logPath
+        Write-Log -Level VERBOSE -Message 'Initializing EDU Module' -ProgressId 99 -Activity 'Environment Discovery Utility'
+        $environment = @{}
         $environment.Add('SessionId', $sessionGuid)
         $environment.Add('TimeStamp', $( ([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ") ))
         $outPutPath = ".\environment-$sessionGuid.json"
@@ -48,12 +51,12 @@
                 {
                     'ad'
                     {
-                        $activeDirectoryObject = Start-ActiveDirectoryDiscovery
+                        $activeDirectoryObject = Start-ActiveDirectoryDiscovery -ProgressId 2
                         $environment.Add("Active-Directory",$activeDirectoryObject)
                     }
                     'exchange'
                     {
-                        $exchangeObject = Start-ExchangeDiscovery
+                        $exchangeObject = Start-ExchangeDiscovery -ProgressId 3
                         $environment.Add("Exchange",$exchangeObject)
                     }
                 }
@@ -61,6 +64,11 @@
         }
 
         $environment | SerializeTo-Json | Set-Content -Path $outPutPath -Encoding UTF8 -Force
+    }
+    end
+    {
+        Write-Log -Level VERBOSE -Message 'end' -ProgressId 99 -Activity 'Environment Discovery Utility' -ProgressComplete $true
+        Disable-Logging -LogFile $Script:logFile
     }
 }
 

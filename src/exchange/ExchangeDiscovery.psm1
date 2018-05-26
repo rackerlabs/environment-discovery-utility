@@ -15,7 +15,10 @@ function Start-ExchangeDiscovery
     #>
 
     [CmdletBinding()]
-    param ()
+    param (
+        [int]
+        $ProgressId
+    )
     begin
     {
         $exchangeEnvironment = @{}
@@ -23,6 +26,7 @@ function Start-ExchangeDiscovery
     }
     process
     {
+        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Starting Exchange Discovery' -ParentProgressId 99
         $domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain()
         $forestName = $domain.Forest.Name
         $forestDN = "DC=$( $ForestName.Replace(".",",DC=") )"
