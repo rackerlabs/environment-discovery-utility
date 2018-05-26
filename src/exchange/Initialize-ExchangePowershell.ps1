@@ -1,5 +1,8 @@
 function Initialize-ExchangePowershell
 {
+    [CmdletBinding()]
+    param ()
+
     $connectedToExchange = $false
 
     if (-not (Get-Command Get-ExchangeServer -ErrorAction SilentlyContinue))
@@ -22,7 +25,7 @@ function Initialize-ExchangePowershell
 
     $testCommand = Get-Command Get-ExchangeServer -ErrorAction SilentlyContinue
 
-    if($testCommand)
+    if ($testCommand)
     {
         $connectedToExchange = $true
     }
