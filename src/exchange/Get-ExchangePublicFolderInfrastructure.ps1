@@ -3,7 +3,6 @@ function Get-ExchangePublicFolderInfrastructure
     [CmdletBinding()]
     param ()
 
-    #Run AD Query for all PF MBX and their homeMDB
     $discoveredPublicFolderMailboxes = @()
     $ldapFilter = "(msExchRecipientTypeDetails=68719476736)"
     $context = "LDAP://$($DomainDN)"
@@ -13,13 +12,13 @@ function Get-ExchangePublicFolderInfrastructure
 
     foreach ($pfMailbox in $pfMailboxes)
     {
-        $PublicFolderMailboxes = $null
-        $PublicFolderMailboxes = "" | Select-Object ObjectGuid, Name, homeMDB
-        $PublicFolderMailboxes.ObjectGuid = [GUID]  $( $pfMailbox.objectGuid | Select-Object -First 1 )
-        $PublicFolderMailboxes.PFMBXName = $( $pfMailbox.name | Select-Object -First 1 )
-        $PublicFolderMailboxes.ParentDatabase = $( $pfMailbox.homeMDB | Select-Object -First 1 )
+        $publicFolderMailboxes = $null
+        $publicFolderMailboxes = "" | Select-Object objectGuid, name, homeMDB
+        $publicFolderMailboxes.objectGuid = [GUID]$pfMailbox.objectGuid
+        $publicFolderMailboxes.pfMBXName = $pfMailbox.name
+        $publicFolderMailboxes.parentDatabase = $pfMailbox.homeMDB
 
-        $discoveredPublicFolderMailboxes += $PublicFolderMailboxes
+        $discoveredPublicFolderMailboxes += $publicFolderMailboxes
     }
 
     $discoveredPublicFolderMailboxes

@@ -8,29 +8,29 @@ function Get-ExchangePublicFolderStatistics
 
     if ($ExchangeShellConnected)
     {
-        $PublicFolderStatistics = Get-PublicFolderStatistics -resultSize Unlimited | Select-Object Name,FolderPath,ItemCount,TotalItemSize
-        $DiscoveredPublicFolderStatistics = $null
-        foreach ($publicFolderStatistic in $PublicFolderStatistics)
+        $publicFolderStatistics = Get-PublicFolderStatistics -resultSize Unlimited | Select-Object name,folderPath,itemCount,totalItemSize
+        $discoveredPublicFolderStatistics = $null
+        foreach ($publicFolderStatistic in $publicFolderStatistics)
         {
             
-            $PublicFolderStats = $null
-            $PublicFolderStats = "" | Select-Object Name,FolderPath,ItemCount,TotalItemSize    
-            $PublicFolderStats.Name = $publicFolderStatistic.Name        
+            $publicFolderStats = $null
+            $publicFolderStats = "" | Select-Object name,folderPath,itemCount,totalItemSize    
+            $publicFolderStats.name = $publicFolderStatistic.name        
                         
-            if($publicFolderStatistic.FolderPath -is [system.array])
+            if($publicFolderStatistic.folderPath -is [system.array])
             {
-                $PublicFolderStats.FolderPath = "\" + ($publicFolderStatistic.FolderPath) -join '\'
+                $publicFolderStats.folderPath = "\" + ($publicFolderStatistic.folderPath) -join '\'
             }
             
             else 
             {
-                $PublicFolderStats.FolderPath = $publicFolderStatistic.FolderPath
+                $publicFolderStats.folderPath = $publicFolderStatistic.folderPath
             }
 
-            $PublicFolderStats.ItemCount = $publicFolderStatistic.ItemCount
-            $PublicFolderStats.TotalItemSize = $publicFolderStatistic.TotalItemSize
-            $DiscoveredPublicFolderStatistics += $PublicFolderStats
+            $publicFolderStats.itemCount = $publicFolderStatistic.itemCount
+            $publicFolderStats.totalItemSize = $publicFolderStatistic.totalItemSize
+            $discoveredPublicFolderStatistics += $PublicFolderStats
         }
-        $DiscoveredPublicFolderStatistics
+        $discoveredPublicFolderStatistics
     }
 }
