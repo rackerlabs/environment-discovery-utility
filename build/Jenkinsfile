@@ -1,0 +1,40 @@
+#!/usr/bin/env groovy
+pipeline {
+	agent any
+    parameters {
+        string(name: 'branch', defaultValue: 'develop', description: '')
+    }
+	stages {
+		stage('Checkout') {
+			steps {
+				slackSend "${env.JOB_NAME} - #${env.BUILD_NUMBER} Started (<${env.BUILD_URL}|Open>)"
+				checkout (
+					changelog: true,
+					poll: true,
+					scm: [ 
+						$class: 'GitSCM', 
+						branches: [[name: "${params.branch}"]], 
+						doGenerateSubmoduleConfigurations: false, 
+						extensions: [[$class: 'CleanBeforeCheckout']], 
+						submoduleCfg: [], 
+						userRemoteConfigs: [[credentialsId: 'james.blake', url: 'git@github.rackspace.com:MicrosoftEng/environment-discovery-utility.git']]
+					]
+				)
+			}
+		}
+		stage('Zip') {
+			steps {
+				slackSend "${env.JOB_NAME} - #${env.BUILD_NUMBER} Zipping files"
+				bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Build-ZipFile.ps1 -BuildNumber ${env.BUILD_NUMBER}'
+			}
+		}
+	}
+	post {
+		success {
+			slackSend color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Success (<${env.BUILD_URL}|Open>)"
+		}
+		failure {
+			slackSend color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open>)"
+		}
+	}
+}
