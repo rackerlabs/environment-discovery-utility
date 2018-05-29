@@ -10,16 +10,19 @@ function Get-ExchangePublicFolderInfrastructure
     [array] $properties = "name","homeMDB"
     $pfMailboxes = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
-    foreach ($pfMailbox in $pfMailboxes)
+    if ($pfMailboxes)
     {
-        $publicFolderMailboxes = $null
-        $publicFolderMailboxes = "" | Select-Object objectGuid, name, homeMDB
-        $publicFolderMailboxes.objectGuid = [GUID]$pfMailbox.objectGuid
-        $publicFolderMailboxes.pfMBXName = $pfMailbox.name
-        $publicFolderMailboxes.parentDatabase = $pfMailbox.homeMDB
+        foreach ($pfMailbox in $pfMailboxes)
+        {
+            $publicFolderMailboxes = $null
+            $publicFolderMailboxes = "" | Select-Object objectGuid, name, homeMDB
+            $publicFolderMailboxes.objectGuid = [GUID]$pfMailbox.objectGuid
+            $publicFolderMailboxes.pfMBXName = $pfMailbox.name
+            $publicFolderMailboxes.parentDatabase = $pfMailbox.homeMDB
 
-        $discoveredPublicFolderMailboxes += $publicFolderMailboxes
+            $discoveredPublicFolderMailboxes += $publicFolderMailboxes
+        }
+
+        $discoveredPublicFolderMailboxes
     }
-
-    $discoveredPublicFolderMailboxes
 }
