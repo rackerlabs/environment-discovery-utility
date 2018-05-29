@@ -26,7 +26,7 @@ pipeline {
 		stage('Zip') {
 			steps {
 				slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Zipping files"
-				bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Build-ZipFile.ps1 -BuildNumber ${env.BUILD_NUMBER}'
+				bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Build-ZipFile.ps1 -BuildNumber %BUILD_NUMBER%-%branch%'
 			}
 		}
 	}
