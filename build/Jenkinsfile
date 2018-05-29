@@ -2,7 +2,6 @@
 pipeline {
 	agent any
     parameters {
-        string(name: 'branch', defaultValue: 'develop', description: '')
         string(name: 'slackChannel', defaultValue: 'edu', description: '')
     }
 	stages {
@@ -14,7 +13,7 @@ pipeline {
 					poll: true,
 					scm: [ 
 						$class: 'GitSCM', 
-						branches: [[name: "${params.branch}"]], 
+						branches: [[name: "develop"]], 
 						doGenerateSubmoduleConfigurations: false, 
 						extensions: [[$class: 'CleanBeforeCheckout']], 
 						submoduleCfg: [], 
