@@ -1,7 +1,10 @@
 function Get-ExchangePublicFolderInfrastructure
 {
     [CmdletBinding()]
-    param ()
+    param (
+        [string]
+        $DomainDN
+    )
 
     $discoveredPublicFolderMailboxes = @()
     $ldapFilter = "(msExchRecipientTypeDetails=68719476736)"
