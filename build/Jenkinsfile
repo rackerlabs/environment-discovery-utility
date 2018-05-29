@@ -3,11 +3,12 @@ pipeline {
 	agent any
     parameters {
         string(name: 'branch', defaultValue: 'develop', description: '')
+        string(name: 'slackChannel', defaultValue: 'edu', description: '')
     }
 	stages {
 		stage('Checkout') {
 			steps {
-				slackSend "${env.JOB_NAME} - #${env.BUILD_NUMBER} Started (<${env.BUILD_URL}|Open>)"
+				slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Started (<${env.BUILD_URL}|Open>)"
 				checkout (
 					changelog: true,
 					poll: true,
@@ -24,17 +25,17 @@ pipeline {
 		}
 		stage('Zip') {
 			steps {
-				slackSend "${env.JOB_NAME} - #${env.BUILD_NUMBER} Zipping files"
+				slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Zipping files"
 				bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Build-ZipFile.ps1 -BuildNumber ${env.BUILD_NUMBER}'
 			}
 		}
 	}
 	post {
 		success {
-			slackSend color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Success (<${env.BUILD_URL}|Open>)"
+			slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Success (<${env.BUILD_URL}|Open>)"
 		}
 		failure {
-			slackSend color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open>)"
+			slackSend channel: "${slackChannel}", color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open>)"
 		}
 	}
 }
