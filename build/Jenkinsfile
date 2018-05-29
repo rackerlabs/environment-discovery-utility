@@ -26,7 +26,7 @@ pipeline {
 		stage('Zip') {
 			steps {
 				slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Zipping files"
-				bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Build-ZipFile.ps1 -BuildNumber %BUILD_NUMBER%-%branch%'
+				bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Build-ZipFile.ps1 -BuildNumber %BUILD_NUMBER%'
 			}
 		}
 	}
@@ -34,7 +34,7 @@ pipeline {
 		success {		
             archiveArtifacts artifacts: "build/edu.v${env.BUILD_NUMBER}.zip"
 			slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Success (<${env.BUILD_URL}|Open>)"
-			slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} (<https://jenkins.mseng.mlsrvr.com/view/EDU/job/edu_ci/${env.BUILD_NUMBER}/artifact/build/edu.v${env.BUILD_NUMBER}-${params.branch}.zip|Download Zip>)"
+			slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} (<https://jenkins.mseng.mlsrvr.com/view/EDU/job/edu_ci/${env.BUILD_NUMBER}/artifact/build/edu.v${env.BUILD_NUMBER}.zip|Download Zip>)"
 		}
 		failure {
 			slackSend channel: "${slackChannel}", color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open>)"
