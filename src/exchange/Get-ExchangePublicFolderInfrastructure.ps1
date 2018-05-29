@@ -15,7 +15,7 @@ function Get-ExchangePublicFolderInfrastructure
         foreach ($pfMailbox in $pfMailboxes)
         {
             $publicFolderMailboxes = $null
-            $publicFolderMailboxes = "" | Select-Object objectGuid, name, homeMDB
+            $publicFolderMailboxes = "" | Select-Object objectGuid, pfMBXName, parentDatabase
             $publicFolderMailboxes.objectGuid = [GUID]$pfMailbox.objectGuid
             $publicFolderMailboxes.pfMBXName = $pfMailbox.name
             $publicFolderMailboxes.parentDatabase = $pfMailbox.homeMDB
