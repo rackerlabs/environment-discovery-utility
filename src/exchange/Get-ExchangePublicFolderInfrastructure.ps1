@@ -4,7 +4,7 @@ function Get-ExchangePublicFolderInfrastructure
     param ()
 
     #Run AD Query for all PF MBX and their homeMDB
-    $PublicFolderMailboxes = @()
+    $discoveredPublicFolderMailboxes = @()
     $ldapFilter = "(msExchRecipientTypeDetails=68719476736)"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$($DomainDN)"
