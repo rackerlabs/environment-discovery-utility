@@ -7,7 +7,7 @@ function Get-ExchangePublicFolderInfrastructure
     )
 
     $discoveredPublicFolderMailboxes = @()
-    $ldapFilter = "(|(msExchRecipientTypeDetails=68719476736)(objectClass=msExchPublicMDB))"
+    $ldapFilter = "(&(msExchRecipientTypeDetails=68719476736)(objectClass=msExchPublicMDB))"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$($DomainDN)"
     [array] $properties = "name","homeMDB"
