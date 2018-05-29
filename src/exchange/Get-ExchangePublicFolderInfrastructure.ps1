@@ -14,10 +14,10 @@ function Get-ExchangePublicFolderInfrastructure
     foreach ($pfMailbox in $pfMailboxes)
     {
         $PublicFolderMailboxes = $null
-        $pfMailbox = "" | Select-Object ObjectGuid, Name, homeMDB
-        $pfMailbox.ObjectGuid = [GUID]  $( $recipient.objectGuid | Select-Object -First 1 )
-        $pfMailbox.PFMBXName = $( $recipient.name | Select-Object -First 1 )
-        $pfMailbox.ParentDatabase = $( $recipient.homeMDB | Select-Object -First 1 )
+        $PublicFolderMailboxes = "" | Select-Object ObjectGuid, Name, homeMDB
+        $PublicFolderMailboxes.ObjectGuid = [GUID]  $( $pfMailbox.objectGuid | Select-Object -First 1 )
+        $PublicFolderMailboxes.PFMBXName = $( $pfMailbox.name | Select-Object -First 1 )
+        $PublicFolderMailboxes.ParentDatabase = $( $pfMailbox.homeMDB | Select-Object -First 1 )
 
         $discoveredPublicFolderMailboxes += $PublicFolderMailboxes
     }
