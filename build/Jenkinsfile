@@ -32,7 +32,7 @@ pipeline {
 	}
 	post {
 		success {		
-            archiveArtifacts artifacts: 'build/edu.${env.BUILD_NUMBER}.zip'
+            archiveArtifacts artifacts: 'build/edu.%BUILD_NUMBER%.zip'
 			slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Success (<${env.BUILD_URL}|Open>)"
 		}
 		failure {
