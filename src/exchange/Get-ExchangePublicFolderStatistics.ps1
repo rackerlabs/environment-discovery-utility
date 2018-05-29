@@ -11,7 +11,7 @@ function Get-ExchangePublicFolderStatistics
         if (Get-PublicFolder -ErrorAction SilentlyContinue)
         {
             $publicFolderStatistics = Get-PublicFolderStatistics -resultSize Unlimited | Select-Object name,folderPath,itemCount,totalItemSize
-            $discoveredPublicFolderStatistics = $null
+            $discoveredPublicFolderStatistics = @()
             foreach ($publicFolderStatistic in $publicFolderStatistics)
             {
                 
