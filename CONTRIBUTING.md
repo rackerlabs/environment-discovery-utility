@@ -144,6 +144,7 @@ root<br>
 |<br>
 -> README.md<br>
 -> CONTRIBUTING.md<br>
+-> build<br>
 -> src<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> EnvironmentDiscoveryUtility.psd1<br>
