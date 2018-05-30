@@ -1,122 +1,122 @@
 <#
 
 .SYNOPSIS
-	Deploy and test EDU against a test lab.
+    Deploy and test EDU against a test lab.
 
 .DESCRIPTION
-	This script copies a pre-generated EDU zip file to a lab for testing purposes.  Once copied,
-	the contents are extracted and the primary EDU script is run in the remote environment.  
-	After the script completes, the json output is analyzed against an expected result.  The script 
-	will return $True if successful, $False if the result does not match the expected output.
+    This script copies a pre-generated EDU zip file to a lab for testing purposes.  Once copied,
+    the contents are extracted and the primary EDU script is run in the remote environment.  
+    After the script completes, the json output is analyzed against an expected result.  The script 
+    will return $True if successful, $False if the result does not match the expected output.
 
 #>
 
 [CmdletBinding()]
 param (
-	[string]
-	$BuildNumber,
+    [string]
+    $BuildNumber,
 
-	[string]
-	$LabIpAddress,
-	
-	[string]
-	$Password,
-	
-	[string]
-	$Username,
-	
-	[string]
-	$ZipLibrary = ".\Ionic.Zip.dll",
+    [string]
+    $LabIpAddress,
+    
+    [string]
+    $Password,
+    
+    [string]
+    $Username,
+    
+    [string]
+    $ZipLibrary = ".\Ionic.Zip.dll",
 
-	[string]
-	$ZipFile
+    [string]
+    $ZipFile
 )
 
 function Map-PSDrive()
 {
-	Write-Host "Connecting PSDrive to $eduFolderUnc"
+    Write-Host "Connecting PSDrive to $eduFolderUnc"
 
-	New-PSDrive -Name "EDU_CI_$labName" -PSProvider FileSystem -Root $eduFolderUnc -Credential $credential 
+    New-PSDrive -Name "EDU_CI_$labName" -PSProvider FileSystem -Root $eduFolderUnc -Credential $credential 
 
-	Verify-RemoteFolders
+    Verify-RemoteFolders
 }
 
 function Verify-RemoteFolders()
 {
-	Write-Host "Verifying $buildFolderUnc exists"
+    Write-Host "Verifying $buildFolderUnc exists"
 
-	if (!(Test-Path -Path $buildFolderUnc))
-	{
-		Write-Host "Folder $buildFolderUnc was not found, creating new folder"
-		New-Item -ItemType Directory -Path $buildFolderUnc
-	}
-	else
-	{
-		Write-Host "Folder $buildFolderUnc was found, clearing existing folder"
-		Remove-Item "$buildFolderUnc" -Force -Recurse
-		New-Item -ItemType Directory -Path $buildFolderUnc
-	}
+    if (!(Test-Path -Path $buildFolderUnc))
+    {
+        Write-Host "Folder $buildFolderUnc was not found, creating new folder"
+        New-Item -ItemType Directory -Path $buildFolderUnc
+    }
+    else
+    {
+        Write-Host "Folder $buildFolderUnc was found, clearing existing folder"
+        Remove-Item "$buildFolderUnc" -Force -Recurse
+        New-Item -ItemType Directory -Path $buildFolderUnc
+    }
 
-	Transfer-Files
+    Transfer-Files
 }
 
 function Transfer-Files()
 {
-	Write-Host "Copying $ZipFile to $buildFolderUnc"
-	Copy-Item $ZipFile -Destination $buildFolderUnc
+    Write-Host "Copying $ZipFile to $buildFolderUnc"
+    Copy-Item $ZipFile -Destination $buildFolderUnc
 
-	Write-Host "Copying $ZipLibrary to $buildFolderUnc"
-	Copy-Item $ZipLibrary -Destination $buildFolderUnc
-	
-	Extract-ZipContents
+    Write-Host "Copying $ZipLibrary to $buildFolderUnc"
+    Copy-Item $ZipLibrary -Destination $buildFolderUnc
+    
+    Extract-ZipContents
 }
 
 function Extract-ZipContents()
 {
-	Write-Host "Extracting zip files from $remoteZipFile to $remoteBuildFolder on $LabIpAddress"
+    Write-Host "Extracting zip files from $remoteZipFile to $remoteBuildFolder on $LabIpAddress"
 
-	$scriptBlock = 
-	{
+    $scriptBlock = 
+    {
         param(
-			[string]
-			$ZipFile,
+            [string]
+            $ZipFile,
 
-			[string]
-			$OutputPath
-		)
-		
-		Add-Type -Path "$OutputPath\Ionic.Zip.dll"
-		
-		$zip = [Ionic.Zip.ZIPFile]::Read($ZipFile)
-		$zip | % { $_.Extract($OutputPath, [Ionic.Zip.ExtractExistingFileAction]::OverWriteSilently) }
-	}
-	
-	Invoke-Command -ComputerName $LabIpAddress -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $remoteZipFIle, $remoteBuildFolder
+            [string]
+            $OutputPath
+        )
+        
+        Add-Type -Path "$OutputPath\Ionic.Zip.dll"
+        
+        $zip = [Ionic.Zip.ZIPFile]::Read($ZipFile)
+        $zip | % { $_.Extract($OutputPath, [Ionic.Zip.ExtractExistingFileAction]::OverWriteSilently) }
+    }
+    
+    Invoke-Command -ComputerName $LabIpAddress -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $remoteZipFIle, $remoteBuildFolder
 
-	Execute-Script
+    Execute-Script
 }
 
 function Execute-Script()
 {
-	Write-Host "Executing EDU script"
+    Write-Host "Executing EDU script"
 
-	$scriptBlock = 
-	{
+    $scriptBlock = 
+    {
         param(
-			[string]
-			$BuildFolder
-		)
+            [string]
+            $BuildFolder
+        )
 
-		Set-Location -Path $BuildFolder
+        Set-Location -Path $BuildFolder
 
-		Import-Module .\EnvironmentDiscoveryUtility.psd1
-		
-		Start-EnvironmentDiscovery
-	}
-	
-	Invoke-Command -ComputerName $LabIpAddress -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $remoteBuildFolder
+        Import-Module .\EnvironmentDiscoveryUtility.psd1
+        
+        Start-EnvironmentDiscovery
+    }
+    
+    Invoke-Command -ComputerName $LabIpAddress -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $remoteBuildFolder
 
-	Analyze-Results
+    Analyze-Results
 }
 
 function Analyze-Results()
