@@ -15,16 +15,17 @@ A set of powershell scripts used to gather information about Active Directory an
 - .Net Framework 3.5
 - PowerShell v2
 - Exchange 2010
-  - Exchange must be installed in the same forest the script is run in.
+- Exchange must be installed in the same forest the script is run in.
 
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/blob/master/CONTRIBUTING.md) for details.
 
 ## Lab Environments
-### Windows Server 2008 / Exchange 2010 Static Lab
 
-**Username:** testlab\administrator
+[Password Safe Project](https://passwordsafe.corp.rackspace.com/projects/22502/credentials)
+
+### Windows Server 2008 / Exchange 2010 Static Lab
 
 |Role| Hostname  | IP |
 | ------------- | ------------- | ------------- |
