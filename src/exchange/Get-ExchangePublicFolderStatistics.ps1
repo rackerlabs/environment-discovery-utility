@@ -10,30 +10,39 @@ function Get-ExchangePublicFolderStatistics
     {
         if (Get-PublicFolder -ErrorAction SilentlyContinue)
         {
-            $publicFolderStatistics = Get-PublicFolderStatistics -resultSize Unlimited | Select-Object name,folderPath,itemCount,totalItemSize
+            $publicFolderStatistics = Get-PublicFolderStatistics -resultSize Unlimited
             $discoveredPublicFolderStatistics = @()
-            foreach ($publicFolderStatistic in $publicFolderStatistics)
+            
+            if ((Get-ExchangeServer $env:ComputerName).AdminDisplayVersion -like "Version 15*")
             {
-                
-                $publicFolderStats = $null
-                $publicFolderStats = "" | Select-Object name,folderPath,itemCount,totalItemSize    
-                $publicFolderStats.name = $publicFolderStatistic.name        
-                            
-                if($publicFolderStatistic.folderPath -is [system.array])
+                foreach ($publicFolderStatistic in $publicFolderStatistics)
                 {
-                    $publicFolderStats.folderPath = "\" + ($publicFolderStatistic.folderPath) -join '\'
+                    
+                    $publicFolderStats = $null
+                    $publicFolderStats = "" | Select-Object name,folderPath,itemCount,totalItemSizeKB    
+                    $publicFolderStats.name = $publicFolderStatistic.name        
+                    $publicFolderStats.folderPath = ($publicFolderStatistic.folderPath) -join '\'
+                    $publicFolderStats.itemCount = $publicFolderStatistic.itemCount
+                    $publicFolderStats.totalItemSizeKB = $publicFolderStatistic.totalItemSize.ToKB()
+                    $discoveredPublicFolderStatistics += $PublicFolderStats
                 }
-                
-                else 
-                {
-                    $publicFolderStats.folderPath = $publicFolderStatistic.folderPath
-                }
-
-                $publicFolderStats.itemCount = $publicFolderStatistic.itemCount
-                $publicFolderStats.totalItemSize = $publicFolderStatistic.totalItemSize
-                $discoveredPublicFolderStatistics += $PublicFolderStats
+                $discoveredPublicFolderStatistics
             }
-            $discoveredPublicFolderStatistics
-        }
+            
+            else 
+            {
+                foreach ($publicFolderStatistic in $publicFolderStatistics)
+                {
+                    $publicFolderStats = $null
+                    $publicFolderStats = "" | Select-Object name,folderPath,itemCount,totalItemSizeKB    
+                    $publicFolderStats.name = $publicFolderStatistic.name        
+                    $publicFolderStats.folderPath = $publicFolderStatistic.folderPath
+                    $publicFolderStats.itemCount = $publicFolderStatistic.itemCount
+                    $publicFolderStats.totalItemSizeKB = $publicFolderStatistic.totalItemSize.Value.ToKB()
+                    $discoveredPublicFolderStatistics += $PublicFolderStats
+                }
+                $discoveredPublicFolderStatistics
+            }
+        }        
     }
 }
