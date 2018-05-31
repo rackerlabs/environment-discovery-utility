@@ -98,23 +98,9 @@ function Extract-ZipContents()
 
 function Execute-Script()
 {
-    Write-Host "Executing EDU script"
+    Write-Host "Executing EDU script remotely on $LabIpAddress"
 
-    $scriptBlock = 
-    {
-        param(
-            [string]
-            $BuildFolder
-        )
-
-        Set-Location -Path $BuildFolder
-
-        Import-Module .\EnvironmentDiscoveryUtility.psd1
-        
-        Start-EnvironmentDiscovery
-    }
-    
-    Invoke-Command -ComputerName $LabIpAddress -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $remoteBuildFolder
+	& .\PsExec.exe "\\$LabIpAddress" -w $remoteBuildFolder -u $Username -p $Password /accepteula cmd /c "echo . | powershell -noninteractive -command Import-Module $remoteBuildFolder\EnvironmentDiscoveryUtility.psd1; Start-EnvironmentDiscovery;"
 
     Analyze-Results
 }
