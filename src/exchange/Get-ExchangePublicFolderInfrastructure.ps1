@@ -18,8 +18,8 @@ function Get-ExchangePublicFolderInfrastructure
         foreach ($publicFolderObject in $publicFolderObjects)
         {
             $discoveredPublicFolderObject = $null
-            $discoveredPublicFolderObject = "" | Select-Object publicFolderMailboxGUID, parentServer, parentDatabase
-            $discoveredPublicFolderObject.publicFolderMailboxGUID = [GUID]$($publicFolderObject.objectguid | Select-Object -First 1)
+            $discoveredPublicFolderObject = "" | Select-Object publicFolderObjectGUID, parentServer, parentDatabase
+            $discoveredPublicFolderObject.publicFolderObjectGUID = [GUID]$($publicFolderObject.objectguid | Select-Object -First 1)
             $discoveredPublicFolderObject.parentServer = $null
             $discoveredPublicFolderObject.parentDatabase = $publicFolderObject.homemdb
 
@@ -44,7 +44,7 @@ function Get-ExchangePublicFolderInfrastructure
             {
                 $discoveredPublicFolderObject = $null
                 $discoveredPublicFolderObject = "" | Select-Object publicFolderMailboxGUID, parentServer, parentDatabase
-                $discoveredPublicFolderObject.publicFolderMailboxGUID = [GUID]$($publicFolderObject.objectguid | Select-Object -First 1)
+                $discoveredPublicFolderObject.publicFolderObjectGUID = [GUID]$($publicFolderObject.objectguid | Select-Object -First 1)
                 $discoveredPublicFolderObject.parentServer = $publicFolderObject.msexchowningserver
                 $discoveredPublicFolderObject.parentDatabase = $null
                 
