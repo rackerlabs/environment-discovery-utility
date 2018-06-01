@@ -37,4 +37,8 @@ function Get-ExchangePublicFolderStatistics
             $discoveredPublicFolderStatistics
         }        
     }
+	else
+	{
+		# TODO: We should log that no connection was available.
+	}
 }
