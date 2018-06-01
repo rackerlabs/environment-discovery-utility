@@ -10,14 +10,16 @@ function Get-ExchangePublicFolderStatistics
     {
         if (Get-PublicFolder -ErrorAction SilentlyContinue)
         {
-            $publicFolderStatistics = Get-PublicFolderStatistics -resultSize Unlimited
             $discoveredPublicFolderStatistics = @()
+			
+            $publicFolderStatistics = Get-PublicFolderStatistics -ResultSize Unlimited
+			
             foreach ($publicFolderStatistic in $publicFolderStatistics)
             {
-                
                 $publicFolderStats = $null
-                $publicFolderStats = "" | Select-Object Identity,ItemCount,TotalItemSizeKB    
+                $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB    
                 $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
+				
                 if ((Get-ExchangeServer $env:ComputerName | Select-Object AdminDisplayVersion) -like "*15.0*")
                 {
                     $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.ToKB()
@@ -28,8 +30,10 @@ function Get-ExchangePublicFolderStatistics
                     $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.value.ToKB()
                     $publicFolderStats.Identity = $publicFolderStatistic.entryID  
                 }
+				
                 $discoveredPublicFolderStatistics += $publicFolderStats
             }
+			
             $discoveredPublicFolderStatistics
         }        
     }

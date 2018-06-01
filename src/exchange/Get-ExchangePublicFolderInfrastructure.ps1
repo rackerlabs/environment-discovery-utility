@@ -9,12 +9,14 @@ function Get-ExchangePublicFolderInfrastructure
     $ldapFilter = "(msExchRecipientTypeDetails=68719476736)"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$DomainDN"
-    [array] $properties = "objectGUID","homeMDB"
-    $modernPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    [array]$properties = "objectGUID","homeMDB"
+	
+    $modernPublicFolders = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
     if ($modernPublicFolders)
     {
         $discoveredModernPublicFolders = @()
+		
         foreach ($modernPublicFolder in $modernPublicFolders)
         {
             $discoveredModernPublicFolder = $null
@@ -27,16 +29,17 @@ function Get-ExchangePublicFolderInfrastructure
         }
 
         $discoveredModernPublicFolders
-    }
-    
+    }    
     else 
     {
         $discoveredLegacyPublicFolders = @()
+		
         $ldapFilter = "(objectClass=msExchPublicMDB)"
         $context = "LDAP://CN=Configuration,$($DomainDN)"
         $searchRoot = "CN=Configuration,$($DomainDN)"
-        [array] $properties = "objectGUID","msExchOwningServer"
-        $legacyPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        [array]$properties = "objectGUID","msExchOwningServer"
+        
+		$legacyPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
         
         if ($legacyPublicFolders)
         {
