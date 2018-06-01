@@ -42,13 +42,13 @@ function Get-ExchangePublicFolderInfrastructure
         {
             foreach ($legacyPublicFolder in $legacyPublicFolders)
             {
-                $discoveredPublicFolder = $null
-                $discoveredPublicFolder = "" | Select-Object publicFolderGUID, parentServer, parentDatabase
-                $discoveredPublicFolder.publicFolderGUID = [GUID]$($legacyPublicFolder.objectguid | Select-Object -First 1)
-                $discoveredPublicFolder.parentServer = $legacyPublicFolder.msexchowningserver
-                $discoveredPublicFolder.parentDatabase = $null
+                $discoveredLegacyPublicFolder = $null
+                $discoveredLegacyPublicFolder = "" | Select-Object publicFolderGUID, parentServer, parentDatabase
+                $discoveredLegacyPublicFolder.publicFolderGUID = [GUID]$($legacyPublicFolder.objectguid | Select-Object -First 1)
+                $discoveredLegacyPublicFolder.parentServer = $legacyPublicFolder.msexchowningserver
+                $discoveredLegacyPublicFolder.parentDatabase = $null
                 
-                $discoveredLegacyPublicFolders += $discoveredPublicFolder
+                $discoveredLegacyPublicFolders += $discoveredLegacyPublicFolder
             }
 
             $discoveredLegacyPublicFolders
