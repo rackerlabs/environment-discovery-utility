@@ -10,46 +10,48 @@ function Get-ExchangePublicFolderInfrastructure
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$DomainDN"
     [array] $properties = "objectGUID","homeMDB"
-    $pfMailboxes = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    $publicFolderObjects = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
-    if ($pfMailboxes)
+    if ($publicFolderObjects)
     {
-        $discoveredPublicFolderMailboxes = @()
-        foreach ($pfMailbox in $pfMailboxes)
+        $discoveredPublicFolderInfrastructure = @()
+        foreach ($publicFolderObject in $publicFolderObjects)
         {
-            $publicFolderMailboxes = $null
-            $publicFolderMailboxes = "" | Select-Object pfMBXGUID, parentDatabase
-            $publicFolderMailboxes.pfMBXGUID = [GUID]  $( $pfMailbox.objectguid | Select-Object -First 1 )
-            $publicFolderMailboxes.parentDatabase = $pfMailbox.homemdb
+            $discoveredPublicFolderObject = $null
+            $discoveredPublicFolderObject = "" | Select-Object publicFolderMailboxGUID, parentServer, parentDatabase
+            $discoveredPublicFolderObject.publicFolderMailboxGUID = [GUID]$($publicFolderObject.objectguid | Select-Object -First 1)
+            $discoveredPublicFolderObject.parentServer = $null
+            $discoveredPublicFolderObject.parentDatabase = $publicFolderObject.homemdb
 
-            $discoveredPublicFolderMailboxes += $publicFolderMailboxes
+            $discoveredPublicFolderInfrastructure += $discoveredPublicFolderObject
         }
 
-        $discoveredPublicFolderMailboxes
+        $discoveredPublicFolderInfrastructure
     }
     
     else 
     {
-        $discoveredPublicFolderMailboxes = @()
+        $discoveredPublicFolderInfrastructure = @()
         $ldapFilter = "(objectClass=msExchPublicMDB)"
         $context = "LDAP://CN=Configuration,$($DomainDN)"
         $searchRoot = "CN=Configuration,$($DomainDN)"
         [array] $properties = "objectGUID","msExchOwningServer"
-        $pfMailboxes = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        $publicFolderObjects = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
         
-        if ($pfMailboxes)
+        if ($publicFolderObjects)
         {
-            foreach ($pfMailbox in $pfMailboxes)
+            foreach ($publicFolderObject in $publicFolderObjects)
             {
-                $publicFolderMailboxes = $null
-                $publicFolderMailboxes = "" | Select-Object pfMBXGUID, parentServer
-                $publicFolderMailboxes.pfMBXGUID = [GUID]  $( $pfMailbox.objectguid | Select-Object -First 1 )
-                $publicFolderMailboxes.parentServer = $pfMailbox.msexchowningserver
-
-                $discoveredPublicFolderMailboxes += $publicFolderMailboxes
+                $discoveredPublicFolderObject = $null
+                $discoveredPublicFolderObject = "" | Select-Object publicFolderMailboxGUID, parentServer, parentDatabase
+                $discoveredPublicFolderObject.publicFolderMailboxGUID = [GUID]$($publicFolderObject.objectguid | Select-Object -First 1)
+                $discoveredPublicFolderObject.parentServer = $publicFolderObject.msexchowningserver
+                $discoveredPublicFolderObject.parentDatabase = $null
+                
+                $discoveredPublicFolderInfrastructure += $discoveredPublicFolderObject
             }
 
-            $discoveredPublicFolderMailboxes
+            $discoveredPublicFolderInfrastructure
         }
     }
 }

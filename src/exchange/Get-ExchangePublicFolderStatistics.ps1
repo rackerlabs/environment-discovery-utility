@@ -16,19 +16,19 @@ function Get-ExchangePublicFolderStatistics
             {
                 
                 $publicFolderStats = $null
-                $publicFolderStats = "" | Select-Object Identity,itemCount,totalItemSizeKB    
+                $publicFolderStats = "" | Select-Object identity,itemCount,totalItemSizeKB    
                 $publicFolderStats.itemCount = $publicFolderStatistic.itemCount
                 if ((Get-ExchangeServer $env:ComputerName | Select-Object AdminDisplayVersion) -like "*15.0*")
                 {
                     $publicFolderStats.totalItemSizeKB = $publicFolderStatistic.totalItemSize.ToKB()
-                    $publicFolderStats.Identity = $publicFolderStatistic.Identity.ObjectGUID  
+                    $publicFolderStats.identity = $publicFolderStatistic.identity.objectGUID  
                 }
                 else 
                 {
                     $publicFolderStats.totalItemSizeKB = $publicFolderStatistic.totalItemSize.value.ToKB()
-                    $publicFolderStats.Identity = $publicFolderStatistic.EntryID  
+                    $publicFolderStats.identity = $publicFolderStatistic.entryID  
                 }
-                $discoveredPublicFolderStatistics += $PublicFolderStats
+                $discoveredPublicFolderStatistics += $publicFolderStats
             }
             $discoveredPublicFolderStatistics
         }        
