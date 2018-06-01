@@ -21,7 +21,10 @@ param (
     
     [string]
     $Password,
-    
+
+	[string]
+    $PsExec = ".\PsExec.exe",
+
     [string]
     $Username,
     
@@ -100,7 +103,7 @@ function Execute-Script()
 {
     Write-Host "Executing EDU script remotely on $LabIpAddress"
 
-	& .\PsExec.exe "\\$LabIpAddress" -w $remoteBuildFolder -u $Username -p $Password /accepteula cmd /c "echo . | powershell -noninteractive -command Import-Module $remoteBuildFolder\EnvironmentDiscoveryUtility.psd1; Start-EnvironmentDiscovery;"
+	& $PsExec "\\$LabIpAddress" -w $remoteBuildFolder -u $Username -p $Password /accepteula cmd /c "echo . | powershell -noninteractive -command Import-Module $remoteBuildFolder\EnvironmentDiscoveryUtility.psd1; Start-EnvironmentDiscovery;"
 
     Analyze-Results
 }
