@@ -18,10 +18,10 @@ function Get-ExchangePublicFolderInfrastructure
         foreach ($modernPublicFolder in $modernPublicFolders)
         {
             $discoveredModernPublicFolder = $null
-            $discoveredModernPublicFolder = "" | Select-Object publicFolderGUID, parentServer, parentDatabase
-            $discoveredModernPublicFolder.publicFolderGUID = [GUID]$($modernPublicFolder.objectguid | Select-Object -First 1)
-            $discoveredModernPublicFolder.parentServer = $null
-            $discoveredModernPublicFolder.parentDatabase = $modernPublicFolder.homemdb
+            $discoveredModernPublicFolder = "" | Select-Object PublicFolderGUID, ParentServer, ParentDatabase
+            $discoveredModernPublicFolder.PublicFolderGUID = [GUID]$($modernPublicFolder.objectguid | Select-Object -First 1)
+            $discoveredModernPublicFolder.ParentServer = $null
+            $discoveredModernPublicFolder.ParentDatabase = $modernPublicFolder.homemdb
 
             $discoveredModernPublicFolders += $discoveredModernPublicFolder
         }
@@ -43,10 +43,10 @@ function Get-ExchangePublicFolderInfrastructure
             foreach ($legacyPublicFolder in $legacyPublicFolders)
             {
                 $discoveredLegacyPublicFolder = $null
-                $discoveredLegacyPublicFolder = "" | Select-Object publicFolderGUID, parentServer, parentDatabase
-                $discoveredLegacyPublicFolder.publicFolderGUID = [GUID]$($legacyPublicFolder.objectguid | Select-Object -First 1)
-                $discoveredLegacyPublicFolder.parentServer = $legacyPublicFolder.msexchowningserver
-                $discoveredLegacyPublicFolder.parentDatabase = $null
+                $discoveredLegacyPublicFolder = "" | Select-Object PublicFolderGUID, ParentServer, ParentDatabase
+                $discoveredLegacyPublicFolder.PublicFolderGUID = [GUID]$($legacyPublicFolder.objectguid | Select-Object -First 1)
+                $discoveredLegacyPublicFolder.ParentServer = $legacyPublicFolder.msexchowningserver
+                $discoveredLegacyPublicFolder.ParentDatabase = $null
                 
                 $discoveredLegacyPublicFolders += $discoveredLegacyPublicFolder
             }
