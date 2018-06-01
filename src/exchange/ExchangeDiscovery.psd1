@@ -63,7 +63,7 @@ TypesToProcess = @()
 FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in ModuleToProcess
-NestedModules = @("Get-ExchangeServers.ps1","Get-ExchangeAcceptedDomains.ps1","Get-ExchangeVirtualDirectories.ps1","Get-ExchangeRecipients.ps1","Initialize-ExchangePowershell.ps1","Get-ExchangeRecipientDataStatistics.ps1","..\Common\Common.psd1")
+NestedModules = @("Get-ExchangeServers.ps1","Get-ExchangeAcceptedDomains.ps1","Get-ExchangeVirtualDirectories.ps1","Get-ExchangeRecipients.ps1","Initialize-ExchangePowershell.ps1","Get-ExchangeRecipientDataStatistics.ps1","Get-ExchangePublicFolderStatistics.ps1","Get-ExchangePublicFolderInfrastructure.ps1","..\Common\Common.psd1")
 
 # Functions to export from this module
 FunctionsToExport = 'Start-ExchangeDiscovery'
