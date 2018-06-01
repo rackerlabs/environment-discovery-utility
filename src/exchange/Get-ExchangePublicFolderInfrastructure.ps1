@@ -10,48 +10,48 @@ function Get-ExchangePublicFolderInfrastructure
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$DomainDN"
     [array] $properties = "objectGUID","homeMDB"
-    $publicFolderObjects = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    $modernPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
-    if ($publicFolderObjects)
+    if ($modernPublicFolders)
     {
-        $discoveredPublicFolderInfrastructure = @()
-        foreach ($publicFolderObject in $publicFolderObjects)
+        $discoveredModernPublicFolders = @()
+        foreach ($modernPublicFolder in $modernPublicFolders)
         {
-            $discoveredPublicFolderObject = $null
-            $discoveredPublicFolderObject = "" | Select-Object publicFolderObjectGUID, parentServer, parentDatabase
-            $discoveredPublicFolderObject.publicFolderObjectGUID = [GUID]$($publicFolderObject.objectguid | Select-Object -First 1)
-            $discoveredPublicFolderObject.parentServer = $null
-            $discoveredPublicFolderObject.parentDatabase = $publicFolderObject.homemdb
+            $discoveredModernPublicFolder = $null
+            $discoveredModernPublicFolder = "" | Select-Object publicFolderGUID, parentServer, parentDatabase
+            $discoveredModernPublicFolder.publicFolderGUID = [GUID]$($modernPublicFolder.objectguid | Select-Object -First 1)
+            $discoveredModernPublicFolder.parentServer = $null
+            $discoveredModernPublicFolder.parentDatabase = $modernPublicFolder.homemdb
 
-            $discoveredPublicFolderInfrastructure += $discoveredPublicFolderObject
+            $discoveredModernPublicFolders += $discoveredModernPublicFolder
         }
 
-        $discoveredPublicFolderInfrastructure
+        $discoveredModernPublicFolders
     }
     
     else 
     {
-        $discoveredPublicFolderInfrastructure = @()
+        $discoveredLegacyPublicFolders = @()
         $ldapFilter = "(objectClass=msExchPublicMDB)"
         $context = "LDAP://CN=Configuration,$($DomainDN)"
         $searchRoot = "CN=Configuration,$($DomainDN)"
         [array] $properties = "objectGUID","msExchOwningServer"
-        $publicFolderObjects = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        $legacyPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
         
-        if ($publicFolderObjects)
+        if ($legacyPublicFolders)
         {
-            foreach ($publicFolderObject in $publicFolderObjects)
+            foreach ($legacyPublicFolder in $legacyPublicFolders)
             {
-                $discoveredPublicFolderObject = $null
-                $discoveredPublicFolderObject = "" | Select-Object publicFolderMailboxGUID, parentServer, parentDatabase
-                $discoveredPublicFolderObject.publicFolderObjectGUID = [GUID]$($publicFolderObject.objectguid | Select-Object -First 1)
-                $discoveredPublicFolderObject.parentServer = $publicFolderObject.msexchowningserver
-                $discoveredPublicFolderObject.parentDatabase = $null
+                $discoveredPublicFolder = $null
+                $discoveredPublicFolder = "" | Select-Object publicFolderGUID, parentServer, parentDatabase
+                $discoveredPublicFolder.publicFolderGUID = [GUID]$($legacyPublicFolder.objectguid | Select-Object -First 1)
+                $discoveredPublicFolder.parentServer = $legacyPublicFolder.msexchowningserver
+                $discoveredPublicFolder.parentDatabase = $null
                 
-                $discoveredPublicFolderInfrastructure += $discoveredPublicFolderObject
+                $discoveredLegacyPublicFolders += $discoveredPublicFolder
             }
 
-            $discoveredPublicFolderInfrastructure
+            $discoveredLegacyPublicFolders
         }
     }
 }
