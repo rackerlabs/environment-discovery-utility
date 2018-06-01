@@ -10,7 +10,7 @@ function Get-ExchangeVirtualDirectories
     $ldapFilter = "(objectClass=msExchVirtualDirectory)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
     $searchRoot = "CN=Configuration,$($DomainDN)"
-    [array] $properties = "name", "distinguishedName", "msExchExternalHostName", "msExchInternalHostName", "msExchMetabasePath", "msExchExternalAuthenticationMethods", "msExchInternalAuthenticationMethods", "objectClass"
+    [array]$properties = "name", "distinguishedName", "msExchExternalHostName", "msExchInternalHostName", "msExchMetabasePath", "msExchExternalAuthenticationMethods", "msExchInternalAuthenticationMethods", "objectClass"
     $virtualDirectories = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
     foreach ($virtualDirectory in $virtualDirectories)

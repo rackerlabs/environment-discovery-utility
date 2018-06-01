@@ -16,7 +16,18 @@ A set of powershell scripts used to gather information about Active Directory an
 - PowerShell v2
 - Exchange 2010
   - Exchange must be installed in the same forest the script is run in.
-  
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/blob/master/CONTRIBUTING.md) for details.
+
+## Lab Environments
+### Windows Server 2008 / Exchange 2010 Static Lab
+
+**Username:** testlab\administrator
+
+|Role| Hostname  | IP |
+| ------------- | ------------- | ------------- |
+|Domain Controller| AD01  | 172.29.20.11 |
+|Client Access| CAS01  | 172.29.20.12 |
+|Mailbox / Hub Transport| CHM01  | 172.29.20.13  |

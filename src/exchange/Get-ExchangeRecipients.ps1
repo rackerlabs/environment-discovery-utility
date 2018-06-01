@@ -13,7 +13,7 @@ function Get-ExchangeRecipients
     $ldapFilter = "(&(msExchRecipientTypeDetails=*)(mail=*))"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$($DomainDN)"
-    [array] $properties = "msexchRecipientTypeDetails", "msexchRecipientDisplayType", "msExchRemoteRecipientType", "objectGuid", "mail", "userPrincipalName"
+    [array]$properties = "msexchRecipientTypeDetails", "msexchRecipientDisplayType", "msExchRemoteRecipientType", "objectGuid", "mail", "userPrincipalName"
     $recipients = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
     foreach ($recipient in $recipients)
