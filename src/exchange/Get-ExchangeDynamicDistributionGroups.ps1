@@ -6,13 +6,12 @@ function Get-ExchangeDynamicDistributionGroups
         $DomainDN
     )
 
+    $discoveredDynamicDitributionGroups = @()
     $ldapFilter = "(objectClass=msExchDynamicDistributionList)"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$DomainDN"
     [array]$properties = "objectGUID", "msExchGroupMemberCount"
     $exchangeDynamicDistributionGroups = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
-
-    $discoveredDynamicDitributionGroups = @()
 
     foreach ($exchangeDynamicDistributionGroup in $exchangeDynamicDistributionGroups)
     {
