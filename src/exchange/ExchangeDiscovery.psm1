@@ -32,6 +32,7 @@ function Start-ExchangeDiscovery
         $exchangeEnvironment.Add("ExchangeRecipients", $( Get-ExchangeRecipients -DomainDN $forestDN -IncludeStatistics $exchangeShellConnected ))
         $exchangeEnvironment.Add("ExchangePublicFoldersInfrastructure", $( Get-ExchangePublicFolderInfrastructure -DomainDN $forestDN ))
         $exchangeEnvironment.Add("ExchangePublicFolderStatistics", $( Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected ))
+        $exchangeEnvironment.Add("ExchangeDynamicDistributionGroups", $( Get-ExchangeDynamicDistributionGroups -DomainDN $forestDN ))
 
         $exchangeEnvironment
     }
