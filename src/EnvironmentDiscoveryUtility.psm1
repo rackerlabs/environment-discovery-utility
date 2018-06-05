@@ -30,10 +30,10 @@
 
     begin
     {
+		#clear
         $sessionGuid = [GUID]::NewGuid()
         $logPath = ".\environment-$sessionGuid.log"
-        $Script:logFile = Enable-Logging -FilePath $logPath
-        Write-Log -Level VERBOSE -Message 'Initializing EDU Module' -ProgressId 99 -Activity 'Environment Discovery Utility'
+        Enable-Logging -FilePath $logPath
         $environment = @{}
         $environment.Add('SessionId', $sessionGuid)
         $environment.Add('TimeStamp', $( ([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ") ))
@@ -42,10 +42,11 @@
     process
     {
         $allModules = @('ad','exchange')
+		Write-Log -Level 'VERBOSE' -Message 'Initializing EDU Module' -ProgressId 1 -Activity 'Environment Discovery Utility'
 
         foreach ($module in $allModules)
         {
-            if(($Modules -like 'all') -or ($Modules -contains $module))
+            if (( $Modules -like 'all') -or ($Modules -contains $module))
             {
                 switch ($module)
                 {
@@ -67,8 +68,8 @@
     }
     end
     {
-        Write-Log -Level VERBOSE -Message 'end' -ProgressId 99 -Activity 'Environment Discovery Utility' -ProgressComplete $true
-        Disable-Logging -LogFile $Script:logFile
+        Write-Log -Level 'VERBOSE' -Message 'end' -ProgressId 99 -Activity 'Environment Discovery Utility' -ProgressComplete $true
+        Disable-Logging -LogFile $Global:logFile
     }
 }
 

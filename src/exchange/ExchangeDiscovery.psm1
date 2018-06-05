@@ -22,20 +22,21 @@ function Start-ExchangeDiscovery
     begin
     {
         $exchangeEnvironment = @{}
-        [bool] $exchangeShellConnected = Initialize-ExchangePowershell
+        [bool]$exchangeShellConnected = Initialize-ExchangePowershell
+		#clear
     }
     process
     {
         Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Starting Exchange Discovery' -ParentProgressId 99
         $domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain()
         $forestName = $domain.Forest.Name
-        $forestDN = "DC=$( $ForestName.Replace(".",",DC=") )"
-        $exchangeEnvironment.Add("ExchangeServers", $( Get-ExchangeServers -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeAcceptedDomains", $( Get-ExchangeAcceptedDomains -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeVirtualDirectories", $( Get-ExchangeVirtualDirectories -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeRecipients", $( Get-ExchangeRecipients -DomainDN $forestDN -IncludeStatistics $exchangeShellConnected ))
-        $exchangeEnvironment.Add("ExchangePublicFoldersInfrastructure", $( Get-ExchangePublicFolderInfrastructure -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangePublicFolderStatistics", $( Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected ))
+        $forestDN = "DC=$( $ForestName.Replace(".",",DC="))"
+        $exchangeEnvironment.Add("ExchangeServers", $(Get-ExchangeServers -DomainDN $forestDN))
+        $exchangeEnvironment.Add("ExchangeAcceptedDomains", $(Get-ExchangeAcceptedDomains -DomainDN $forestDN))
+        $exchangeEnvironment.Add("ExchangeVirtualDirectories", $(Get-ExchangeVirtualDirectories -DomainDN $forestDN))
+        $exchangeEnvironment.Add("ExchangeRecipients", $(Get-ExchangeRecipients -DomainDN $forestDN -IncludeStatistics $exchangeShellConnected))
+        $exchangeEnvironment.Add("ExchangePublicFoldersInfrastructure", $(Get-ExchangePublicFolderInfrastructure -DomainDN $forestDN))
+        $exchangeEnvironment.Add("ExchangePublicFolderStatistics", $(Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected))
 
         $exchangeEnvironment
     }
