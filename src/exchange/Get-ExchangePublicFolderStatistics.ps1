@@ -20,15 +20,22 @@ function Get-ExchangePublicFolderStatistics
                 $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB    
                 $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
 				
-                if ((Get-ExchangeServer $env:ComputerName | Select-Object AdminDisplayVersion) -like "*15.0*")
+                if ((Get-ExchangeServer $env:ComputerName | Select-Object AdminDisplayVersion) -like "*15.*")
                 {
-                    $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.ToKB()
                     $publicFolderStats.Identity = $publicFolderStatistic.identity.objectGUID  
                 }
                 else 
                 {
-                    $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.value.ToKB()
                     $publicFolderStats.Identity = $publicFolderStatistic.entryID  
+                }
+
+				if ($PSVersionTable.PSVersion.Major -ge 3)
+                {
+                    $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.ToKB()
+                }
+                else 
+                {
+                    $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.value.ToKB()
                 }
 				
                 $discoveredPublicFolderStatistics += $publicFolderStats
