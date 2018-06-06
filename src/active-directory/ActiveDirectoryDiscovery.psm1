@@ -21,6 +21,7 @@ function Start-ActiveDirectoryDiscovery
     )
     begin
     {
+        Write-Log -Level 'VERBOSE' -Activity 'Active Directory Discovery' -ProgressId $ProgressId -Message 'Starting Active Directory Discovery' -ParentProgressId $ParentProgressId
         $activeDirectoryEnvironment = @{}
     }
     process
@@ -52,6 +53,7 @@ function Start-ActiveDirectoryDiscovery
         }
 
         $activeDirectoryEnvironment.Add("Forest",$forestDetails)
+        Write-Log -Level 'VERBOSE' -Activity 'Active Directory Discovery' -ProgressId $ProgressId -Message 'Completed Active Directory Discovery' -ParentProgressId $ParentProgressId -ProgressComplete
 
         $activeDirectoryEnvironment
     }
