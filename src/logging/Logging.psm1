@@ -42,9 +42,8 @@ function Write-Log
         $ProgressComplete
     )
 
-    $VerbosePreference = 'Continue'
-    $DebugPreference = 'Continue'
     $dateString = [DateTime]::UtcNow | Get-Date -Format o
+    $Message = $Message.Trim()
     $logEntry = "$dateString,$Level,$Activity,$Message"
     $logEntry | Out-File -Append -Encoding utf8 -FilePath $Global:logFilePath
 
@@ -83,6 +82,8 @@ function Enable-Logging
         $LogFilePath
     )
 
+    $VerbosePreference = 'Continue'
+    $DebugPreference = 'Continue'
     $Global:logFilePath = $LogFilePath
     $Global:logSubscriber = Enable-OutputSubscriber `
                             -OnWriteError {Write-Log -Level "ERROR" -Message $args[0]}`
