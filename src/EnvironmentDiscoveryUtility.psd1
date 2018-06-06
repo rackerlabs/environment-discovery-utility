@@ -66,7 +66,8 @@ FormatsToProcess = @()
 NestedModules = @(
     "active-directory\ActiveDirectoryDiscovery.psd1",
     "common\Common.psd1",
-    "exchange\ExchangeDiscovery.psd1")
+    "exchange\ExchangeDiscovery.psd1"
+)
 
 # Functions to export from this module
 FunctionsToExport = 'Start-EnvironmentDiscovery'

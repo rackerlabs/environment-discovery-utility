@@ -75,6 +75,7 @@ NestedModules = @(
     "Get-ExchangeDynamicDistributionGroups.ps1", 
     "..\Common\Common.psd1" 
 )
+
 # Functions to export from this module
 FunctionsToExport = 'Start-ExchangeDiscovery'
 
