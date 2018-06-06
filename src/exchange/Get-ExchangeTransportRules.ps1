@@ -3,9 +3,13 @@ function Get-ExchangeTransportRules
     [CmdletBinding()]
     param (
         [string]
-        $DomainDN
+        $DomainDN,
+
+        [bool]
+        $ExchangeShellConnected
     )
 
+    $ErrorActionPreference = "silentlycontinue"
     $discoveredTransportRules = @()
     $searchRoot = "CN=Configuration,$($DomainDN)"
     $ldapFilter = "(objectClass=msExchTransportRule)"
@@ -15,20 +19,29 @@ function Get-ExchangeTransportRules
 
     foreach ($transportRule in $transportRules)
     {
-        $transportRuleSettings = "" | Select-Object ObjectGUID, Type, RuleXML
-        $transportRuleSettings.ObjectGUID = $transportRule.objectGUID
+        $transportRuleSettings = $null
+        $transportRuleSettings = "" | Select-Object ObjectGUID, Type, RuleXML, Condition, Exemption, Action
+        $transportRuleSettings.ObjectGUID = [GUID] $( $transportRule.objectGUID | Select-Object -First 1 )
         $transportRuleSettings.RuleXML = $transportRule.msExchTransportRuleXml
         
-        if (($transportRule.properties.distinguishedname) -like "*TransportVersioned*")
+        if (($transportRule.distinguishedName) -like "*TransportVersioned*")
         {
             $transportRuleSettings.Type = "TransportRule"
-
+            
+            if ($ExchangeShellConnected)
+            {
+                $objectGuid = [string]($transportRuleSettings).ObjectGUID
+                $exchangeTransportRule = Get-TransportRule -Identity $objectGuid
+                $transportRuleSettings.Condition = ( $exchangeTransportRule | Select-Object -ExpandProperty Conditions ).name
+                $transportRuleSettings.Exemption = ( $exchangeTransportRule | Select-Object -ExpandProperty Exemptions ).name
+                $transportRuleSettings.Action = ( $exchangeTransportRule | Select-Object -ExpandProperty Actions ).name
+            }
         }
-        elseif (($transportRule.properties.distinguishedname) -like "*JournalingVersioned*")
+        elseif (($transportRule.distinguishedName) -like "*JournalingVersioned*")
         {
             $transportRuleSettings.Type = "JournalingRule"
         }
-        elseif (($transportRule.properties.distinguishedname) -like "*ClassificationDefinitions*")
+        elseif (($transportRule.distinguishedName) -like "*ClassificationDefinitions*")
         {
             continue
         }
@@ -41,4 +54,5 @@ function Get-ExchangeTransportRules
     }
 
     $discoveredTransportRules
+    $ErrorActionPreference = "continue"
 }
