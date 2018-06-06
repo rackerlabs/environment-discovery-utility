@@ -11,15 +11,15 @@ function Get-ExchangePublicFolderStatistics
         if (Get-PublicFolder -ErrorAction SilentlyContinue)
         {
             $discoveredPublicFolderStatistics = @()
-			
+
             $publicFolderStatistics = Get-PublicFolderStatistics -ResultSize Unlimited
-			
+
             foreach ($publicFolderStatistic in $publicFolderStatistics)
             {
                 $publicFolderStats = $null
                 $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB    
                 $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
-				
+
                 if ((Get-ExchangeServer $env:ComputerName | Select-Object AdminDisplayVersion) -like "*15.*")
                 {
                     $publicFolderStats.Identity = $publicFolderStatistic.identity.objectGUID  
@@ -29,7 +29,7 @@ function Get-ExchangePublicFolderStatistics
                     $publicFolderStats.Identity = $publicFolderStatistic.entryID  
                 }
 
-				if ($PSVersionTable.PSVersion.Major -ge 3)
+                if ($PSVersionTable.PSVersion.Major -ge 3)
                 {
                     $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.ToKB()
                 }
@@ -37,15 +37,15 @@ function Get-ExchangePublicFolderStatistics
                 {
                     $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.value.ToKB()
                 }
-				
+
                 $discoveredPublicFolderStatistics += $publicFolderStats
             }
-			
+
             $discoveredPublicFolderStatistics
         }        
     }
-	else
-	{
-		# TODO: We should log that no connection was available.
-	}
+    else
+    {
+    # TODO: We should log that no connection was available.
+    }
 }
