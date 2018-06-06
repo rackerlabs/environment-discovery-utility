@@ -63,7 +63,9 @@ TypesToProcess = @()
 FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in ModuleToProcess
-NestedModules = @("PowerShellLogging\PowerShellLogging.psd1")
+NestedModules = @(
+    "PowerShellLogging\PowerShellLogging.psd1"
+)
 
 # Functions to export from this module
 FunctionsToExport = '*'
