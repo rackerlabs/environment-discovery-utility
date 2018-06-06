@@ -27,7 +27,12 @@ function Initialize-ExchangePowershell
 
     if ($testCommand)
     {
+        Write-Verbose 'Successfully Connected to Exchange Powershell.'
         $connectedToExchange = $true
+    }
+    else
+    {
+        Write-Warning 'Failed to connect to Exchange Powershell. Some components of discovery will not fully function.'
     }
 
     $connectedToExchange
