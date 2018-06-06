@@ -25,7 +25,7 @@ param (
     [string]
     $Password,
 
-	[string]
+    [string]
     $PsExec = ".\build\PsExec.exe",
 
     [string]
@@ -106,24 +106,24 @@ function Execute-Script()
 {
     Write-Host "Executing EDU script remotely on $LabIpAddress"
 
-	& $PsExec "\\$LabIpAddress" -w $remoteBuildFolder -u $Username -p $Password /accepteula cmd /c "echo . | powershell -noninteractive -command Import-Module $remoteBuildFolder\EnvironmentDiscoveryUtility.psd1; Start-EnvironmentDiscovery;"
+    & $PsExec "\\$LabIpAddress" -w $remoteBuildFolder -u $Username -p $Password /accepteula cmd /c "echo . | powershell -noninteractive -command Import-Module $remoteBuildFolder\EnvironmentDiscoveryUtility.psd1; Start-EnvironmentDiscovery;"
 
     Analyze-Results
 }
 
 function Analyze-Results()
 {
-	Remove-Item "$PSScriptRoot\*.json"
+    Remove-Item "$PSScriptRoot\*.json"
 
-	Copy-Item "$buildFolderUnc\*.json" -Destination $PSScriptRoot
+    Copy-Item "$buildFolderUnc\*.json" -Destination $PSScriptRoot
 
-	$output = Get-ChildItem "$PSScriptRoot\*.json" | Select-Object -First 1
+    $output = Get-ChildItem "$PSScriptRoot\*.json" | Select-Object -First 1
 
-	if ($output.length -gt 0kb) 
-	{
-		Write-Host "File size was greater than 0, setting result to $true"
-		$Script:result = $true
-	}
+    if ($output.length -gt 0kb) 
+    {
+        Write-Host "File size was greater than 0, setting result to $true"
+        $Script:result = $true
+    }
 }
 
 #region Fields
@@ -151,9 +151,5 @@ Write-Host "Test results were $Script:result"
 
 if ($Script:result -eq $false)
 {
-	throw "Tests failed, please check the log file for more information"
+    throw "Tests failed, please check the log file for more information"
 }
-
-
-
-
