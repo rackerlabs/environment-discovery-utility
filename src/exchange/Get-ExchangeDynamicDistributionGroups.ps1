@@ -1,4 +1,4 @@
-function Get-ExchangeDynamicDistributionGroups
+function Get-ExchangeDynamicGroups
 {
     [CmdletBinding()]
     param (
@@ -6,22 +6,22 @@ function Get-ExchangeDynamicDistributionGroups
         $DomainDN
     )
 
-    $discoveredDynamicDitributionGroups = @()
+    $discoveredDynamicGroups = @()
     $ldapFilter = "(objectClass=msExchDynamicDistributionList)"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$DomainDN"
     [array]$properties = "objectGUID", "msExchGroupMemberCount"
-    $exchangeDynamicDistributionGroups = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    $exchangeDynamicGroups = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
-    foreach ($exchangeDynamicDistributionGroup in $exchangeDynamicDistributionGroups)
+    foreach ($exchangeDynamicGroup in $exchangeDynamicGroups)
     {
-        $dynamicDistributionGroup = $null
-        $dynamicDistributionGroup = ""| Select-Object ObjectGUID, GroupMemberCount
-        $dynamicDistributionGroup.ObjectGUID = [GUID]$($exchangeDynamicDistributionGroup.objectGUID | Select-Object -First 1)
-        $dynamicDistributionGroup.GroupMemberCount = $exchangeDynamicDistributionGroup.msExchGroupMemberCount
+        $dynamicGroup = $null
+        $dynamicGroup = ""| Select-Object ObjectGUID, GroupMemberCount
+        $dynamicGroup.ObjectGUID = [GUID]$($exchangeDynamicGroup.objectGUID | Select-Object -First 1)
+        $dynamicGroup.GroupMemberCount = $exchangeDynamicGroup.msExchGroupMemberCount
         
-        $discoveredDynamicDitributionGroups += $dynamicDistributionGroup
+        $discoveredDynamicGroups += $dynamicDistributionGroup
     }
     
-    $discoveredDynamicDitributionGroups
+    $discoveredDynamicGroups
 }
