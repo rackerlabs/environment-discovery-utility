@@ -149,7 +149,10 @@ Map-PSDrive
 
 Write-Host "Test results were $Script:result"
 
-$Script:result
+if ($Script:result -eq $false)
+{
+	throw "Tests failed, please check the log file for more information"
+}
 
 
 
