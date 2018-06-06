@@ -32,7 +32,7 @@ function Get-ExchangeRecipients
         {
             $recipientStatistics = Get-ExchangeRecipientDataStatistics -Recipient $currentRecipient
             
-            if($recipientStatistics)
+            if ($recipientStatistics)
             {
                 $currentRecipient.TotalItemSizeKB = $recipientStatistics.TotalItemSize.Value.ToKB()
                 $currentRecipient.ItemCount = $recipientStatistics.itemCount
