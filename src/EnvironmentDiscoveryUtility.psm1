@@ -30,7 +30,7 @@
 
     begin
     {
-        #clear
+        clear
         $sessionGuid = [GUID]::NewGuid()
         $logPath = ".\environment-$sessionGuid.log"
         Enable-Logging $logPath
@@ -46,7 +46,8 @@
 
         foreach ($module in $allModules)
         {
-            if (( $Modules -like 'all') -or ($Modules -contains $module))
+            Write-Log -Level 'VERBOSE' -Message "Executing $($module.ToUpper()) Module." -ProgressId 1 -Activity 'Environment Discovery Utility'
+            if (($Modules -like 'all') -or ($Modules -contains $module))
             {
                 switch ($module)
                 {
