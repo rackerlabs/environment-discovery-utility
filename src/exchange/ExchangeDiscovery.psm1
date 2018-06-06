@@ -47,7 +47,6 @@ function Start-ExchangeDiscovery
         $exchangeEnvironment.Add("ExchangePublicFoldersInfrastructure", $(Get-ExchangePublicFolderInfrastructure -DomainDN $forestDN))
         Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Gathering public folder statistics' -ParentProgressId $ParentProgressId
         $exchangeEnvironment.Add("ExchangePublicFolderStatistics", $(Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected))
-
         Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Completed Exchange Discovery' -ParentProgressId $ParentProgressId -ProgressComplete
 
         $exchangeEnvironment
