@@ -63,7 +63,11 @@ TypesToProcess = @()
 FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in ModuleToProcess
-NestedModules = @("Get-ActiveDirectoryCurrentForest.ps1","Get-ActiveDirectoryDomains.ps1","Get-ActiveDirectorySites.ps1")
+NestedModules = @(
+    "Get-ActiveDirectoryCurrentForest.ps1",
+    "Get-ActiveDirectoryDomains.ps1",
+    "Get-ActiveDirectorySites.ps1"
+)
 
 # Functions to export from this module
 FunctionsToExport = 'Start-ActiveDirectoryDiscovery'
