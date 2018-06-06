@@ -11,11 +11,26 @@ The following is a set of guidelines for contributing to EDU.
 * If there is no existing issue, create an issue with a descriptive subject and description.  Non-descriptive issues will be closed.
 * Use existing labels when possible and assign the issue to the correct person performing the work.
 * Get feedback on the request in the issue you created.
-* Create a branch using the following format: descriptive-feature-name
+
+#### **Branching**
+* Create a branch using the following format: feature-name.
+* Branch names should be short and concise.
+
+### **Testing**
+* Once work in your branch is complete, merge your branch into the [develop branch](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/tree/develop).
+* Our build server (BUILD01-ORD1.mgmt.mlsrvr.com) runs [Jenkins](https://jenkins.io/) which monitors the develop branch, any changes to this branch will kick off a new CI build.
+* The CI build will automatically deploy and test the updated to code using our lab automation infrastructure.
+* It is important to monitor the results of the CI build.  If there are any errors, the build will fail.  
+    - This first place to check is in the #edu Slack channel.  
+    - If your build failed or no output is showing in Slack, please log into our [Jenkins instance](https://jenkins.mseng.mlsrvr.com/job/edu_ci/) using MGMT credentials.  
+    - Once logged in, you can view the build output directly using [this link](https://jenkins.mseng.mlsrvr.com/job/edu_ci)
+    - To view detailed logs, click your build number in the left pane, then click Console Output in the left menu. 
+
+#### **Pull Requests**
 * Once ready to merge, initiate a pull request.
-* Pull requests should include refences to the issues being worked using [keywords](https://help.github.com/articles/closing-issues-using-keywords/) like `closes #234`
+* Pull requests should include refences to the issues being worked using [keywords](https://help.github.com/articles/closing-issues-using-keywords/) like `closes #234`.
 * The team will perform a code review and provide feedback, which may require adjustments in code.
-* Once your pull request is approved, merge your branch into master.  Be sure all associated CI builds complete successfully.
+* Once your pull request is approved, merge your branch into master.
 
 ## Styleguides
 
