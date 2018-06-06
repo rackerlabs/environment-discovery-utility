@@ -25,6 +25,7 @@ The following is a set of guidelines for contributing to EDU.
     - If your build failed or no output is showing in Slack, please log into our [Jenkins instance](https://jenkins.mseng.mlsrvr.com/job/edu_ci/) using MGMT credentials.  
     - Once logged in, you can view the build output directly using [this link](https://jenkins.mseng.mlsrvr.com/job/edu_ci)
     - To view detailed logs, click your build number in the left pane, then click Console Output in the left menu. 
+* If your build fails, switch back to the original branch, correct the errors and restart the testing procedure.
 
 #### **Pull Requests**
 * Once ready to merge, initiate a pull request.
