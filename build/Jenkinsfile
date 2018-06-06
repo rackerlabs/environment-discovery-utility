@@ -37,6 +37,7 @@ pipeline {
 				withCredentials([
 					usernamePassword(credentialsId: '03bbc260-f717-48f0-b16a-c97ba14e6d85', passwordVariable: 'password', usernameVariable: 'username')
 				]) {
+<<<<<<< HEAD
 					bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Execute-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress %labIpAddress% -Password %password% -Username %username% -ZipFile .\\edu.v%BUILD_NUMBER%.zip'
 				}				
 			}
