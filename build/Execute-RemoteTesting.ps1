@@ -26,13 +26,13 @@ param (
     $Password,
 
 	[string]
-    $PsExec = ".\PsExec.exe",
+    $PsExec = ".\build\PsExec.exe",
 
     [string]
     $Username,
     
     [string]
-    $ZipLibrary = ".\Ionic.Zip.dll",
+    $ZipLibrary = ".\build\Ionic.Zip.dll",
 
     [string]
     $ZipFile
