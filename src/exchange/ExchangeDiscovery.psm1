@@ -33,6 +33,7 @@ function Start-ExchangeDiscovery
         $exchangeEnvironment.Add("ExchangePublicFoldersInfrastructure", $( Get-ExchangePublicFolderInfrastructure -DomainDN $forestDN ))
         $exchangeEnvironment.Add("ExchangePublicFolderStatistics", $( Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected ))
         $exchangeEnvironment.Add("ExchangeDynamicGroups", $( Get-ExchangeDynamicGroups -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("ExchangeDatabaseJournaling", $( Get-ExchangeDatabaseJournaling -DomainDN $forestDN ))
 
         $exchangeEnvironment
     }
