@@ -16,7 +16,7 @@ function Get-ExchangeImapPopSettings
     foreach ($exchangeImapPopSetting in $exchangeImapPopSettings)
     {
         $imapPopSetting = $null
-        $imapPopSetting = "" | Select-Object ObjectGUID, ExternalConnectionSetting, InternalConnectionSetting, X509CertificateName, SecureBindings, ServerBindings, portNumber
+        $imapPopSetting = "" | Select-Object ObjectGUID, SecureBindings, ServerBindings, portNumber
         $imapPopSetting.ObjectGUID = [GUID]$( $exchangeImapPopSetting.objectGUID | Select-Object -First 1 )
         $imapPopSetting.SecureBindings = $exchangeImapPopSetting.msExchSecureBindings
         $imapPopSetting.ServerBindings = $exchangeImapPopSetting.msExchServerBindings
