@@ -14,15 +14,14 @@ function Get-ExchangeTransportRules
     $searchRoot = "CN=Configuration,$($DomainDN)"
     $ldapFilter = "(objectClass=msExchTransportRule)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
-    [array] $properties = "objectGUID", "distinguishedName", "msExchTransportRuleXml"
+    [array] $properties = "objectGUID", "distinguishedName"
     $transportRules = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
     foreach ($transportRule in $transportRules)
     {
         $transportRuleSettings = $null
-        $transportRuleSettings = "" | Select-Object ObjectGUID, Type, RuleXML, Condition, Exemption, Action
+        $transportRuleSettings = "" | Select-Object ObjectGUID, Type, Condition, Exemption, Action
         $transportRuleSettings.ObjectGUID = [GUID] $( $transportRule.objectGUID | Select-Object -First 1 )
-        $transportRuleSettings.RuleXML = $transportRule.msExchTransportRuleXml
         
         if (($transportRule.distinguishedName) -like "*TransportVersioned*")
         {
