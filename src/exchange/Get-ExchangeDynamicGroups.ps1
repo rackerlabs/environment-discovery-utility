@@ -35,3 +35,4 @@ function Get-ExchangeDynamicGroups
 
     $discoveredDynamicGroups
 }
+

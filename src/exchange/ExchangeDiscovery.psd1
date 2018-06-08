@@ -64,15 +64,20 @@ FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in ModuleToProcess
 NestedModules = @(
-    "Get-ExchangeServers.ps1",
-    "Get-ExchangeAcceptedDomains.ps1",
-    "Get-ExchangeVirtualDirectories.ps1",
-    "Get-ExchangeRecipients.ps1",
-    "Initialize-ExchangePowershell.ps1",
-    "Get-ExchangeRecipientDataStatistics.ps1",
-    "Get-ExchangePublicFolderStatistics.ps1",
-    "Get-ExchangePublicFolderInfrastructure.ps1",
+    "Get-ExchangeServers.ps1", 
+    "Get-ExchangeAcceptedDomains.ps1", 
+    "Get-ExchangeVirtualDirectories.ps1", 
+    "Get-ExchangeRecipients.ps1", 
+    "Initialize-ExchangePowershell.ps1", 
+    "Get-ExchangeRecipientDataStatistics.ps1", 
+    "Get-ExchangePublicFolderStatistics.ps1", 
+    "Get-ExchangePublicFolderInfrastructure.ps1", 
     "Get-ExchangeDynamicGroups.ps1",
+    "Get-ExchangeFederationTrust.ps1",
+    "Get-ExchangeFederation.ps1", 
+    "Get-ExchangeDatabaseJournaling.ps1",
+    "Get-ExchangeImapPopSettings.ps1", 
+    "Get-ExchangeTransportRules.ps1", 
     "..\Common\Common.psd1",
     "..\Logging\Logging.psd1"
 )
