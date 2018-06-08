@@ -11,7 +11,16 @@ function Get-ExchangeServers
     $ldapFilter = "(&(objectClass=msExchExchangeServer)(msExchCurrentServerRoles=*)(!(objectClass=msExchExchangeTransportServer)))"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
     [array]$properties = "name", "serialNumber", "msExchMDBAvailabilityGroupLink", "msExchCurrentServerRoles", "msExchServerSite", "whenCreated", "distinguishedName"
-    $exchangeServers = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+
+    try
+    {
+        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Searching for Exchange servers' -WriteProgress
+        $exchangeServers = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    }
+    catch
+    {
+        Write-Log -Level 'ERROR' -Activity $MyInvocation.MyCommand.Name -Message "Failed to search Active Directory for Exchange Servers. $($_.Exception.Message)"
+    }
 
     foreach ($exchangeServer in $exchangeServers)
     {

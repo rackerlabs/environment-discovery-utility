@@ -15,13 +15,10 @@ function Start-ActiveDirectoryDiscovery
     #>
 
     [CmdletBinding()]
-    param (
-        [int]
-        $ProgressId
-    )
+    param ()
     begin
     {
-        Write-Log -Level 'VERBOSE' -Activity 'Active Directory Discovery' -ProgressId $ProgressId -Message 'Starting Active Directory Discovery' -ParentProgressId $ParentProgressId
+        Write-Log -Level 'VERBOSE' -Activity 'Active Directory Discovery' -ProgressId $ProgressId -Message 'Starting Active Directory Discovery' -WriteProgress
         $activeDirectoryEnvironment = @{}
     }
     process
@@ -53,7 +50,7 @@ function Start-ActiveDirectoryDiscovery
         }
 
         $activeDirectoryEnvironment.Add("Forest",$forestDetails)
-        Write-Log -Level 'VERBOSE' -Activity 'Active Directory Discovery' -ProgressId $ProgressId -Message 'Completed Active Directory Discovery' -ParentProgressId $ParentProgressId -ProgressComplete
+        Write-Log -Level 'VERBOSE' -Activity 'Active Directory Discovery' -ProgressId $ProgressId -Message 'Completed Active Directory Discovery' -ProgressComplete -WriteProgress
 
         $activeDirectoryEnvironment
     }

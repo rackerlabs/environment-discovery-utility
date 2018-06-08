@@ -11,22 +11,22 @@ function Get-ExchangePublicFolderStatistics
         if (Get-PublicFolder -ErrorAction SilentlyContinue)
         {
             $discoveredPublicFolderStatistics = @()
-
             $publicFolderStatistics = Get-PublicFolderStatistics -ResultSize Unlimited
 
             foreach ($publicFolderStatistic in $publicFolderStatistics)
             {
+                $percentComplete = (100 / $publicFolderStatistics.Count) * $x
                 $publicFolderStats = $null
-                $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB    
+                $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB
                 $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
 
                 if ((Get-ExchangeServer $env:ComputerName | Select-Object AdminDisplayVersion) -like "*15.*")
                 {
-                    $publicFolderStats.Identity = $publicFolderStatistic.identity.objectGUID  
+                    $publicFolderStats.Identity = $publicFolderStatistic.identity.objectGUID
                 }
                 else 
                 {
-                    $publicFolderStats.Identity = $publicFolderStatistic.entryID  
+                    $publicFolderStats.Identity = $publicFolderStatistic.entryID
                 }
 
                 if ($PSVersionTable.PSVersion.Major -ge 3)
@@ -42,10 +42,10 @@ function Get-ExchangePublicFolderStatistics
             }
 
             $discoveredPublicFolderStatistics
-        }        
+        }
     }
     else
     {
-    # TODO: We should log that no connection was available.
+        Write-Log -Level 'WARNING' -Activity $MyInvocation.MyCommand.Name -Message 'Skipping Exchange Public Folder statistics. No connection to Exchange.'
     }
 }

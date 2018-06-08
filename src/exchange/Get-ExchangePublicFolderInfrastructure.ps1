@@ -10,13 +10,19 @@ function Get-ExchangePublicFolderInfrastructure
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$DomainDN"
     [array]$properties = "objectGUID","homeMDB"
-	
-    $modernPublicFolders = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    try
+    {
+        $modernPublicFolders = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    }
+    catch
+    {
+        Write-Log -Level 'ERROR' -Activity $MyInvocation.MyCommand.Name -Message "Failed to search Active Directory for Modern Public Folders. $($_.Exception.Message)"
+    }
 
     if ($modernPublicFolders)
     {
         $discoveredModernPublicFolders = @()
-		
+
         foreach ($modernPublicFolder in $modernPublicFolders)
         {
             $discoveredModernPublicFolder = $null
@@ -27,20 +33,25 @@ function Get-ExchangePublicFolderInfrastructure
 
             $discoveredModernPublicFolders += $discoveredModernPublicFolder
         }
-
-        $discoveredModernPublicFolders
-    }    
-    else 
+    }
+    else
     {
         $discoveredLegacyPublicFolders = @()
-		
+
         $ldapFilter = "(objectClass=msExchPublicMDB)"
         $context = "LDAP://CN=Configuration,$($DomainDN)"
         $searchRoot = "CN=Configuration,$($DomainDN)"
         [array]$properties = "objectGUID","msExchOwningServer"
-        
-		$legacyPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
-        
+
+        try
+        {
+            $legacyPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        }
+        catch
+        {
+            Write-Log -Level 'ERROR' -Activity $MyInvocation.MyCommand.Name -Message "Failed to search Active Directory for Legacy Public Folders. $($_.Exception.Message)"
+        }
+
         if ($legacyPublicFolders)
         {
             foreach ($legacyPublicFolder in $legacyPublicFolders)
@@ -50,11 +61,11 @@ function Get-ExchangePublicFolderInfrastructure
                 $discoveredLegacyPublicFolder.PublicFolderGUID = [GUID]$($legacyPublicFolder.objectguid | Select-Object -First 1)
                 $discoveredLegacyPublicFolder.ParentServer = $legacyPublicFolder.msexchowningserver
                 $discoveredLegacyPublicFolder.ParentDatabase = $null
-                
+
                 $discoveredLegacyPublicFolders += $discoveredLegacyPublicFolder
             }
-
-            $discoveredLegacyPublicFolders
         }
+
+        $discoveredLegacyPublicFolders
     }
 }

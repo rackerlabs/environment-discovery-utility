@@ -10,7 +10,16 @@ function Get-ExchangeAcceptedDomains
     $ldapFilter = "(objectClass=msExchAcceptedDomain)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
     [array]$properties = "name", "msExchAcceptedDomainFlags"
-    $acceptedDomains = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+
+    try
+    {
+        Write-Log -Level 'VERBOSE' -Activity $MyInvocation.MyCommand.Name -Message 'Finding Exchange accepted domains' -WriteProgress
+        $acceptedDomains = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    }
+    catch
+    {
+        Write-Log -Level 'ERROR' -Activity $MyInvocation.MyCommand.Name -Message "Failed to get Active Directory Forest information. $($_.Exception.Message)"
+    }
 
     foreach ($acceptedDomain in $acceptedDomains)
     {

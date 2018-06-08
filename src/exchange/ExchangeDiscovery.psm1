@@ -15,39 +15,32 @@ function Start-ExchangeDiscovery
     #>
 
     [CmdletBinding()]
-    param (
-        [int]
-        $ProgressId,
-
-        [int]
-        $ParentProgressId = 99
-    )
+    param ()
     begin
     {
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Connecting to Exchange PowerShell and starting Exchange Discovery' -ParentProgressId $ParentProgressId
+        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Attempting to connect to Exchange PowerShell' -WriteProgress
         $exchangeEnvironment = @{}
         [bool]$exchangeShellConnected = Initialize-ExchangePowershell
         clear
     }
     process
     {
-        
         $domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain()
         $forestName = $domain.Forest.Name
         $forestDN = "DC=$( $ForestName.Replace(".",",DC="))"
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Searching for Exchange servers' -ParentProgressId $ParentProgressId
+        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Searching for Exchange servers' -WriteProgress
         $exchangeEnvironment.Add("ExchangeServers", $(Get-ExchangeServers -DomainDN $forestDN))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Finding Exchange accepted domains' -ParentProgressId $ParentProgressId
+        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Finding Exchange accepted domains' -WriteProgress
         $exchangeEnvironment.Add("ExchangeAcceptedDomains", $(Get-ExchangeAcceptedDomains -DomainDN $forestDN))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Finding Exchange virtual directories' -ParentProgressId $ParentProgressId
+        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Finding Exchange virtual directories' -WriteProgress
         $exchangeEnvironment.Add("ExchangeVirtualDirectories", $(Get-ExchangeVirtualDirectories -DomainDN $forestDN))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Discovering Exchange recipients' -ParentProgressId $ParentProgressId
-        $exchangeEnvironment.Add("ExchangeRecipients", $(Get-ExchangeRecipients -DomainDN $forestDN -IncludeStatistics $exchangeShellConnected))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Discovering Exchange public folders' -ParentProgressId $ParentProgressId
+        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Discovering Exchange recipients' -WriteProgress
+        $exchangeEnvironment.Add("ExchangeRecipients", $(Get-ExchangeRecipients -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected))
+        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Discovering Exchange public folders' -WriteProgress
         $exchangeEnvironment.Add("ExchangePublicFoldersInfrastructure", $(Get-ExchangePublicFolderInfrastructure -DomainDN $forestDN))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Gathering public folder statistics' -ParentProgressId $ParentProgressId
+        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Gathering public folder statistics' -WriteProgress
         $exchangeEnvironment.Add("ExchangePublicFolderStatistics", $(Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -ProgressId $ProgressId -Message 'Completed Exchange Discovery' -ParentProgressId $ParentProgressId -ProgressComplete
+        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Completed Exchange Discovery' -WriteProgress
 
         $exchangeEnvironment
     }

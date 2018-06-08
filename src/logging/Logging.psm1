@@ -1,25 +1,5 @@
 function Write-Log
 {
-    #TODO: Fix the below documentation
-    <#
-    .SYNOPSIS
-        This cmdlet will write to log
-
-    .DESCRIPTION
-        This cmdlet will write to log
-
-    .PARAMETER Modules
-        This cmdlet will write to log
-
-    .OUTPUTS
-        This cmdlet will write to log
-
-    .EXAMPLE
-        This cmdlet will write to log
-
-    .EXAMPLE
-        This cmdlet will write to log
-    #>
     [CmdletBinding()]
     param (
         [ValidateSet('DEBUG','VERBOSE','ERROR','WARNING','INFO')]
@@ -32,45 +12,38 @@ function Write-Log
         [string]
         $Activity,
 
+        [switch]
+        $WriteProgress,
+
         [int]
         $ProgressId,
 
         [int]
-        $ParentProgressId,
+        $PercentComplete,
 
         [switch]
         $ProgressComplete
     )
 
-    $dateString = [DateTime]::UtcNow | Get-Date -Format o
-    $Message = $Message.Trim()
-    $logEntry = "$dateString,$Level,$Activity,$Message"
-    $logEntry | Out-File -Append -Encoding utf8 -FilePath $Global:logFilePath
+    $utcDate = [DateTime]::UtcNow | Get-Date -Format o
+    $Message = $Message.Trim().Replace("`"","\`"")
+    $logEntry = "" | Select Date, Level, Activity, Message
+    $logEntry.Date = $utcDate
+    $logEntry.Level = $Level
+    $logEntry.Activity = $Activity
+    $logEntry.Message = $Message
+    "$utcDate,$Level,$Activity,`"$Message`"" | Out-File -Append -Encoding utf8 -FilePath $Global:logFilePath -n
+    $Global:logEntries += $logEntry
+    if ($WriteProgress)
+    {
+        $progressArgs = @{}
+        $progressArgs.Add('Status',$Message)
+        $progressArgs.Add('Activity',$Activity)
+        if ($ProgressId) { $progressArgs.Add('Id',$progressId) }
+        if ($ProgressComplete) { $progressArgs.Add('Completed',$null) }
+        if ($PercentComplete) { $progressArgs.Add('PercentComplete',$PercentComplete) }
 
-    <#
-    switch ($Level)
-    {
-        'DEBUG' { Write-Debug $Message }
-        'VERBOSE' { Write-Verbose $Message }
-        'ERROR' { Write-Error $Message }
-        default { Write-Verbose $Message }
-    }
-    #>
-    if ($ProgressId)
-    {
-        Write-Progress -Id $ProgressId -Activity $Activity -Status $Message
-        if ($ParentProgressId)
-        {
-            Write-Progress -Id $ProgressId -Activity $Activity -Status $Message -ParentId $ParentProgressId
-        }
-        else
-        {
-            Write-Progress -Id $ProgressId -Activity $Activity -Status $Message
-        }
-        if ($ProgressComplete)
-        {
-            Write-Progress -Id $ProgressId -Completed -Activity $Activity -Status $Message
-        }
+        Write-Progress @progressArgs
     }
 }
 
@@ -82,9 +55,8 @@ function Enable-Logging
         $LogFilePath
     )
 
-    $VerbosePreference = 'Continue'
-    $DebugPreference = 'Continue'
     $Global:logFilePath = $LogFilePath
+    $Global:logEntries = @()
     $Global:logSubscriber = Enable-OutputSubscriber `
                             -OnWriteError {Write-Log -Level "ERROR" -Message $args[0]}`
                             -OnWriteWarning {Write-Log -Level "WARNING" -Message $args[0]}`
@@ -93,8 +65,6 @@ function Enable-Logging
                             -OnWriteVerbose {Write-Log -Level "VERBOSE" -Message $args[0]}
     $logEntry = "DateTime,Level,Activity,Message"
     $logEntry | Out-File -Append -Encoding utf8 -FilePath $Global:logFilePath
-
-    $logger
 }
 
 function Disable-Logging
@@ -103,4 +73,9 @@ function Disable-Logging
     param ()
 
     $Global:logSubscriber | Disable-OutputSubscriber
+}
+
+function Get-LogEntries
+{
+    $Global:logEntries
 }

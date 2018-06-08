@@ -42,34 +42,36 @@
     process
     {
         $allModules = @('ad','exchange')
-        Write-Log -Level 'VERBOSE' -Message 'Initializing EDU Module' -ProgressId 1 -Activity 'Environment Discovery Utility'
+        Write-Log -Level 'VERBOSE' -Message 'Initializing EDU Module' -Activity 'Environment Discovery Utility' -WriteProgress
 
         foreach ($module in $allModules)
         {
-            Write-Log -Level 'VERBOSE' -Message "Executing $($module.ToUpper()) Module." -ProgressId 1 -Activity 'Environment Discovery Utility'
+            Write-Log -Level 'VERBOSE' -Message "Executing $($module.ToUpper()) Module." -Activity 'Environment Discovery Utility'
             if (($Modules -like 'all') -or ($Modules -contains $module))
             {
                 switch ($module)
                 {
                     'ad'
                     {
-                        $activeDirectoryObject = Start-ActiveDirectoryDiscovery -ProgressId 2
+                        $activeDirectoryObject = Start-ActiveDirectoryDiscovery
                         $environment.Add("Active-Directory",$activeDirectoryObject)
                     }
                     'exchange'
                     {
-                        $exchangeObject = Start-ExchangeDiscovery -ProgressId 3
+                        $exchangeObject = Start-ExchangeDiscovery
                         $environment.Add("Exchange",$exchangeObject)
                     }
                 }
             }
         }
 
+        Write-Log -Level 'VERBOSE' -Message 'Packaging EDU Results' -Activity 'Environment Discovery Utility' -WriteProgress
+        $environment.Add("Log",$Global:logEntries)
         $environment | SerializeTo-Json | Set-Content -Path $outPutPath -Encoding UTF8 -Force
     }
     end
     {
-        Write-Log -Level 'VERBOSE' -Message 'end' -ProgressId 99 -Activity 'Environment Discovery Utility' -ProgressComplete $true
+        Write-Log -Level 'VERBOSE' -Message 'Environment Discovery Utility completed' -Activity 'Environment Discovery Utility' -ProgressComplete $true -WriteProgress
         Disable-Logging
     }
 }
