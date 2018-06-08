@@ -74,6 +74,10 @@ NestedModules = @(
     "Get-ExchangePublicFolderInfrastructure.ps1", 
     "Get-ExchangeDynamicGroups.ps1",
     "Get-ExchangeFederationTrust.ps1",
+    "Get-ExchangeFederation.ps1", 
+    "Get-ExchangeDatabaseJournaling.ps1",
+    "Get-ExchangeImapPopSettings.ps1", 
+    "Get-ExchangeTransportRules.ps1", 
     "..\Common\Common.psd1" 
 )
 
