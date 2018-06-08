@@ -2,9 +2,9 @@ function Write-Log
 {
     [CmdletBinding()]
     param (
-        [ValidateSet('DEBUG','VERBOSE','ERROR','WARNING','INFO')]
+        [ValidateSet("DEBUG","VERBOSE","ERROR","WARNING","INFO")]
         [string]
-        $Level = 'DEBUG',
+        $Level = "DEBUG",
 
         [string]
         $Message,
@@ -42,9 +42,9 @@ function Write-Log
             Activity = $Activity
         }
 
-        if ($ProgressId) {$progressArgs.Add('Id',$progressId)}
-        if ($ProgressComplete) {$progressArgs.Add('Completed',$null)}
-        if ($PercentComplete) {$progressArgs.Add('PercentComplete',$PercentComplete)}
+        if ($ProgressId) {$progressArgs.Add("Id",$progressId)}
+        if ($ProgressComplete) {$progressArgs.Add("Completed",$null)}
+        if ($PercentComplete) {$progressArgs.Add("PercentComplete",$PercentComplete)}
 
         Write-Progress @progressArgs
     }

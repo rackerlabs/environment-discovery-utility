@@ -9,7 +9,7 @@ function Get-ActiveDirectoryCurrentForest
     }
     catch
     {
-        Write-Log -Level 'ERROR' -Activity $MyInvocation.MyCommand.Name -Message "Failed to get Active Directory Forest information. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $MyInvocation.MyCommand.Name -Message "Failed to get Active Directory Forest information. $($_.Exception.Message)"
     }
 
     $currentForest

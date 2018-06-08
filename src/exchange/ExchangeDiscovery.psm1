@@ -18,7 +18,7 @@ function Start-ExchangeDiscovery
     param ()
     begin
     {
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Attempting to connect to Exchange PowerShell.' -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity "Exchange Discovery" -Message "Attempting to connect to Exchange PowerShell." -WriteProgress
         $exchangeEnvironment = @{}
         [bool]$exchangeShellConnected = Initialize-ExchangePowershell
         clear
@@ -34,7 +34,7 @@ function Start-ExchangeDiscovery
         $exchangeEnvironment.Add("ExchangeRecipients", $(Get-ExchangeRecipients -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected))
         $exchangeEnvironment.Add("ExchangePublicFoldersInfrastructure", $(Get-ExchangePublicFolderInfrastructure -DomainDN $forestDN))
         $exchangeEnvironment.Add("ExchangePublicFolderStatistics", $(Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Completed Exchange Discovery.' -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity "Exchange Discovery" -Message "Completed Exchange Discovery." -WriteProgress
 
         $exchangeEnvironment
     }

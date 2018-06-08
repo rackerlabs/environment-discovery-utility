@@ -6,7 +6,7 @@ function Get-ExchangePublicFolderInfrastructure
         $DomainDN
     )
 
-    $activity = 'Public Folder Discovery'
+    $activity = "Public Folder Discovery"
     $ldapFilter = "(msExchRecipientTypeDetails=68719476736)"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$DomainDN"
@@ -14,12 +14,12 @@ function Get-ExchangePublicFolderInfrastructure
 
     try
     {
-        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Public Folder mailboxes.' -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Public Folder mailboxes." -WriteProgress
         $modernPublicFolders = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
     {
-        Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for Public Folder mailboxes. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Public Folder mailboxes. $($_.Exception.Message)"
     }
 
     if ($modernPublicFolders)
@@ -39,7 +39,7 @@ function Get-ExchangePublicFolderInfrastructure
     }
     else
     {
-        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Did not find Public Folder mailboxes in Active Directory. Checking for legacy Public Folders.' -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity $activity -Message "Did not find Public Folder mailboxes in Active Directory. Checking for legacy Public Folders." -WriteProgress
         $discoveredLegacyPublicFolders = @()
 
         $ldapFilter = "(objectClass=msExchPublicMDB)"
@@ -49,12 +49,12 @@ function Get-ExchangePublicFolderInfrastructure
 
         try
         {
-            Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Public Folder databases.' -WriteProgress
+            Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Public Folder databases." -WriteProgress
             $legacyPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
         }
         catch
         {
-            Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for Public Folder databases. $($_.Exception.Message)"
+            Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Public Folder databases. $($_.Exception.Message)"
         }
 
         if ($legacyPublicFolders)
@@ -72,7 +72,7 @@ function Get-ExchangePublicFolderInfrastructure
         }
         else
         {
-            Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Did not find Public Folder databases in Active Directory.' -WriteProgress
+            Write-Log -Level "VERBOSE" -Activity $activity -Message "Did not find Public Folder databases in Active Directory." -WriteProgress
         }
 
         $discoveredLegacyPublicFolders

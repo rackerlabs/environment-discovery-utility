@@ -22,10 +22,10 @@
 
     [CmdletBinding()]
     param (
-        # An array of strings indicating which modules the Environment Discovery Utility should run.  Possible values: AD, Exchange, All.  This defaults to 'All'
+        # An array of strings indicating which modules the Environment Discovery Utility should run.  Possible values: AD, Exchange, All.  This defaults to "All"
         [ValidateSet("ad","exchange","all")]
         [array]
-        $Modules = @('all')
+        $Modules = @("all")
     )
 
     begin
@@ -35,28 +35,28 @@
         $logPath = ".\environment-$sessionGuid.log"
         Enable-Logging $logPath
         $environment = @{}
-        $environment.Add('SessionId', $sessionGuid)
-        $environment.Add('TimeStamp', $( ([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ") ))
+        $environment.Add("SessionId", $sessionGuid)
+        $environment.Add("TimeStamp", $( ([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ") ))
         $outPutPath = ".\environment-$sessionGuid.json"
     }
     process
     {
-        $allModules = @('ad','exchange')
-        Write-Log -Level 'VERBOSE' -Message 'Initializing EDU Module' -Activity 'Environment Discovery Utility' -WriteProgress
+        $allModules = @("ad","exchange")
+        Write-Log -Level "VERBOSE" -Message "Initializing EDU Module" -Activity "Environment Discovery Utility" -WriteProgress
 
         foreach ($module in $allModules)
         {
-            Write-Log -Level 'VERBOSE' -Message "Executing $($module.ToUpper()) Module." -Activity 'Environment Discovery Utility'
-            if (($Modules -like 'all') -or ($Modules -contains $module))
+            Write-Log -Level "VERBOSE" -Message "Executing $($module.ToUpper()) Module." -Activity "Environment Discovery Utility"
+            if (($Modules -like "all") -or ($Modules -contains $module))
             {
                 switch ($module)
                 {
-                    'ad'
+                    "ad"
                     {
                         $activeDirectoryObject = Start-ActiveDirectoryDiscovery
                         $environment.Add("Active-Directory",$activeDirectoryObject)
                     }
-                    'exchange'
+                    "exchange"
                     {
                         $exchangeObject = Start-ExchangeDiscovery
                         $environment.Add("Exchange",$exchangeObject)
@@ -65,13 +65,13 @@
             }
         }
 
-        Write-Log -Level 'VERBOSE' -Message 'Packaging EDU Results' -Activity 'Environment Discovery Utility' -WriteProgress
+        Write-Log -Level "VERBOSE" -Message "Packaging EDU Results" -Activity "Environment Discovery Utility" -WriteProgress
         $environment.Add("Log",$Global:logEntries)
         $environment | SerializeTo-Json | Set-Content -Path $outPutPath -Encoding UTF8 -Force
     }
     end
     {
-        Write-Log -Level 'VERBOSE' -Message 'Environment Discovery Utility completed' -Activity 'Environment Discovery Utility' -ProgressComplete $true -WriteProgress
+        Write-Log -Level "VERBOSE" -Message "Environment Discovery Utility completed" -Activity "Environment Discovery Utility" -ProgressComplete $true -WriteProgress
         Disable-Logging
     }
 }
