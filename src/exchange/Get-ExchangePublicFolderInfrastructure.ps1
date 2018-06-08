@@ -6,17 +6,20 @@ function Get-ExchangePublicFolderInfrastructure
         $DomainDN
     )
 
+    $activity = 'Public Folder Discovery'
     $ldapFilter = "(msExchRecipientTypeDetails=68719476736)"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$DomainDN"
     [array]$properties = "objectGUID","homeMDB"
+
     try
     {
+        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Public Folder mailboxes' -WriteProgress
         $modernPublicFolders = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
     {
-        Write-Log -Level 'ERROR' -Activity $MyInvocation.MyCommand.Name -Message "Failed to search Active Directory for Modern Public Folders. $($_.Exception.Message)"
+        Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for Public Folder mailboxes. $($_.Exception.Message)"
     }
 
     if ($modernPublicFolders)
@@ -45,11 +48,12 @@ function Get-ExchangePublicFolderInfrastructure
 
         try
         {
+            Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Public Folder databases' -WriteProgress
             $legacyPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
         }
         catch
         {
-            Write-Log -Level 'ERROR' -Activity $MyInvocation.MyCommand.Name -Message "Failed to search Active Directory for Legacy Public Folders. $($_.Exception.Message)"
+            Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for Public Folder databases. $($_.Exception.Message)"
         }
 
         if ($legacyPublicFolders)
