@@ -3,7 +3,7 @@ function Write-Log
     [CmdletBinding()]
     param (
         [ValidateSet('DEBUG','VERBOSE','ERROR','WARNING','INFO')]
-        [array]
+        [string]
         $Level = 'DEBUG',
 
         [string]
