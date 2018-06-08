@@ -1,26 +1,56 @@
 function Write-Log
 {
+    <#
+        .SYNOPSIS
+            This function writes to the configured log file, as well as PowerShell progress bars.
+
+        .DESCRIPTION
+            This function writes to the configured log file, as well as PowerShell progress bars. Messages can be written to log file only, or to progress as well based on the parameters.
+
+        .OUTPUTS
+            None
+
+        .EXAMPLE
+            Write a warning message without writing progress bar
+            Write-Log -Level 'WARNING' -Activity $activity -Message 'Failed to do something that is not critical but we would want to know about.'
+
+        .EXAMPLE
+            Write a verbose message with progress
+            Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Gathering Public Folder statistics. This may take some time without feedback.' -WriteProgress
+
+        .EXAMPLE
+            Write a verbose message with progress and completion percentage 
+            Write-Log -Level 'DEBUG' -Activity $activity -Message "Gathering Exchange recipient details $x / $($recipients.Count)" -PercentComplete $percentComplete -WriteProgress
+
+    #>
     [CmdletBinding()]
     param (
+        # Level1 A string representation of Logging Level. Can be one of DEBUG, VERBOSE, ERROR, WARNING, INFO.
         [ValidateSet("DEBUG","VERBOSE","ERROR","WARNING","INFO")]
         [string]
         $Level = "DEBUG",
 
+        # Message The string to log. This will be used as the status if writing to Progress as well.
         [string]
         $Message,
 
+        # Activity The activity being performed when the entry was logged
         [string]
         $Activity,
 
+        # WriteProgress Toggles writing to Write-Progress. Omit this if you want to write to log file only.
         [switch]
         $WriteProgress,
 
+        # ProgressId Allows the caller to hard-code the progressId in the case that we want to show multiple progress bars on screen.
         [int]
         $ProgressId,
 
+        # PercentComplete Allows passing the PercentComplete parameter to Write-Progress.
         [int]
         $PercentComplete,
 
+        # PercentComplete Allows for setting a progress bar as complete to remove it from the screen.
         [switch]
         $ProgressComplete
     )
@@ -61,15 +91,27 @@ function Write-Log
 
 function Enable-Logging
 {
+    <#
+        .SYNOPSIS
+            This function enables logging using the PowerShellLogging module to intercept streams and write to log files.
+
+        .DESCRIPTION
+            This function enables logging. Output subscribers will be created for the Error, Warning, Output, Debug and Verbose streams. Intercepted streams will be sent to the Write-Log function.
+
+        .EXAMPLE
+            Enable-Logging -LogFilePath somefile.log
+
+    #>
     [CmdletBinding()]
     param (
+        # LogFilePath The path for the log file.
         [string]
         $LogFilePath
     )
 
     $Global:logFilePath = $LogFilePath
     $Global:logEntries = @()
-    $subscriberActions = @{
+    $subscriberActions = @ {
         OnWriteError = {Write-Log -Level "ERROR" -Message $args[0]}
         OnWriteWarning = {Write-Log -Level "WARNING" -Message $args[0]}
         OnWriteOutput = {Write-Log -Level "INFO" -Message $args[0]}
@@ -84,6 +126,17 @@ function Enable-Logging
 
 function Disable-Logging
 {
+    <#
+    .SYNOPSIS
+        This function disables logging. 
+
+    .DESCRIPTION
+        This function disables logging. 
+
+    .EXAMPLE
+        Disable-Logging
+
+    #>
     [CmdletBinding()]
     param ()
 
@@ -92,5 +145,18 @@ function Disable-Logging
 
 function Get-LogEntries
 {
+    <#
+    .SYNOPSIS
+        This function returns all logg entries for the current session.
+
+    .DESCRIPTION
+        This function returns all logg entries for the current session.
+
+    .EXAMPLE
+        Get-LogEntries
+    #>
+    [CmdletBinding()]
+    param ()
+
     $Global:logEntries
 }
