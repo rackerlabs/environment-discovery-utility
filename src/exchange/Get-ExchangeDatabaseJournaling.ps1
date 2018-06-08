@@ -24,8 +24,8 @@ function Get-ExchangeDatabaseJournaling
         
         $databaseJournaling = $null
         $databaseJournaling = "" | Select-Object DatabaseGUID, JournalTargetGUID, JournalTargetObjectClass
-        $databaseJournaling.DatabaseGUID = [GUID] $( $database.objectGUID | Select-Object -First 1 )
-        $databaseJournaling.JournalTargetGUID = [GUID] $( $journalingTarget.objectGUID | Select-Object -First 1 )
+        $databaseJournaling.DatabaseGUID = [GUID]$($database.objectGUID | Select-Object -First 1)
+        $databaseJournaling.JournalTargetGUID = [GUID]$($journalingTarget.objectGUID | Select-Object -First 1)
         $databaseJournaling.JournalTargetObjectClass = [array]$journalingTarget.objectClass
         
         $discoveredDatabaseJournaling += $DatabaseJournaling
