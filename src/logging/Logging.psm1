@@ -32,8 +32,8 @@ function Write-Log
     $logEntry.Level = $Level
     $logEntry.Activity = $Activity
     $logEntry.Message = $Message
-    "$utcDate,$Level,$Activity,`"$Message`"" | Out-File -Append -Encoding utf8 -FilePath $Global:logFilePath -n
     $Global:logEntries += $logEntry
+    "$utcDate,$Level,$Activity,`"$Message`"" | Out-File -Append -Encoding utf8 -FilePath $Global:logFilePath -n
 
     if ($WriteProgress)
     {

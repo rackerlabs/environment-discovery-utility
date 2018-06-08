@@ -14,7 +14,7 @@ function Get-ExchangePublicFolderInfrastructure
 
     try
     {
-        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Public Folder mailboxes' -WriteProgress
+        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Public Folder mailboxes.' -WriteProgress
         $modernPublicFolders = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
@@ -39,6 +39,7 @@ function Get-ExchangePublicFolderInfrastructure
     }
     else
     {
+        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Did not find Public Folder mailboxes in Active Directory. Checking for legacy Public Folders.' -WriteProgress
         $discoveredLegacyPublicFolders = @()
 
         $ldapFilter = "(objectClass=msExchPublicMDB)"
@@ -48,7 +49,7 @@ function Get-ExchangePublicFolderInfrastructure
 
         try
         {
-            Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Public Folder databases' -WriteProgress
+            Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Public Folder databases.' -WriteProgress
             $legacyPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
         }
         catch
@@ -68,6 +69,10 @@ function Get-ExchangePublicFolderInfrastructure
 
                 $discoveredLegacyPublicFolders += $discoveredLegacyPublicFolder
             }
+        }
+        else
+        {
+            Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Did not find Public Folder databases in Active Directory.' -WriteProgress
         }
 
         $discoveredLegacyPublicFolders

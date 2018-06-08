@@ -15,7 +15,7 @@ function Get-ExchangeRecipients
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$($DomainDN)"
     [array]$properties = "msexchRecipientTypeDetails", "msexchRecipientDisplayType", "msExchRemoteRecipientType", "objectGuid", "mail", "userPrincipalName"
-    Write-Log -Level 'VERBOSE' -Activity $activity -Message "Gathering Exchange recipient details" -PercentComplete 0 -WriteProgress
+    Write-Log -Level 'VERBOSE' -Activity $activity -Message "Gathering Exchange recipient details." -PercentComplete 0 -WriteProgress
 
     if (-not $ExchangeShellConnected)
     {
@@ -24,7 +24,7 @@ function Get-ExchangeRecipients
 
     try
     {
-        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Exchange Recipients' -WriteProgress
+        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Exchange Recipients.' -WriteProgress
         $recipients = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
@@ -75,7 +75,7 @@ function Get-ExchangeRecipients
             $discoveredRecipients += $currentRecipient
         }
 
-        Write-Log -Level 'VERBOSE' -Activity $activity -Message "Completed Exchange recipient discovery" -ProgressComplete -WriteProgress
+        Write-Log -Level 'VERBOSE' -Activity $activity -Message "Completed Exchange recipient discovery." -ProgressComplete -WriteProgress
     }
     else
     {
