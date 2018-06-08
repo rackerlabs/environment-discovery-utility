@@ -18,8 +18,10 @@ function Start-ExchangeDiscovery
     param ()
     begin
     {
+        Write-Log -Level "VERBOSE" -Activity "Exchange Discovery" -Message "Attempting to connect to Exchange PowerShell." -WriteProgress
         $exchangeEnvironment = @{}
-        [bool] $exchangeShellConnected = Initialize-ExchangePowershell
+        [bool]$exchangeShellConnected = Initialize-ExchangePowershell
+        clear
     }
     process
     {
@@ -38,6 +40,7 @@ function Start-ExchangeDiscovery
         $exchangeEnvironment.Add("ExchangeDatabaseJournaling", $( Get-ExchangeDatabaseJournaling -DomainDN $forestDN ))
         $exchangeEnvironment.Add("ExchangeImapPopSettings", $( Get-ExchangeImapPopSettings -DomainDN $forestDN ))
         $exchangeEnvironment.Add("ExchangeTransportRules", $( Get-ExchangeTransportRules -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected ))
+        Write-Log -Level "VERBOSE" -Activity "Exchange Discovery" -Message "Completed Exchange Discovery." -WriteProgress
 
         $exchangeEnvironment
     }

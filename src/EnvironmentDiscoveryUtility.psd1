@@ -65,8 +65,9 @@ FormatsToProcess = @()
 # Modules to import as nested modules of the module specified in ModuleToProcess
 NestedModules = @(
     "active-directory\ActiveDirectoryDiscovery.psd1",
+    "exchange\ExchangeDiscovery.psd1",
     "common\Common.psd1",
-    "exchange\ExchangeDiscovery.psd1"
+    "logging\Logging.psd1"
 )
 
 # Functions to export from this module

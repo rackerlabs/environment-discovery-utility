@@ -40,6 +40,7 @@ function Get-ActiveDirectoryDomains
     )
 
     $forestDomains = @()
+
     foreach ($domain in $Domains)
     {
         $forestDomains += Get-ActiveDirectoryDomainDetails $domain

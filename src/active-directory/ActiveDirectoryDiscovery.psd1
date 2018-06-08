@@ -66,7 +66,8 @@ FormatsToProcess = @()
 NestedModules = @(
     "Get-ActiveDirectoryCurrentForest.ps1",
     "Get-ActiveDirectoryDomains.ps1",
-    "Get-ActiveDirectorySites.ps1"
+    "Get-ActiveDirectorySites.ps1",
+    "..\Logging\Logging.psd1"
 )
 
 # Functions to export from this module
