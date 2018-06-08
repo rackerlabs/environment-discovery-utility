@@ -21,7 +21,6 @@ function Write-Log
         .EXAMPLE
             Write a verbose message with progress and completion percentage 
             Write-Log -Level 'DEBUG' -Activity $activity -Message "Gathering Exchange recipient details $x / $($recipients.Count)" -PercentComplete $percentComplete -WriteProgress
-
     #>
     [CmdletBinding()]
     param (
@@ -100,7 +99,6 @@ function Enable-Logging
 
         .EXAMPLE
             Enable-Logging -LogFilePath somefile.log
-
     #>
     [CmdletBinding()]
     param (
@@ -111,7 +109,7 @@ function Enable-Logging
 
     $Global:logFilePath = $LogFilePath
     $Global:logEntries = @()
-    $subscriberActions = @ {
+    $subscriberActions = @{
         OnWriteError = {Write-Log -Level "ERROR" -Message $args[0]}
         OnWriteWarning = {Write-Log -Level "WARNING" -Message $args[0]}
         OnWriteOutput = {Write-Log -Level "INFO" -Message $args[0]}
@@ -127,15 +125,14 @@ function Enable-Logging
 function Disable-Logging
 {
     <#
-    .SYNOPSIS
-        This function disables logging. 
+        .SYNOPSIS
+            This function disables logging.
 
-    .DESCRIPTION
-        This function disables logging. 
+        .DESCRIPTION
+            This function disables logging.
 
-    .EXAMPLE
-        Disable-Logging
-
+        .EXAMPLE
+            Disable-Logging
     #>
     [CmdletBinding()]
     param ()
@@ -146,14 +143,14 @@ function Disable-Logging
 function Get-LogEntries
 {
     <#
-    .SYNOPSIS
-        This function returns all log entries for the current session.
+        .SYNOPSIS
+            This function returns all log entries for the current session.
 
-    .DESCRIPTION
-        This function returns all log entries for the current session.
+        .DESCRIPTION
+            This function returns all log entries for the current session.
 
-    .EXAMPLE
-        Get-LogEntries
+        .EXAMPLE
+            Get-LogEntries
     #>
     [CmdletBinding()]
     param ()
