@@ -36,7 +36,7 @@
         Enable-Logging $logPath
         $environment = @{}
         $environment.Add("SessionId", $sessionGuid)
-        $environment.Add("TimeStamp", $( ([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ") ))
+        $environment.Add("TimeStamp", $(([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")))
         $outPutPath = ".\environment-$sessionGuid.json"
     }
     process

@@ -42,9 +42,18 @@ function Write-Log
             Activity = $Activity
         }
 
-        if ($ProgressId) {$progressArgs.Add("Id",$progressId)}
-        if ($ProgressComplete) {$progressArgs.Add("Completed",$null)}
-        if ($PercentComplete) {$progressArgs.Add("PercentComplete",$PercentComplete)}
+        if ($ProgressId)
+        {
+            $progressArgs.Add("Id",$progressId)
+        }
+        if ($ProgressComplete)
+        {
+            $progressArgs.Add("Completed",$null)
+        }
+        if ($PercentComplete)
+        {
+            $progressArgs.Add("PercentComplete",$PercentComplete)
+        }
 
         Write-Progress @progressArgs
     }
