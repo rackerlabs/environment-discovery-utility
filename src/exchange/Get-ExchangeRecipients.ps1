@@ -34,7 +34,7 @@ function Get-ExchangeRecipients
 
     if ($recipients)
     {
-        $progressFrequency = 5
+        $progressFrequency = 25
         $x = 0
 
         foreach ($recipient in $recipients)
