@@ -8,7 +8,7 @@ function Get-ExchangeFederation
 
     $discoveredFederationSettings = @()
     $ldapFilter = "(objectClass=msexchfedsharingrelationship)"
-    $context = "LDAP://CN=Configuration,$($domainDN)"
+    $context = "LDAP://CN=Configuration, $($domainDN)"
     $searchRoot = "$DomainDN"
     [array]$properties = "objectGUID", "msExchFedEnabledActions", "msEXchFedIsEnabled"
     $exchangeFederationPolicys = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
@@ -17,7 +17,7 @@ function Get-ExchangeFederation
     {
         $federationPolicy = $null
         $federationPolicy = "" | Select-Object ObjectGUID, FederationEnabled, FederationActions
-        $federationPolicy.ObjectGUID = [GUID] $( $exchangeGederationPolicy.objectGUID | Select-Object -First 1 )
+        $federationPolicy.ObjectGUID = [GUID]$($exchangeGederationPolicy.objectGUID | Select-Object -First 1)
         $federationPolicy.FederationEnabled = $exchangeGederationPolicy.msEXchFedIsEnabled
         $federationPolicy.FederationActions = $exchangeGederationPolicy.msExchFedEnabledActions
 
