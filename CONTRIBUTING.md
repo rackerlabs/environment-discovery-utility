@@ -173,6 +173,52 @@ root<br>
 | **ext** | External binaries and libraries, for example Nlog or Json.Net. |
 | **[area]** | Scripts grouped by functionality, for example [area] would be "active-directory" or "exchange". |
 
+# Logging
+## Logging Module
+I've added a Logging module to the project.  It is currently in a directory under src/logging.  
+This module is simply a wrapper module for the [Enhanced Script Logging module](https://gallery.technet.microsoft.com/scriptcenter/Enhanced-Script-Logging-27615f85) which exists as a nested module in the /src/logging/PowerShellLogging directory.  
+
+## Stream Interception
+We use Enable-OutputSubscriber from the PowerShellLogging module to intercept the different streams and use our own Write-Log function to write to file.  We are still unable to stop the Exchange tips from coming to the screen, but we can/do clear the screen once we can.
+
+## Log File
+We are logging to the environment-session.log file in the current directory.
+
+### Sample log file from JMLLab
+[environment-4a884b49-11ad-4b18-a095-15e8fe58c477_log.txt](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/files/344/environment-4a884b49-11ad-4b18-a095-15e8fe58c477_log.txt)
+
+## Logging in JSON Return
+We take the log entries from the session and include them in the environment report json under the Log element..
+
+
+Sample log entry
+`{
+            "Activity": "Exchange Recipient Discovery",
+            "Date": "2018-06-08T16:18:18.9463254Z",
+            "Level": "DEBUG",
+            "Message": "Gathering Exchange recipient details 1180 / 1193"
+  }`
+
+### Sample Updated JSON output file from JMLLab
+[environment-4a884b49-11ad-4b18-a095-15e8fe58c477_json.txt](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/files/343/environment-4a884b49-11ad-4b18-a095-15e8fe58c477_json.txt)
+
+## Logging Something
+Functions have an 'activity' variable for logging.  I'm not extremely fond of this and have considered using a method I found to set the activity to the name of the function
+
+## Example Usage
+- Write a warning message without writing progress bar
+`Write-Log -Level 'WARNING' -Activity $activity -Message 'Failed to do something that is not critical but we would want to know about.'`
+- Write a verbose message with progress
+`Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Gathering Public Folder statistics. This may take some time without feedback.' -WriteProgress`
+- Write a verbose message with progress and completion percentage
+`Write-Log -Level 'DEBUG' -Activity $activity -Message "Gathering Exchange recipient details $x / $($recipients.Count)" -PercentComplete $percentComplete -WriteProgress`
+
+## Progress Bars
+Progress bars are built into the Write-Log function.  See the below notes for more information on usage.
+- Demo of Progress Bars
+![progress_demo](https://media.github.rackspace.com/user/1619/files/75fb5c94-6a99-11e8-916f-310749c5e360)
+
+
 ## Additional Notes
 
 This document is open for changes, please feel free to contribute to the style guide itself.
