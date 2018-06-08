@@ -49,6 +49,10 @@ If a particular matter is not address by the PoshCode style guide, we fall back 
 
 Highlighted standards or anything not covered by the preceding guidelines.
 
+#### Nested Expression Whitespace
+
+The style guide calls out nested expressions as needed a space on the inside of the perenthesis like `$( Some-Command )`.  We prefer to not have spaces where not needed like this: `$(Some-Command)`. This should not be confused with script blocks which should have a single whitespace for padding `{ Some-Command }`.
+
 #### Comment Based Help
 
 All scripts should be written with the appropriate inline documentation, please refer to this template when adding help to your script.
