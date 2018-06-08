@@ -147,10 +147,10 @@ function Get-LogEntries
 {
     <#
     .SYNOPSIS
-        This function returns all logg entries for the current session.
+        This function returns all log entries for the current session.
 
     .DESCRIPTION
-        This function returns all logg entries for the current session.
+        This function returns all log entries for the current session.
 
     .EXAMPLE
         Get-LogEntries
