@@ -34,11 +34,14 @@ function Write-Log
     $logEntry.Message = $Message
     "$utcDate,$Level,$Activity,`"$Message`"" | Out-File -Append -Encoding utf8 -FilePath $Global:logFilePath -n
     $Global:logEntries += $logEntry
+
     if ($WriteProgress)
     {
-        $progressArgs = @{}
-        $progressArgs.Add('Status',$Message)
-        $progressArgs.Add('Activity',$Activity)
+        $progressArgs = @{
+            Status = $Message
+            Activity = $Activity
+        }
+
         if ($ProgressId) {$progressArgs.Add('Id',$progressId)}
         if ($ProgressComplete) {$progressArgs.Add('Completed',$null)}
         if ($PercentComplete) {$progressArgs.Add('PercentComplete',$PercentComplete)}
@@ -57,12 +60,15 @@ function Enable-Logging
 
     $Global:logFilePath = $LogFilePath
     $Global:logEntries = @()
-    $Global:logSubscriber = Enable-OutputSubscriber `
-                            -OnWriteError {Write-Log -Level "ERROR" -Message $args[0]}`
-                            -OnWriteWarning {Write-Log -Level "WARNING" -Message $args[0]}`
-                            -OnWriteOutput {Write-Log -Level "INFO" -Message $args[0]}`
-                            -OnWriteDebug {Write-Log -Level "DEBUG" -Message $args[0]}`
-                            -OnWriteVerbose {Write-Log -Level "VERBOSE" -Message $args[0]}
+    $subscriberActions = @{
+        OnWriteError = {Write-Log -Level "ERROR" -Message $args[0]}
+        OnWriteWarning = {Write-Log -Level "WARNING" -Message $args[0]}
+        OnWriteOutput = {Write-Log -Level "INFO" -Message $args[0]}
+        OnWriteDebug = {Write-Log -Level "DEBUG" -Message $args[0]}
+        OnWriteVerbose = {Write-Log -Level "VERBOSE" -Message $args[0]}
+    }
+    $Global:logSubscriber = Enable-OutputSubscriber @subscriberActions
+
     $logEntry = "DateTime,Level,Activity,Message"
     $logEntry | Out-File -Append -Encoding utf8 -FilePath $Global:logFilePath
 }
