@@ -32,7 +32,7 @@ function Get-ExchangeRecipients
         Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for recipients. $($_.Exception.Message)"
     }
 
-    if ($recpients)
+    if ($recipients)
     {
         $progressFrequency = 5
         $x = 0
