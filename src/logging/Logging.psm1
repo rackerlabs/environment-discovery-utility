@@ -25,7 +25,7 @@ function Write-Log
     #>
     [CmdletBinding()]
     param (
-        # Level1 A string representation of Logging Level. Can be one of DEBUG, VERBOSE, ERROR, WARNING, INFO.
+        # Level A string representation of Logging Level. Can be one of DEBUG, VERBOSE, ERROR, WARNING, INFO.
         [ValidateSet("DEBUG","VERBOSE","ERROR","WARNING","INFO")]
         [string]
         $Level = "DEBUG",
