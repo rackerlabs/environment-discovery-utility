@@ -13,9 +13,9 @@ function Get-ExchangeTransportRules
     {    
         $ErrorActionPreference = "silentlycontinue"
         $discoveredTransportRules = @()
-        $searchRoot = "CN=Configuration, $($DomainDN)"
+        $searchRoot = "CN=Configuration,$($DomainDN)"
         $ldapFilter = "(objectClass=msExchTransportRule)"
-        $context = "LDAP://CN=Configuration, $($DomainDN)"
+        $context = "LDAP://CN=Configuration,$($DomainDN)"
         [array] $properties = "objectGUID", "distinguishedName"
         $transportRules = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
