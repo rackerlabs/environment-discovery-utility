@@ -26,7 +26,7 @@ function Get-ExchangePublicFolderStatistics
                 {
                     $publicFolderStats.Identity = $publicFolderStatistic.identity.objectGUID
                 }
-                else 
+                else
                 {
                     $publicFolderStats.Identity = $publicFolderStatistic.entryID
                 }
@@ -35,7 +35,7 @@ function Get-ExchangePublicFolderStatistics
                 {
                     $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.ToKB()
                 }
-                else 
+                else
                 {
                     $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.value.ToKB()
                 }
