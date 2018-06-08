@@ -1,5 +1,6 @@
 function Get-ExchangeAcceptedDomains
 {
+    [CmdletBinding()]
     param (
         [string]
         $DomainDN

@@ -27,12 +27,12 @@ function Initialize-ExchangePowershell
 
     if ($testCommand)
     {
-        Write-Warning 'Successfully Connected to Exchange Powershell.'
+        Write-Log -Level 'VERBOSE' -Activity $MyInvocation.MyCommand.Name -Message "Successfully connected Exchange PowerShell"
         $connectedToExchange = $true
     }
     else
     {
-        Write-Log -Level 'WARNING' -Activity $MyInvocation.MyCommand.Name -Message "Failed to connect to Exchange PowerShell."
+        Write-Log -Level 'WARNING' -Activity $MyInvocation.MyCommand.Name -Message "Failed to connect to Exchange PowerShell"
     }
 
     $connectedToExchange

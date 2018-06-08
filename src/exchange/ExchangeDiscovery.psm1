@@ -28,17 +28,11 @@ function Start-ExchangeDiscovery
         $domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain()
         $forestName = $domain.Forest.Name
         $forestDN = "DC=$( $ForestName.Replace(".",",DC="))"
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Searching for Exchange servers' -WriteProgress
         $exchangeEnvironment.Add("ExchangeServers", $(Get-ExchangeServers -DomainDN $forestDN))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Finding Exchange accepted domains' -WriteProgress
         $exchangeEnvironment.Add("ExchangeAcceptedDomains", $(Get-ExchangeAcceptedDomains -DomainDN $forestDN))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Finding Exchange virtual directories' -WriteProgress
         $exchangeEnvironment.Add("ExchangeVirtualDirectories", $(Get-ExchangeVirtualDirectories -DomainDN $forestDN))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Discovering Exchange recipients' -WriteProgress
         $exchangeEnvironment.Add("ExchangeRecipients", $(Get-ExchangeRecipients -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Discovering Exchange public folders' -WriteProgress
         $exchangeEnvironment.Add("ExchangePublicFoldersInfrastructure", $(Get-ExchangePublicFolderInfrastructure -DomainDN $forestDN))
-        Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Gathering public folder statistics' -WriteProgress
         $exchangeEnvironment.Add("ExchangePublicFolderStatistics", $(Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected))
         Write-Log -Level 'VERBOSE' -Activity 'Exchange Discovery' -Message 'Completed Exchange Discovery' -WriteProgress
 

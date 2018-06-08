@@ -6,16 +6,18 @@ function Get-ExchangePublicFolderStatistics
         $ExchangeShellConnected
     )
 
+    $activity = 'Public Folder Statistics'
+
     if ($ExchangeShellConnected)
     {
         if (Get-PublicFolder -ErrorAction SilentlyContinue)
         {
             $discoveredPublicFolderStatistics = @()
+            Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Gathering Public Folder statistics. This may take some time without feedback.' -WriteProgress
             $publicFolderStatistics = Get-PublicFolderStatistics -ResultSize Unlimited
 
             foreach ($publicFolderStatistic in $publicFolderStatistics)
             {
-                $percentComplete = (100 / $publicFolderStatistics.Count) * $x
                 $publicFolderStats = $null
                 $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB
                 $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
@@ -46,6 +48,6 @@ function Get-ExchangePublicFolderStatistics
     }
     else
     {
-        Write-Log -Level 'WARNING' -Activity $MyInvocation.MyCommand.Name -Message 'Skipping Exchange Public Folder statistics. No connection to Exchange.'
+        Write-Log -Level 'WARNING' -Activity $activity -Message 'Skipping Exchange Public Folder statistics. No connection to Exchange.'
     }
 }
