@@ -34,6 +34,8 @@ function Start-ExchangeDiscovery
         $exchangeEnvironment.Add("ExchangePublicFolderStatistics", $( Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected ))
         $exchangeEnvironment.Add("ExchangeDynamicGroups", $( Get-ExchangeDynamicGroups -DomainDN $forestDN ))
         $exchangeEnvironment.Add("ExchangeDatabaseJournaling", $( Get-ExchangeDatabaseJournaling -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("ExchangeImapPopSettings", $( Get-ExchangeImapPopSettings -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("ExchangeTransportRules", $( Get-ExchangeTransportRules -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected ))
 
         $exchangeEnvironment
     }
