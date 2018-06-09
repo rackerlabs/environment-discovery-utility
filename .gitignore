@@ -1,4 +1,5 @@
 .vscode/launch.json
+<<<<<<< HEAD
 *.sqlite
 
 ## Ignore Visual Studio temporary files, build results, and
@@ -329,4 +330,9 @@ ASALocalRun/
 *.nvuser
 
 # MFractors (Xamarin productivity tool) working folder 
-.mfractor/
+.mfractor/=======
+/.vs
+.vs/environment-discovery-utility/v15/.suo
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
+>>>>>>> master

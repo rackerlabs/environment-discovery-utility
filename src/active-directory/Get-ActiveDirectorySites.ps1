@@ -25,7 +25,7 @@ function Get-ActiveDirectorySiteLinkDetails
     $siteLinkDetails.NotificationEnabled = $SiteLink.NotificationEnabled
     $siteLinkDetails.DataCompressionEnabled = $SiteLink.DataCompressionEnabled
 
-    if (-not $( $Script:SiteLinks | Where-Object{$_.Name -like $siteLinkDetails.Name} ))
+    if (-not $($Script:SiteLinks | Where-Object{$_.Name -like $siteLinkDetails.Name}))
     {
         $Script:SiteLinks += $siteLinkDetails
     }

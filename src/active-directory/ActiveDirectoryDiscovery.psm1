@@ -18,6 +18,7 @@ function Start-ActiveDirectoryDiscovery
     param ()
     begin
     {
+        Write-Log -Level "VERBOSE" -Activity "Active Directory Discovery" -ProgressId $ProgressId -Message "Starting Active Directory Discovery." -WriteProgress
         $activeDirectoryEnvironment = @{}
     }
     process
@@ -44,11 +45,12 @@ function Start-ActiveDirectoryDiscovery
             $forestDetails.NamingRoleOwner = $forest.NamingRoleOwner.ToString()
             $forestDetails.Domains = $domains
             $forestDetails.Sites = $sites
-            $forestDetails.SiteLinks = $Script:siteLinks
+            $forestDetails.SiteLinks = $Global:siteLinks
             $forestDetails.ApplicationPartitions = $applicationPartitions
         }
 
         $activeDirectoryEnvironment.Add("Forest",$forestDetails)
+        Write-Log -Level "VERBOSE" -Activity "Active Directory Discovery" -ProgressId $ProgressId -Message "Completed Active Directory Discovery." -ProgressComplete -WriteProgress
 
         $activeDirectoryEnvironment
     }

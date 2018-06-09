@@ -10,7 +10,7 @@ function Get-ExchangeRecipientDataStatistics
 
     if ($mailboxTypeValues -contains $Recipient.RecipientTypeDetails)
     {
-        $recipientStatistics = Get-MailboxStatistics $( $Recipient.ObjectGuid.ToString())
+        $recipientStatistics = Get-MailboxStatistics $($Recipient.ObjectGuid.ToString()) -WarningAction SilentlyContinue
     }
 
     $recipientStatistics
