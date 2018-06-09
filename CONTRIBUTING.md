@@ -5,14 +5,14 @@ The following is a set of guidelines for contributing to EDU.
 
 ## Github
 
-#### **Everything starts with a GitHub Issue**
+### **Everything starts with a GitHub Issue**
 
 * Search for the issue or feature in the issues list on GitHub.
 * If there is no existing issue, create an issue with a descriptive subject and description.  Non-descriptive issues will be closed.
 * Use existing labels when possible and assign the issue to the correct person performing the work.
 * Get feedback on the request in the issue you created.
 
-#### **Branching**
+### **Branching**
 * Create a branch using the following format: feature-name.
 * Branch names should be short and concise.
 
