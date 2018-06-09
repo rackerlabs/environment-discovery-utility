@@ -17,6 +17,7 @@
 [CmdletBinding()]
 param (
 	[Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
 	[string]
 	$BuildNumber
 )
