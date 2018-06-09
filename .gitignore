@@ -330,7 +330,6 @@ ASALocalRun/
 *.nvuser
 
 # MFractors (Xamarin productivity tool) working folder 
-.mfractor/=======
 /.vs
 .vs/environment-discovery-utility/v15/.suo
 .vs/slnx.sqlite
