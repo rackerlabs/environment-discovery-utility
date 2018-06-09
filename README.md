@@ -21,9 +21,8 @@ A set of powershell scripts used to gather information about Active Directory an
 
 Please read [CONTRIBUTING.md](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/blob/master/CONTRIBUTING.md) for details.
 
-## Lab Environments
-
-[Password Safe Project](https://passwordsafe.corp.rackspace.com/projects/22502/credentials)
+### Credentials
+https://passwordsafe.corp.rackspace.com/projects/22502
 
 ### Windows Server 2008 / Exchange 2010 Static Lab
 
