@@ -12,6 +12,7 @@ function Get-ExchangeTransportRules
     try 
     {    
         $ErrorActionPreference = "silentlycontinue"
+        $activity = 'Exchange Transport Rule Discovery'
         $discoveredTransportRules = @()
         $searchRoot = "CN=Configuration,$($DomainDN)"
         $ldapFilter = "(objectClass=msExchTransportRule)"

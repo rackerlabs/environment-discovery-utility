@@ -30,12 +30,14 @@ function Get-ExchangePublicFolderInfrastructure
         {
             $discoveredModernPublicFolder = $null
             $discoveredModernPublicFolder = "" | Select-Object PublicFolderGUID, ParentServer, ParentDatabase
-            $discoveredModernPublicFolder.PublicFolderGUID = [GUID]$($modernPublicFolder.objectguid | Select-Object -First 1)
+            $discoveredModernPublicFolder.PublicFolderGUID = [GUID]$($modernPublicFolder.objectGUID | Select-Object -First 1)
             $discoveredModernPublicFolder.ParentServer = $null
-            $discoveredModernPublicFolder.ParentDatabase = $modernPublicFolder.homemdb
+            $discoveredModernPublicFolder.ParentDatabase = $modernPublicFolder.homeMDB
 
             $discoveredModernPublicFolders += $discoveredModernPublicFolder
         }
+
+        $discoveredModernPublicFolders
     }
     else
     {

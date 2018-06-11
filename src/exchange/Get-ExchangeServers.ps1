@@ -6,6 +6,7 @@ function Get-ExchangeServers
         $DomainDN
     )
 
+    $activity = 'Exchange Server Discovery'
     $discoveredExchangeServers = @()
     $searchRoot = "CN=Configuration,$($DomainDN)"
     $ldapFilter = "(&(objectClass=msExchExchangeServer)(msExchCurrentServerRoles=*)(!(objectClass=msExchExchangeTransportServer)))"
@@ -14,12 +15,12 @@ function Get-ExchangeServers
 
     try
     {
-        Write-Log -Level "VERBOSE" -Activity "Exchange Server Discovery" -Message "Searching Active Directory for Exchange servers." -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Exchange servers." -WriteProgress
         $exchangeServers = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
     {
-        Write-Log -Level "ERROR" -Activity "Exchange Server Discovery" -Message "Failed to search Active Directory for Exchange servers. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Exchange servers. $($_.Exception.Message)"
     }
 
     if ($exchangeServers)

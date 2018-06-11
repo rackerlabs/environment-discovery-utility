@@ -6,6 +6,7 @@ function Get-ExchangeFederationTrust
         $DomainDN
     )
 
+    $activity = 'Exchange Federation Trusts'
     $discoveredFederationTrusts = @()
     $ldapFilter = "(objectClass=msExchFedTrust)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"

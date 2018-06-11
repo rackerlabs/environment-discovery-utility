@@ -6,6 +6,7 @@ function Get-ExchangeDatabaseJournaling
         $DomainDN
     )
 
+    $activity = 'Database Journaling'
     $discoveredDatabaseJournaling = @()
     $searchRoot = "CN=Configuration,$($DomainDN)"
     $ldapFilter = "(objectClass=msExchPrivateMDB)"

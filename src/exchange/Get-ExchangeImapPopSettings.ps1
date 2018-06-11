@@ -6,6 +6,7 @@ function Get-ExchangeImapPopSettings
         $DomainDN
     )
 
+    $activity = 'Pop/IMAP Settings'
     $discoveredImapPopSettings = @()
     $ldapFilter = "(|(objectClass=protocolCfgIMAP)(objectClass=protocolCfgPOP))"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
