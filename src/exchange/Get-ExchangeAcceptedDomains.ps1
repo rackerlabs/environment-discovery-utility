@@ -23,14 +23,18 @@ function Get-ExchangeAcceptedDomains
         Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for Accepted Domains. $($_.Exception.Message)"
     }
 
-    foreach ($acceptedDomain in $acceptedDomains)
+    if ($acceptedDomains)
     {
-        $currentAcceptedDomain = "" | Select-Object Name,AcceptedDomainFlags
-        $currentAcceptedDomain.Name = $acceptedDomain.name
-        $currentAcceptedDomain.AcceptedDomainFlags = $acceptedDomain.msExchAcceptedDomainFlags | Select-Object -First 1
+        
+        foreach ($acceptedDomain in $acceptedDomains)
+        {
+            $currentAcceptedDomain = "" | Select-Object Name,AcceptedDomainFlags
+            $currentAcceptedDomain.Name = $acceptedDomain.name
+            $currentAcceptedDomain.AcceptedDomainFlags = $acceptedDomain.msExchAcceptedDomainFlags | Select-Object -First 1
 
-        $discoveredAcceptedDomains += $currentAcceptedDomain
+            $discoveredAcceptedDomains += $currentAcceptedDomain
+        }
     }
-
+    
     $discoveredAcceptedDomains
 }

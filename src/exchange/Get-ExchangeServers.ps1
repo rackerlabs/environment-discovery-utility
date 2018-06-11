@@ -22,18 +22,22 @@ function Get-ExchangeServers
         Write-Log -Level "ERROR" -Activity "Exchange Server Discovery" -Message "Failed to search Active Directory for Exchange servers. $($_.Exception.Message)"
     }
 
-    foreach ($exchangeServer in $exchangeServers)
+    if ($exchangeServers)
     {
-        $currentServer = "" | Select-Object Name, Version, DatabaseAvailabilityGroup, InstalledRoles, Site, DistinguishedName
-        $currentServer.Name = $exchangeServer.name
-        $currentServer.Version = $exchangeServer.serialNumber
-        $currentServer.DatabaseAvailabilityGroup = $exchangeServer.msExchMDBAvailabilityGroupLink
-        $currentServer.Site = $exchangeServer.msExchServerSite
-        $currentServer.DistinguishedName = $exchangeServer.distinguishedName
-        $currentServer.InstalledRoles = $exchangeServer.msExchCurrentServerRoles
 
-        $discoveredExchangeServers += $currentServer
+        foreach ($exchangeServer in $exchangeServers)
+        {
+            $currentServer = "" | Select-Object Name, Version, DatabaseAvailabilityGroup, InstalledRoles, Site, DistinguishedName
+            $currentServer.Name = $exchangeServer.name
+            $currentServer.Version = $exchangeServer.serialNumber
+            $currentServer.DatabaseAvailabilityGroup = $exchangeServer.msExchMDBAvailabilityGroupLink
+            $currentServer.Site = $exchangeServer.msExchServerSite
+            $currentServer.DistinguishedName = $exchangeServer.distinguishedName
+            $currentServer.InstalledRoles = $exchangeServer.msExchCurrentServerRoles
+
+            $discoveredExchangeServers += $currentServer
+        }
     }
-
+    
     $discoveredExchangeServers
 }

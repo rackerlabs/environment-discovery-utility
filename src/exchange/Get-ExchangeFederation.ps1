@@ -11,18 +11,31 @@ function Get-ExchangeFederation
     $context = "LDAP://CN=Configuration,$($domainDN)"
     $searchRoot = "$DomainDN"
     [array]$properties = "objectGUID", "msExchFedEnabledActions", "msEXchFedIsEnabled"
-    $exchangeFederationPolicys = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
-
-    foreach ($exchangeGederationPolicy in $exchangeFederationPolicys)
+    
+    try
     {
-        $federationPolicy = $null
-        $federationPolicy = "" | Select-Object ObjectGUID, FederationEnabled, FederationActions
-        $federationPolicy.ObjectGUID = [GUID]$($exchangeGederationPolicy.objectGUID | Select-Object -First 1)
-        $federationPolicy.FederationEnabled = $exchangeGederationPolicy.msEXchFedIsEnabled
-        $federationPolicy.FederationActions = $exchangeGederationPolicy.msExchFedEnabledActions
-
-        $discoveredFederationSettings += $federationPolicy
+        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Federation Policies.' -WriteProgress
+        $exchangeFederationPolicys = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    }
+    catch
+    {
+        Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for Federation Policies. $($_.Exception.Message)"
     }
 
+    if ($exchangeFederationPolicys)
+    {    
+     
+        foreach ($exchangeGederationPolicy in $exchangeFederationPolicys)
+        {
+            $federationPolicy = $null
+            $federationPolicy = "" | Select-Object ObjectGUID, FederationEnabled, FederationActions
+            $federationPolicy.ObjectGUID = [GUID]$($exchangeGederationPolicy.objectGUID | Select-Object -First 1)
+            $federationPolicy.FederationEnabled = $exchangeGederationPolicy.msEXchFedIsEnabled
+            $federationPolicy.FederationActions = $exchangeGederationPolicy.msExchFedEnabledActions
+
+            $discoveredFederationSettings += $federationPolicy
+        }
+    }    
+    
     $discoveredFederationSettings
 }
