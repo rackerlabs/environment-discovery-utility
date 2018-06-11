@@ -9,7 +9,7 @@ function Get-ExchangeRecipients
         $ExchangeShellConnected
     )
 
-    $activity = "Exchange Recipient Discovery"
+    $activity = "Exchange Recipients"
     $discoveredRecipients = @()
     $ldapFilter = "(&(msExchRecipientTypeDetails=*)(mail=*))"
     $context = "LDAP://$($DomainDN)"

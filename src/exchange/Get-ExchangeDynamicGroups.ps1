@@ -6,7 +6,7 @@ function Get-ExchangeDynamicGroups
         $DomainDN
     )
 
-    $activity = "Dynamic Group Discovery"
+    $activity = "Dynamic Group"
     $discoveredDynamicGroups = @()
     $ldapFilter = "(objectClass=msExchDynamicDistributionList)"
     $context = "LDAP://$($DomainDN)"
@@ -24,8 +24,7 @@ function Get-ExchangeDynamicGroups
     }
 
     if ($exchangeDynamicGroups)
-    {    
-    
+    {
         foreach ($exchangeDynamicGroup in $exchangeDynamicGroups)
         {
             $dynamicGroup = $null
@@ -39,4 +38,3 @@ function Get-ExchangeDynamicGroups
 
     $discoveredDynamicGroups
 }
-

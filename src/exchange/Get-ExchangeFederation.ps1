@@ -15,17 +15,16 @@ function Get-ExchangeFederation
     
     try
     {
-        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Federation Policies.' -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Federation Policies." -WriteProgress
         $exchangeFederationPolicys = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
     {
-        Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for Federation Policies. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Federation Policies. $($_.Exception.Message)"
     }
 
     if ($exchangeFederationPolicys)
-    {    
-     
+    {
         foreach ($exchangeGederationPolicy in $exchangeFederationPolicys)
         {
             $federationPolicy = $null
@@ -36,7 +35,7 @@ function Get-ExchangeFederation
 
             $discoveredFederationSettings += $federationPolicy
         }
-    }    
-    
+    }
+
     $discoveredFederationSettings
 }

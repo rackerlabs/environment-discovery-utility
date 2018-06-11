@@ -12,20 +12,19 @@ function Get-ExchangeDatabaseJournaling
     $ldapFilter = "(objectClass=msExchPrivateMDB)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
     [array] $properties = "objectGUID", "msExchMessageJournalRecipient"
-    
+
     try
     {
-        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Database Journaling.' -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Database Journaling." -WriteProgress
         $databases = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
     {
-        Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for Database Journaling. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Database Journaling. $($_.Exception.Message)"
     }
     
     if ($databases)
     {
-        
         foreach ($database in $databases)
         {
             $distinguishedName = $database.msExchMessageJournalRecipient

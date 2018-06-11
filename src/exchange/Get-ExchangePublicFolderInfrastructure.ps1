@@ -6,7 +6,7 @@ function Get-ExchangePublicFolderInfrastructure
         $DomainDN
     )
 
-    $activity = "Public Folder Discovery"
+    $activity = "Public Folder Infrastructure"
     $ldapFilter = "(msExchRecipientTypeDetails=68719476736)"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$DomainDN"

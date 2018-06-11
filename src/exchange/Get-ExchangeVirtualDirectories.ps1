@@ -25,7 +25,6 @@ function Get-ExchangeVirtualDirectories
 
     if ($virtualDirectories)
     {
-
         foreach ($virtualDirectory in $virtualDirectories)
         {
             $computerName = ($virtualDirectory.distinguishedname | Select-Object -First 1).Split(",")[3]

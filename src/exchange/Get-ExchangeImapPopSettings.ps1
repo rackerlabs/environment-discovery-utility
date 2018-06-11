@@ -6,7 +6,7 @@ function Get-ExchangeImapPopSettings
         $DomainDN
     )
 
-    $activity = 'Pop/IMAP Settings'
+    $activity = "Pop/IMAP Settings"
     $discoveredImapPopSettings = @()
     $ldapFilter = "(|(objectClass=protocolCfgIMAP)(objectClass=protocolCfgPOP))"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
@@ -16,17 +16,16 @@ function Get-ExchangeImapPopSettings
 
     try
     {
-        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Pop/Imap Settings.' -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Pop/Imap Settings." -WriteProgress
         $exchangeImapPopSettings = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
     {
-        Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for Pop/IMAP Settings. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Pop/IMAP Settings. $($_.Exception.Message)"
     }
 
     if ($exchangeImapPopSettings)
     {
-        
         foreach ($exchangeImapPopSetting in $exchangeImapPopSettings)
         {
             $imapPopSetting = $null

@@ -8,9 +8,9 @@ function Get-ExchangeTransportRules
         [bool]
         $ExchangeShellConnected
     )
-    
-    try 
-    {    
+
+    try
+    {
         $ErrorActionPreference = "silentlycontinue"
         $activity = 'Exchange Transport Rule Discovery'
         $discoveredTransportRules = @()
@@ -18,7 +18,7 @@ function Get-ExchangeTransportRules
         $ldapFilter = "(objectClass=msExchTransportRule)"
         $context = "LDAP://CN=Configuration,$($DomainDN)"
         [array] $properties = "objectGUID", "distinguishedName"
-        
+
         try
         {
             Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Transport Rules.' -WriteProgress
@@ -36,7 +36,7 @@ function Get-ExchangeTransportRules
                 $transportRuleSettings = $null
                 $transportRuleSettings = "" | Select-Object ObjectGUID, Type, Condition, Exemption, Action
                 $transportRuleSettings.ObjectGUID = [GUID]$($transportRule.objectGUID | Select-Object -First 1)
-                
+
                 if (($transportRule.distinguishedName) -like "*TransportVersioned*")
                 {
                     $transportRuleSettings.Type = "TransportRule"
@@ -67,7 +67,7 @@ function Get-ExchangeTransportRules
             }
         }
     }
-    
+
     finally 
     {
         $ErrorActionPreference = "continue"

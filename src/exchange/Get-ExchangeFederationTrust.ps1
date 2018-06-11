@@ -16,17 +16,16 @@ function Get-ExchangeFederationTrust
 
     try
     {
-        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Federation Trusts.' -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity $activity -Message 'Searching Active Directory for Federation Trusts.' -WriteProgress
         $exchangeFederationTrusts = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
     {
-        Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for Federation Trusts. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Federation Trusts. $($_.Exception.Message)"
     }
 
     if ($exchangeFederationTrusts)
     {
-        
         foreach ($exchangefederationTrust in $exchangeFederationTrusts)
         {
             $federationTrust = $null
