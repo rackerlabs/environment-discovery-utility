@@ -28,18 +28,18 @@ function Start-ExchangeDiscovery
         $domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain()
         $forestName = $domain.Forest.Name
         $forestDN = "DC=$( $ForestName.Replace(".",",DC=") )"
-        $exchangeEnvironment.Add("ExchangeServers", $( Get-ExchangeServers -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeAcceptedDomains", $( Get-ExchangeAcceptedDomains -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeVirtualDirectories", $( Get-ExchangeVirtualDirectories -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeRecipients", $( Get-ExchangeRecipients -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected ))
-        $exchangeEnvironment.Add("ExchangePublicFoldersInfrastructure", $( Get-ExchangePublicFolderInfrastructure -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangePublicFolderStatistics", $( Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected ))
-        $exchangeEnvironment.Add("ExchangeDynamicGroups", $( Get-ExchangeDynamicGroups -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeFederationTrust", $( Get-ExchangeFederationTrust -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeFederation", $( Get-ExchangeFederation -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeDatabaseJournaling", $( Get-ExchangeDatabaseJournaling -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeImapPopSettings", $( Get-ExchangeImapPopSettings -DomainDN $forestDN ))
-        $exchangeEnvironment.Add("ExchangeTransportRules", $( Get-ExchangeTransportRules -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected ))
+        $exchangeEnvironment.Add("Servers", $( Get-ExchangeServers -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("AcceptedDomains", $( Get-ExchangeAcceptedDomains -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("VirtualDirectories", $( Get-ExchangeVirtualDirectories -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("Recipients", $( Get-ExchangeRecipients -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected ))
+        $exchangeEnvironment.Add("PublicFoldersInfrastructure", $( Get-ExchangePublicFolderInfrastructure -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("PublicFolderStatistics", $( Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected ))
+        $exchangeEnvironment.Add("DynamicGroups", $( Get-ExchangeDynamicGroups -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("FederationTrust", $( Get-ExchangeFederationTrust -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("Federation", $( Get-ExchangeFederation -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("DatabaseJournaling", $( Get-ExchangeDatabaseJournaling -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("ImapPopSettings", $( Get-ExchangeImapPopSettings -DomainDN $forestDN ))
+        $exchangeEnvironment.Add("TransportRules", $( Get-ExchangeTransportRules -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected ))
         Write-Log -Level "VERBOSE" -Activity "Exchange Discovery" -Message "Completed Exchange Discovery." -WriteProgress
 
         $exchangeEnvironment
