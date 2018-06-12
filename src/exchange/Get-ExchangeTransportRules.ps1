@@ -35,13 +35,13 @@ function Get-ExchangeTransportRules
             foreach ($transportRule in $transportRules)
             {
                 $transportRuleSettings = $null
-                $transportRuleSettings = "" | Select-Object ObjectGUID, Type, Condition, Exemption, Action
-                $transportRuleSettings.ObjectGUID = [GUID]$($transportRule.objectGUID | Select-Object -First 1)
+                $transportRuleSettings = "" | Select-Object ObjectGuid, Type, Condition, Exemption, Action
+                $transportRuleSettings.ObjectGuid = [GUID]$($transportRule.objectGUID | Select-Object -First 1)
 
                 if (($transportRule.distinguishedName) -like "*TransportVersioned*")
                 {
                     $transportRuleSettings.Type = "TransportRule"
-                    
+
                     if ($ExchangeShellConnected)
                     {
                         $objectGuid = [string]($transportRuleSettings).ObjectGUID

@@ -36,9 +36,9 @@ function Start-ActiveDirectoryDiscovery
                 $applicationPartitions += $applicationPartition.Name
             }
 
-            $forestDetails = "" | Select-Object Name,ForestMode,RootDomain,SchemaRoleOwner,NamingRoleOwner,Schema,ApplicationPartitions,SiteLinks,Domains,Sites
+            $forestDetails = "" | Select-Object Name, Mode, RootDomain, SchemaRoleOwner, NamingRoleOwner, Schema, ApplicationPartitions, SiteLinks, Domains, Sites
             $forestDetails.Name = $forest.Name
-            $forestDetails.ForestMode = $forest.ForestMode.ToString()
+            $forestDetails.Mode = $forest.ForestMode.ToString()
             $forestDetails.RootDomain = $forest.RootDomain.ToString()
             $forestDetails.Schema = $forest.Schema.ToString()
             $forestDetails.SchemaRoleOwner = $forest.SchemaRoleOwner.ToString()

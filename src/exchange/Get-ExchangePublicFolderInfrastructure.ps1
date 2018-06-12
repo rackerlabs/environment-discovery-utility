@@ -29,10 +29,9 @@ function Get-ExchangePublicFolderInfrastructure
         foreach ($modernPublicFolder in $modernPublicFolders)
         {
             $discoveredModernPublicFolder = $null
-            $discoveredModernPublicFolder = "" | Select-Object PublicFolderGUID, ParentServer, ParentDatabase
-            $discoveredModernPublicFolder.PublicFolderGUID = [GUID]$($modernPublicFolder.objectGUID | Select-Object -First 1)
-            $discoveredModernPublicFolder.ParentServer = $null
-            $discoveredModernPublicFolder.ParentDatabase = $modernPublicFolder.homeMDB
+            $discoveredModernPublicFolder = "" | Select-Object ObjectGUID, MailboxDatabase, ParentDatabase
+            $discoveredModernPublicFolder.ObjectGUID = [GUID]$($modernPublicFolder.objectGUID | Select-Object -First 1)
+            $discoveredModernPublicFolder.MailboxDatabase = $modernPublicFolder.homeMDB
 
             $discoveredModernPublicFolders += $discoveredModernPublicFolder
         }
@@ -65,10 +64,9 @@ function Get-ExchangePublicFolderInfrastructure
             foreach ($legacyPublicFolder in $legacyPublicFolders)
             {
                 $discoveredLegacyPublicFolder = $null
-                $discoveredLegacyPublicFolder = "" | Select-Object PublicFolderGUID, ParentServer, ParentDatabase
-                $discoveredLegacyPublicFolder.PublicFolderGUID = [GUID]$($legacyPublicFolder.objectGUID | Select-Object -First 1)
+                $discoveredLegacyPublicFolder = "" | Select-Object ObjectGuid, ParentServer, ParentDatabase
+                $discoveredLegacyPublicFolder.ObjectGuid = [GUID]$($legacyPublicFolder.objectGUID | Select-Object -First 1)
                 $discoveredLegacyPublicFolder.ParentServer = $legacyPublicFolder.msExchOwningServer
-                $discoveredLegacyPublicFolder.ParentDatabase = $null
 
                 $discoveredLegacyPublicFolders += $discoveredLegacyPublicFolder
             }

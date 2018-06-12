@@ -26,13 +26,13 @@ function Get-ExchangeFederation
 
     if ($exchangeFederationPolicys)
     {
-        foreach ($exchangeederationPolicy in $exchangeFederationPolicys)
+        foreach ($exchangeFederationPolicy in $exchangeFederationPolicys)
         {
             $federationPolicy = $null
-            $federationPolicy = "" | Select-Object ObjectGUID, FederationEnabled, FederationActions
-            $federationPolicy.ObjectGUID = [GUID]$($exchangeGederationPolicy.objectGUID | Select-Object -First 1)
-            $federationPolicy.FederationEnabled = $exchangeGederationPolicy.msEXchFedIsEnabled
-            $federationPolicy.FederationActions = $exchangeGederationPolicy.msExchFedEnabledActions
+            $federationPolicy = "" | Select-Object ObjectGuid, Enabled, EnabledActions
+            $federationPolicy.ObjectGuid = [GUID]$($exchangeFederationPolicy.objectGUID | Select-Object -First 1)
+            $federationPolicy.Enabled = $exchangeFederationPolicy.msExchFedIsEnabled
+            $federationPolicy.EnabledActions = $exchangeFederationPolicy.msExchFedEnabledActions
 
             $discoveredFederationSettings += $federationPolicy
         }
