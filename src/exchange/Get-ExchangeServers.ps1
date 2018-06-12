@@ -6,6 +6,7 @@ function Get-ExchangeServers
         $DomainDN
     )
 
+    $activity = "Exchange Servers"
     $discoveredExchangeServers = @()
     $searchRoot = "CN=Configuration,$($DomainDN)"
     $ldapFilter = "(&(objectClass=msExchExchangeServer)(msExchCurrentServerRoles=*)(!(objectClass=msExchExchangeTransportServer)))"
@@ -14,25 +15,30 @@ function Get-ExchangeServers
 
     try
     {
-        Write-Log -Level "VERBOSE" -Activity "Exchange Server Discovery" -Message "Searching Active Directory for Exchange servers." -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Exchange servers." -WriteProgress
         $exchangeServers = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
     {
-        Write-Log -Level "ERROR" -Activity "Exchange Server Discovery" -Message "Failed to search Active Directory for Exchange servers. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Exchange servers. $($_.Exception.Message)"
+        return
     }
 
-    foreach ($exchangeServer in $exchangeServers)
+    if ($exchangeServers)
     {
-        $currentServer = "" | Select-Object Name, Version, DatabaseAvailabilityGroup, InstalledRoles, Site, DistinguishedName
-        $currentServer.Name = $exchangeServer.name
-        $currentServer.Version = $exchangeServer.serialNumber
-        $currentServer.DatabaseAvailabilityGroup = $exchangeServer.msExchMDBAvailabilityGroupLink
-        $currentServer.Site = $exchangeServer.msExchServerSite
-        $currentServer.DistinguishedName = $exchangeServer.distinguishedName
-        $currentServer.InstalledRoles = $exchangeServer.msExchCurrentServerRoles
 
-        $discoveredExchangeServers += $currentServer
+        foreach ($exchangeServer in $exchangeServers)
+        {
+            $currentServer = "" | Select-Object Name, Version, DatabaseAvailabilityGroup, InstalledRoles, Site, DistinguishedName
+            $currentServer.Name = $exchangeServer.name
+            $currentServer.Version = $exchangeServer.serialNumber
+            $currentServer.DatabaseAvailabilityGroup = $exchangeServer.msExchMDBAvailabilityGroupLink
+            $currentServer.Site = $exchangeServer.msExchServerSite
+            $currentServer.DistinguishedName = $exchangeServer.distinguishedName
+            $currentServer.InstalledRoles = $exchangeServer.msExchCurrentServerRoles
+
+            $discoveredExchangeServers += $currentServer
+        }
     }
 
     $discoveredExchangeServers

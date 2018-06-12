@@ -6,7 +6,7 @@ function Get-ExchangeDynamicGroups
         $DomainDN
     )
 
-    $activity = "Dynamic Group Discovery"
+    $activity = "Dynamic Group"
     $discoveredDynamicGroups = @()
     $ldapFilter = "(objectClass=msExchDynamicDistributionList)"
     $context = "LDAP://$($DomainDN)"
@@ -21,18 +21,21 @@ function Get-ExchangeDynamicGroups
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Dynamic Groups. $($_.Exception.Message)"
+        return
     }
 
-    foreach ($exchangeDynamicGroup in $exchangeDynamicGroups)
+    if ($exchangeDynamicGroups)
     {
-        $dynamicGroup = $null
-        $dynamicGroup = "" | Select-Object ObjectGUID, GroupMemberCount
-        $dynamicGroup.ObjectGUID = [GUID]$($exchangeDynamicGroup.objectGUID | Select-Object -First 1)
-        $dynamicGroup.GroupMemberCount = $exchangeDynamicGroup.msExchGroupMemberCount
+        foreach ($exchangeDynamicGroup in $exchangeDynamicGroups)
+        {
+            $dynamicGroup = $null
+            $dynamicGroup = "" | Select-Object ObjectGUID, GroupMemberCount
+            $dynamicGroup.ObjectGUID = [GUID]$($exchangeDynamicGroup.objectGUID | Select-Object -First 1)
+            $dynamicGroup.GroupMemberCount = $exchangeDynamicGroup.msExchGroupMemberCount
 
-        $discoveredDynamicGroups += $dynamicGroup
+            $discoveredDynamicGroups += $dynamicGroup
+        }
     }
 
     $discoveredDynamicGroups
 }
-

@@ -9,7 +9,7 @@ function Get-ExchangeRecipients
         $ExchangeShellConnected
     )
 
-    $activity = "Exchange Recipient Discovery"
+    $activity = "Exchange Recipients"
     $discoveredRecipients = @()
     $ldapFilter = "(&(msExchRecipientTypeDetails=*)(mail=*))"
     $context = "LDAP://$($DomainDN)"
@@ -30,6 +30,7 @@ function Get-ExchangeRecipients
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for recipients. $($_.Exception.Message)"
+        return
     }
 
     if ($recipients)

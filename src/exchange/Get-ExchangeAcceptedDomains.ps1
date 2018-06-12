@@ -6,7 +6,7 @@ function Get-ExchangeAcceptedDomains
         $DomainDN
     )
 
-    $activity = 'Accepted Domain Discovery'
+    $activity = "Accepted Domains"
     $discoveredAcceptedDomains = @()
     $searchRoot = "CN=Configuration,$($DomainDN)"
     $ldapFilter = "(objectClass=msExchAcceptedDomain)"
@@ -15,21 +15,25 @@ function Get-ExchangeAcceptedDomains
 
     try
     {
-        Write-Log -Level 'VERBOSE' -Activity $activity -Message 'Searching Active Directory for Accepted Domains.' -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Accepted Domains." -WriteProgress
         $acceptedDomains = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
     {
-        Write-Log -Level 'ERROR' -Activity $activity -Message "Failed to search Active Directory for Accepted Domains. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Accepted Domains. $($_.Exception.Message)"
+        return
     }
 
-    foreach ($acceptedDomain in $acceptedDomains)
+    if ($acceptedDomains)
     {
-        $currentAcceptedDomain = "" | Select-Object Name,AcceptedDomainFlags
-        $currentAcceptedDomain.Name = $acceptedDomain.name
-        $currentAcceptedDomain.AcceptedDomainFlags = $acceptedDomain.msExchAcceptedDomainFlags | Select-Object -First 1
+        foreach ($acceptedDomain in $acceptedDomains)
+        {
+            $currentAcceptedDomain = "" | Select-Object Name,AcceptedDomainFlags
+            $currentAcceptedDomain.Name = $acceptedDomain.name
+            $currentAcceptedDomain.AcceptedDomainFlags = $acceptedDomain.msExchAcceptedDomainFlags | Select-Object -First 1
 
-        $discoveredAcceptedDomains += $currentAcceptedDomain
+            $discoveredAcceptedDomains += $currentAcceptedDomain
+        }
     }
 
     $discoveredAcceptedDomains

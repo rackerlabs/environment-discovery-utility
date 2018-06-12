@@ -6,7 +6,7 @@ function Get-ExchangePublicFolderInfrastructure
         $DomainDN
     )
 
-    $activity = "Public Folder Discovery"
+    $activity = "Public Folder Infrastructure"
     $ldapFilter = "(msExchRecipientTypeDetails=68719476736)"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$DomainDN"
@@ -30,12 +30,14 @@ function Get-ExchangePublicFolderInfrastructure
         {
             $discoveredModernPublicFolder = $null
             $discoveredModernPublicFolder = "" | Select-Object PublicFolderGUID, ParentServer, ParentDatabase
-            $discoveredModernPublicFolder.PublicFolderGUID = [GUID]$($modernPublicFolder.objectguid | Select-Object -First 1)
+            $discoveredModernPublicFolder.PublicFolderGUID = [GUID]$($modernPublicFolder.objectGUID | Select-Object -First 1)
             $discoveredModernPublicFolder.ParentServer = $null
-            $discoveredModernPublicFolder.ParentDatabase = $modernPublicFolder.homemdb
+            $discoveredModernPublicFolder.ParentDatabase = $modernPublicFolder.homeMDB
 
             $discoveredModernPublicFolders += $discoveredModernPublicFolder
         }
+
+        $discoveredModernPublicFolders
     }
     else
     {
@@ -55,6 +57,7 @@ function Get-ExchangePublicFolderInfrastructure
         catch
         {
             Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Public Folder databases. $($_.Exception.Message)"
+            return
         }
 
         if ($legacyPublicFolders)
@@ -63,8 +66,8 @@ function Get-ExchangePublicFolderInfrastructure
             {
                 $discoveredLegacyPublicFolder = $null
                 $discoveredLegacyPublicFolder = "" | Select-Object PublicFolderGUID, ParentServer, ParentDatabase
-                $discoveredLegacyPublicFolder.PublicFolderGUID = [GUID]$($legacyPublicFolder.objectguid | Select-Object -First 1)
-                $discoveredLegacyPublicFolder.ParentServer = $legacyPublicFolder.msexchowningserver
+                $discoveredLegacyPublicFolder.PublicFolderGUID = [GUID]$($legacyPublicFolder.objectGUID | Select-Object -First 1)
+                $discoveredLegacyPublicFolder.ParentServer = $legacyPublicFolder.msExchOwningServer
                 $discoveredLegacyPublicFolder.ParentDatabase = $null
 
                 $discoveredLegacyPublicFolders += $discoveredLegacyPublicFolder

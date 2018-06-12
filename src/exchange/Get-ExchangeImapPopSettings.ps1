@@ -6,6 +6,7 @@ function Get-ExchangeImapPopSettings
         $DomainDN
     )
 
+    $activity = "Pop/IMAP Settings"
     $discoveredImapPopSettings = @()
     $ldapFilter = "(|(objectClass=protocolCfgIMAP)(objectClass=protocolCfgPOP))"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
@@ -13,17 +14,31 @@ function Get-ExchangeImapPopSettings
     [array]$properties = "objectGUID", "msExchSecureBindings", "msExchServerBindings", "portNumber"
     $exchangeImapPopSettings = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
-    foreach ($exchangeImapPopSetting in $exchangeImapPopSettings)
+    try
     {
-        $imapPopSetting = $null
-        $imapPopSetting = "" | Select-Object ObjectGUID, SecureBindings, ServerBindings, portNumber
-        $imapPopSetting.ObjectGUID = [GUID]$($exchangeImapPopSetting.objectGUID | Select-Object -First 1)
-        $imapPopSetting.SecureBindings = $exchangeImapPopSetting.msExchSecureBindings
-        $imapPopSetting.ServerBindings = $exchangeImapPopSetting.msExchServerBindings
-        $imapPopSetting.portNumber = $exchangeImapPopSetting.portNumber
-
-        $discoveredImapPopSettings += $imapPopSetting
+        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Pop/Imap Settings." -WriteProgress
+        $exchangeImapPopSettings = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    }
+    catch
+    {
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Pop/IMAP Settings. $($_.Exception.Message)"
+        return
     }
 
+    if ($exchangeImapPopSettings)
+    {
+        foreach ($exchangeImapPopSetting in $exchangeImapPopSettings)
+        {
+            $imapPopSetting = $null
+            $imapPopSetting = "" | Select-Object ObjectGUID, SecureBindings, ServerBindings, portNumber
+            $imapPopSetting.ObjectGUID = [GUID]$($exchangeImapPopSetting.objectGUID | Select-Object -First 1)
+            $imapPopSetting.SecureBindings = $exchangeImapPopSetting.msExchSecureBindings
+            $imapPopSetting.ServerBindings = $exchangeImapPopSetting.msExchServerBindings
+            $imapPopSetting.portNumber = $exchangeImapPopSetting.portNumber
+
+            $discoveredImapPopSettings += $imapPopSetting
+        }
+    }    
+    
     $discoveredImapPopSettings
 }

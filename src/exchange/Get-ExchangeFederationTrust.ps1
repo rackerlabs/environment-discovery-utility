@@ -6,21 +6,36 @@ function Get-ExchangeFederationTrust
         $DomainDN
     )
 
+    $activity = "Exchange Federation Trusts"
     $discoveredFederationTrusts = @()
     $ldapFilter = "(objectClass=msExchFedTrust)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
     $searchRoot = "$DomainDN"
     [array]$properties = "objectGUID"
-    $exchangeFederationTrusts = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    [array]$exchangeFederationTrusts = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
 
-    foreach ($exchangefederationTrust in $exchangeFederationTrusts)
+    try
     {
-        $federationTrust = $null
-        $federationTrust = "" | Select-Object objectGUID
-        $federationTrust.ObjectGUID = [GUID]$($exchangefederationTrust.objectguid | Select-Object -First 1)
-
-        $discoveredFederationTrusts += $federationTrust
+        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Federation Trusts." -WriteProgress
+        $exchangeFederationTrusts = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+    }
+    catch
+    {
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Federation Trusts. $($_.Exception.Message)"
+        return
     }
 
+    if ($exchangeFederationTrusts)
+    {
+        foreach ($exchangefederationTrust in $exchangeFederationTrusts)
+        {
+            $federationTrust = $null
+            $federationTrust = "" | Select-Object objectGUID
+            $federationTrust.ObjectGUID = [GUID]$($exchangefederationTrust.objectGUID | Select-Object -First 1)
+
+            $discoveredFederationTrusts += $federationTrust
+        }
+    }
+    
     $discoveredFederationTrusts
 }
