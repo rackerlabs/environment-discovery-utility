@@ -12,8 +12,7 @@ function Get-ExchangeImapPopSettings
     $context = "LDAP://CN=Configuration,$($DomainDN)"
     $searchRoot = "$DomainDN"
     [array]$properties = "objectGUID", "msExchSecureBindings", "msExchServerBindings", "portNumber"
-    $exchangeImapPopSettings = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
-
+    
     try
     {
         Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Pop/Imap Settings." -WriteProgress
