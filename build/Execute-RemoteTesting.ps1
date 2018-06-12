@@ -141,7 +141,7 @@ function Extract-ZipContents()
         Add-Type -Path "$OutputPath\Ionic.Zip.dll"
         
         $zip = [Ionic.Zip.ZIPFile]::Read($ZipFile)
-        $zip | % { $_.Extract($OutputPath, [Ionic.Zip.ExtractExistingFileAction]::OverWriteSilently) }
+        $zip | ForEach-Object { $_.Extract($OutputPath, [Ionic.Zip.ExtractExistingFileAction]::OverWriteSilently) }
     }
     
     Invoke-Command -ComputerName $LabIpAddress -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $remoteZipFile, $remoteBuildFolder

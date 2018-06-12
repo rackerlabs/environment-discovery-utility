@@ -1,16 +1,16 @@
 <#
 
-.SYNOPSIS
-	Zip all EDU files.
+	.SYNOPSIS
+		Zip all EDU files.
 
-.DESCRIPTION
-	Zip EDU scripts and libaries into one file for testing and distribution.
+	.DESCRIPTION
+		Zip EDU scripts and libaries into one file for testing and distribution.
 
-.PARAMETER BuildNumber
-	EDU build number.
+	.PARAMETER BuildNumber
+		EDU build number.
 
-.EXAMPLE
-	Build-ZipFile -BuildNumber 25
+	.EXAMPLE
+		Build-ZipFile -BuildNumber 25
 
 #>
 
@@ -27,16 +27,18 @@ function Add-ZipFiles
 	foreach ($file in @($input))
 	{
 		$file.VersionInfo.FileName
+		
 		$relativePath = $file.VersionInfo.FileName -replace [Regex]::Escape($rootDir), ""
 		$relativePath = $relativePath -replace [Regex]::Escape($file.Name), ""
 		$relativePath
+		
 		$zipFile.AddFile($file.VersionInfo.FileName, $relativePath) | Out-Null
 	}
 }
 
 function Zip-Scripts()
 {
-	gci "$rootDir\*.*" -Recurse | Add-ZipFiles
+	Get-ChildItem "$rootDir\*.*" -Recurse | Add-ZipFiles
 }
 
 Set-Location -Path "$PSScriptRoot\..\src"
