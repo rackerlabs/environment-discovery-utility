@@ -14,7 +14,7 @@ function Get-ExchangeRecipients
     $ldapFilter = "(&(msExchRecipientTypeDetails=*)(mail=*))"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$($DomainDN)"
-    [array]$properties = "msexchRecipientTypeDetails", "msexchRecipientDisplayType", "msExchRemoteRecipientType", "objectGuid", "mail", "userPrincipalName"
+    [array]$properties = "msexchRecipientTypeDetails", "msexchRecipientDisplayType", "msExchRemoteRecipientType", "objectGuid", "mail", "userPrincipalName", "objectClass"
     Write-Log -Level "VERBOSE" -Activity $activity -Message "Gathering Exchange recipient details." -PercentComplete 0 -WriteProgress
 
     if (-not $ExchangeShellConnected)
