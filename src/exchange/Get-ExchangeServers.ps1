@@ -21,6 +21,7 @@ function Get-ExchangeServers
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Exchange servers. $($_.Exception.Message)"
+        return
     }
 
     if ($exchangeServers)

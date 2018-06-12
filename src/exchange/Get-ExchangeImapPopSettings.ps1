@@ -22,6 +22,7 @@ function Get-ExchangeImapPopSettings
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Pop/IMAP Settings. $($_.Exception.Message)"
+        return
     }
 
     if ($exchangeImapPopSettings)

@@ -27,6 +27,7 @@ function Get-ExchangeTransportRules
         catch
         {
             Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Transport Rules. $($_.Exception.Message)"
+            return
         }
 
         if ($transportRules)

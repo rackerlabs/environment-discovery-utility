@@ -21,6 +21,7 @@ function Get-ExchangeDynamicGroups
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Dynamic Groups. $($_.Exception.Message)"
+        return
     }
 
     if ($exchangeDynamicGroups)

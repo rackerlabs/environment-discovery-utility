@@ -22,6 +22,7 @@ function Get-ExchangeFederationTrust
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Federation Trusts. $($_.Exception.Message)"
+        return
     }
 
     if ($exchangeFederationTrusts)
