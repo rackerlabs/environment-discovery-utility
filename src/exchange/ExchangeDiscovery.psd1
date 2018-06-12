@@ -78,7 +78,9 @@ NestedModules = @(
     "Get-ExchangeDatabaseJournaling.ps1",
     "Get-ExchangeImapPopSettings.ps1", 
     "Get-ExchangeTransportRules.ps1",
-    "Get-ExchangeSMTPSettings.ps1" 
+    "Get-ExchangeReceiveConnectors.ps1",
+    "Start-TransportSettingsDiscovery.ps1",
+    "Get-ExchangeSendConnectors.ps1",
     "..\Common\Common.psd1",
     "..\Logging\Logging.psd1"
 )
