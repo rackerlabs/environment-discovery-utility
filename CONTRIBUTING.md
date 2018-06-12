@@ -143,6 +143,12 @@ Several editors default to tabs for indentations rather than spaces, which cause
 * Foreach Loops
     * In powershell V2 when running a foreach on a null array it will process the foreach once. This will result in errors in the output. It is recommended that any foreach be wrapped in an If statement to avoid this.
 
+#### Qoutation Considerations
+
+* Qoutation Marks
+    * We should also use double qoutes (") in strings. This applies to all cases except where we are trying to avoid evaluation. 
+
+
 #### Scopes
 When explicitly scoping variables ($Global:, $Script:, etc) please do so correctly.  Refer to [this article](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6&viewFallbackFrom=powershell-Microsoft.PowerShell.Core) for details
 
