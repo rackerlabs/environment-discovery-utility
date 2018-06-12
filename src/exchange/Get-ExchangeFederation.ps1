@@ -26,7 +26,7 @@ function Get-ExchangeFederation
 
     if ($exchangeFederationPolicys)
     {
-        foreach ($exchangeGederationPolicy in $exchangeFederationPolicys)
+        foreach ($exchangeederationPolicy in $exchangeFederationPolicys)
         {
             $federationPolicy = $null
             $federationPolicy = "" | Select-Object ObjectGUID, FederationEnabled, FederationActions

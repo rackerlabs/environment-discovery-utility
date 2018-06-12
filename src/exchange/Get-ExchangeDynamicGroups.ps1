@@ -29,9 +29,9 @@ function Get-ExchangeDynamicGroups
         foreach ($exchangeDynamicGroup in $exchangeDynamicGroups)
         {
             $dynamicGroup = $null
-            $dynamicGroup = "" | Select-Object ObjectGUID, GroupMemberCount
+            $dynamicGroup = "" | Select-Object ObjectGUID, MemberCount
             $dynamicGroup.ObjectGUID = [GUID]$($exchangeDynamicGroup.objectGUID | Select-Object -First 1)
-            $dynamicGroup.GroupMemberCount = $exchangeDynamicGroup.msExchGroupMemberCount
+            $dynamicGroup.MemberCount = $exchangeDynamicGroup.msExchGroupMemberCount
 
             $discoveredDynamicGroups += $dynamicGroup
         }
