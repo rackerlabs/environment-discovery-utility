@@ -146,7 +146,7 @@ Several editors default to tabs for indentations rather than spaces, which cause
 #### Qoutation Considerations
 
 * Qoutation Marks
-    * We should also use double qoutes (") in strings. This applies to all cases except where we are trying to avoid evaluation. 
+    * We should always use double qoutes (") in strings. This applies to all cases except where we are trying to avoid evaluation. 
 
 
 #### Scopes
