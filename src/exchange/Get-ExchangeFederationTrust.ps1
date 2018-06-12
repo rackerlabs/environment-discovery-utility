@@ -6,7 +6,7 @@ function Get-ExchangeFederationTrust
         $DomainDN
     )
 
-    $activity = 'Exchange Federation Trusts'
+    $activity = "Exchange Federation Trusts"
     $discoveredFederationTrusts = @()
     $ldapFilter = "(objectClass=msExchFedTrust)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
@@ -16,7 +16,7 @@ function Get-ExchangeFederationTrust
 
     try
     {
-        Write-Log -Level "VERBOSE" -Activity $activity -Message 'Searching Active Directory for Federation Trusts.' -WriteProgress
+        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Federation Trusts." -WriteProgress
         $exchangeFederationTrusts = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch

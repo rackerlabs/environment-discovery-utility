@@ -6,7 +6,7 @@ function Get-ExchangeVirtualDirectories
         $DomainDN
     )
 
-    $activity = 'Exchange Virtual Directory Discovery'
+    $activity = "Exchange Virtual Directory"
     $discoveredVirtualDirectories = @()
     $ldapFilter = "(objectClass=msExchVirtualDirectory)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"

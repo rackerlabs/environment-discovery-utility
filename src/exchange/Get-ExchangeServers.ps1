@@ -6,7 +6,7 @@ function Get-ExchangeServers
         $DomainDN
     )
 
-    $activity = 'Exchange Servers'
+    $activity = "Exchange Servers"
     $discoveredExchangeServers = @()
     $searchRoot = "CN=Configuration,$($DomainDN)"
     $ldapFilter = "(&(objectClass=msExchExchangeServer)(msExchCurrentServerRoles=*)(!(objectClass=msExchExchangeTransportServer)))"

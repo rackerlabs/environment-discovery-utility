@@ -6,7 +6,7 @@ function Get-ExchangeFederation
         $DomainDn
     )
 
-    $activity = 'Exchange Federation'
+    $activity = "Exchange Federation"
     $discoveredFederationSettings = @()
     $ldapFilter = "(objectClass=msexchfedsharingrelationship)"
     $context = "LDAP://CN=Configuration,$($domainDN)"
