@@ -5,17 +5,33 @@ The following is a set of guidelines for contributing to EDU.
 
 ## Github
 
-#### **Everything starts with a GitHub Issue**
+### **Everything starts with a GitHub Issue**
 
 * Search for the issue or feature in the issues list on GitHub.
 * If there is no existing issue, create an issue with a descriptive subject and description.  Non-descriptive issues will be closed.
 * Use existing labels when possible and assign the issue to the correct person performing the work.
 * Get feedback on the request in the issue you created.
-* Create a branch using the following format: descriptive-feature-name
+
+### **Branching**
+* Create a branch using the following format: feature-name.
+* Branch names should be short and concise.
+
+### **Testing**
+* Once work in your branch is complete, merge your branch into the [develop branch](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/tree/develop).
+* Our build server (BUILD01-ORD1.mgmt.mlsrvr.com) runs [Jenkins](https://jenkins.io/) which monitors the develop branch, any changes to this branch will kick off a new CI build.
+* The CI build will automatically deploy and test the updated to code using our lab automation infrastructure.
+* It is important to monitor the results of the CI build.  If there are any errors, the build will fail.  
+    - This first place to check is in the #edu Slack channel.  
+    - If your build failed or no output is showing in Slack, please log into our [Jenkins instance](https://jenkins.mseng.mlsrvr.com/job/edu_ci/) using MGMT credentials.  
+    - Once logged in, you can view the build output directly using [this link](https://jenkins.mseng.mlsrvr.com/job/edu_ci)
+    - To view detailed logs, click your build number in the left pane, then click Console Output in the left menu. 
+* If your build fails, switch back to the original branch, correct the errors and restart the testing procedure.
+
+### **Pull Requests**
 * Once ready to merge, initiate a pull request.
-* Pull requests should include refences to the issues being worked using [keywords](https://help.github.com/articles/closing-issues-using-keywords/) like `closes #234`
+* Pull requests should include refences to the issues being worked using [keywords](https://help.github.com/articles/closing-issues-using-keywords/) like `closes #234`.
 * The team will perform a code review and provide feedback, which may require adjustments in code.
-* Once your pull request is approved, merge your branch into master.  Be sure all associated CI builds complete successfully.
+* Once your pull request is approved, merge your branch into master.
 
 ## Styleguides
 
@@ -148,6 +164,7 @@ root<br>
 |<br>
 -> README.md<br>
 -> CONTRIBUTING.md<br>
+-> build<br>
 -> src<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> EnvironmentDiscoveryUtility.psd1<br>
@@ -177,21 +194,21 @@ root<br>
 | **ext** | External binaries and libraries, for example Nlog or Json.Net. |
 | **[area]** | Scripts grouped by functionality, for example [area] would be "active-directory" or "exchange". |
 
-# Logging
-## Logging Module
+## Logging
+### Logging Module
 I've added a Logging module to the project.  It is currently in a directory under src/logging.  
 This module is simply a wrapper module for the [Enhanced Script Logging module](https://gallery.technet.microsoft.com/scriptcenter/Enhanced-Script-Logging-27615f85) which exists as a nested module in the /src/logging/PowerShellLogging directory.  
 
-## Stream Interception
+### Stream Interception
 We use Enable-OutputSubscriber from the PowerShellLogging module to intercept the different streams and use our own Write-Log function to write to file.  We are still unable to stop the Exchange tips from coming to the screen, but we can/do clear the screen once we can.
 
-## Log File
+### Log File
 We are logging to the environment-session.log file in the current directory.
 
 ### Sample log file from JMLLab
 [environment-4a884b49-11ad-4b18-a095-15e8fe58c477_log.txt](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/files/344/environment-4a884b49-11ad-4b18-a095-15e8fe58c477_log.txt)
 
-## Logging in JSON Return
+### Logging in JSON Return
 We take the log entries from the session and include them in the environment report json under the Log element..
 
 
@@ -206,10 +223,10 @@ Sample log entry
 ### Sample Updated JSON output file from JMLLab
 [environment-4a884b49-11ad-4b18-a095-15e8fe58c477_json.txt](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/files/343/environment-4a884b49-11ad-4b18-a095-15e8fe58c477_json.txt)
 
-## Logging Something
+### Logging Something
 Functions have an 'activity' variable for logging.  I'm not extremely fond of this and have considered using a method I found to set the activity to the name of the function
 
-## Example Usage
+### Example Usage
 - Write a warning message without writing progress bar
 `Write-Log -Level 'WARNING' -Activity $activity -Message 'Failed to do something that is not critical but we would want to know about.'`
 - Write a verbose message with progress
@@ -217,7 +234,7 @@ Functions have an 'activity' variable for logging.  I'm not extremely fond of th
 - Write a verbose message with progress and completion percentage
 `Write-Log -Level 'DEBUG' -Activity $activity -Message "Gathering Exchange recipient details $x / $($recipients.Count)" -PercentComplete $percentComplete -WriteProgress`
 
-## Progress Bars
+### Progress Bars
 Progress bars are built into the Write-Log function.  See the below notes for more information on usage.
 - Demo of Progress Bars
 ![progress_demo](https://media.github.rackspace.com/user/1619/files/75fb5c94-6a99-11e8-916f-310749c5e360)

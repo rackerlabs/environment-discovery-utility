@@ -1,0 +1,56 @@
+#!/usr/bin/env groovy
+pipeline {
+    agent any
+    parameters {
+        string(name: 'slackChannel', defaultValue: 'edu', description: '')
+        string(name: 'labIpAddress', defaultValue: '172.29.20.13', description: '')
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Started (<${env.BUILD_URL}|Open>)"
+                checkout (
+                    changelog: true,
+                    poll: true,
+                    scm: [ 
+                        $class: 'GitSCM', 
+                        branches: [[name: "develop"]], 
+                        doGenerateSubmoduleConfigurations: false, 
+                        extensions: [[$class: 'CleanBeforeCheckout']], 
+                        submoduleCfg: [], 
+                        userRemoteConfigs: [[credentialsId: 'james.blake', url: 'git@github.rackspace.com:MicrosoftEng/environment-discovery-utility.git']]
+                    ]
+                )
+            }
+        }
+        stage('Zip') {
+            steps {
+                slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Zipping files"
+
+                bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Build-ZipFile.ps1 -BuildNumber %BUILD_NUMBER%'
+            }
+        }
+        stage('Run Static Lab Test') {
+            steps {
+                slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Running static lab tests"
+
+                withCredentials([
+                    usernamePassword(credentialsId: '03bbc260-f717-48f0-b16a-c97ba14e6d85', passwordVariable: 'password', usernameVariable: 'username')
+                ]) {
+                    bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Execute-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress %labIpAddress% -Password %password% -Username %username% -ZipFile .\\build\\edu.v%BUILD_NUMBER%.zip'
+                }				
+            }
+        }
+    }
+    post {
+        success {		
+            archiveArtifacts artifacts: "build/edu.v${env.BUILD_NUMBER}.zip"
+
+            slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Success (<${env.BUILD_URL}|Open>)"
+            slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} (<https://jenkins.mseng.mlsrvr.com/view/EDU/job/edu_ci/${env.BUILD_NUMBER}/artifact/build/edu.v${env.BUILD_NUMBER}.zip|Download Zip>)"
+        }
+        failure {
+            slackSend channel: "${slackChannel}", color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open>)"
+        }
+    }
+}
