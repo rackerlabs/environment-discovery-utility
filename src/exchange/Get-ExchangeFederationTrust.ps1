@@ -30,7 +30,7 @@ function Get-ExchangeFederationTrust
         {
             $federationTrust = $null
             $federationTrust = "" | Select-Object objectGUID
-            $federationTrust.ObjectGUID = [GUID]$($exchangefederationTrust.objectguid | Select-Object -First 1)
+            $federationTrust.ObjectGUID = [GUID]$($exchangefederationTrust.objectGUID | Select-Object -First 1)
 
             $discoveredFederationTrusts += $federationTrust
         }

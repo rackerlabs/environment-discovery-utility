@@ -65,8 +65,8 @@ function Get-ExchangePublicFolderInfrastructure
             {
                 $discoveredLegacyPublicFolder = $null
                 $discoveredLegacyPublicFolder = "" | Select-Object PublicFolderGUID, ParentServer, ParentDatabase
-                $discoveredLegacyPublicFolder.PublicFolderGUID = [GUID]$($legacyPublicFolder.objectguid | Select-Object -First 1)
-                $discoveredLegacyPublicFolder.ParentServer = $legacyPublicFolder.msexchowningserver
+                $discoveredLegacyPublicFolder.PublicFolderGUID = [GUID]$($legacyPublicFolder.objectGUID | Select-Object -First 1)
+                $discoveredLegacyPublicFolder.ParentServer = $legacyPublicFolder.msExchOwningServer
                 $discoveredLegacyPublicFolder.ParentDatabase = $null
 
                 $discoveredLegacyPublicFolders += $discoveredLegacyPublicFolder
