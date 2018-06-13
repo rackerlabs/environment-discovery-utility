@@ -6,8 +6,8 @@ function Get-ExchangeReceiveConnectors
         $DomainDN
     )
 
-    $activity = "Receive Connector Settings"
-    $discoveredReceiveConnectorSettings = @()
+    $activity = "Receive Connector"
+    $discoveredReceiveConnectors = @()
     $ldapFilter = "(objectClass=msExchSmtpReceiveConnector)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
     $searchRoot = "$DomainDN"
@@ -16,7 +16,7 @@ function Get-ExchangeReceiveConnectors
     try
     {
         Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Receive Connector Settings." -WriteProgress
-        $exchangeReceiveConnectorSettings = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        $receiveConnectorSettings = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
     {
@@ -24,19 +24,19 @@ function Get-ExchangeReceiveConnectors
         return
     }
 
-    foreach ($exchangeReceiveConnectorSetting in $exchangeReceiveConnectorSettings)
+    foreach ($receiveConnectorSetting in $receiveConnectorSettings)
     {
-        $receiveConnectorSettings = $null
-        $receiveConnectorSettings = ""| Select-Object ConnectorGUID, SMTPReceiveBindings, SMTPInactivityTimeOut, ConnectionTimeout, MaxMessageSize, MaxRecipientsPerMessage 
-        $receiveConnectorSettings.ConnectorGUID = [GUID]$($exchangeReceiveConnectorSetting.objectGUID | Select-Object -First 1)
-        $receiveConnectorSettings.SMTPReceiveBindings = $exchangeReceiveConnectorSetting.msExchSmtpReceiveBindings
-        $receiveConnectorSettings.SMTPInactivityTimeOut = $exchangeReceiveConnectorSetting.msExchSmtpReceiveConnectionInactivityTimeout
-        $receiveConnectorSettings.ConnectionTimeout = $exchangeReceiveConnectorSetting.msExchSmtpReceiveConnectionTimeout
-        $receiveConnectorSettings.MaxMessageSize = $exchangeReceiveConnectorSetting.msExchSmtpReceiveMaxMessageSize
-        $receiveConnectorSettings.MaxRecipientsPerMessage = $exchangeReceiveConnectorSetting.msExchSmtpReceiveMaxRecipientsPerMessage
+        $receiveConnector = $null
+        $receiveConnector = ""| Select-Object ConnectorGUID, SMTPReceiveBindings, SMTPInactivityTimeOut, ConnectionTimeout, MaxMessageSize, MaxRecipientsPerMessage 
+        $receiveConnector.ConnectorGUID = [GUID]$($receiveConnectorSetting.objectGUID | Select-Object -First 1)
+        $receiveConnector.SMTPReceiveBindings = $receiveConnectorSetting.msExchSmtpReceiveBindings
+        $receiveConnector.SMTPInactivityTimeOut = $receiveConnectorSetting.msExchSmtpReceiveConnectionInactivityTimeout
+        $receiveConnector.ConnectionTimeout = $receiveConnectorSetting.msExchSmtpReceiveConnectionTimeout
+        $receiveConnector.MaxMessageSize = $receiveConnectorSetting.msExchSmtpReceiveMaxMessageSize
+        $receiveConnector.MaxRecipientsPerMessage = $receiveConnectorSetting.msExchSmtpReceiveMaxRecipientsPerMessage
         
-        $discoveredReceiveConnectorSettings += $receiveConnectorSettings
+        $discoveredReceiveConnectors += $receiveConnector
     }
 
-    $discoveredReceiveConnectorSettings
+    $discoveredReceiveConnectors
 }

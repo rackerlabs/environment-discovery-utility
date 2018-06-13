@@ -6,8 +6,8 @@ function Get-ExchangeSendConnectors
         $DomainDN
     )
 
-    $activity = "Send Connector Settings"
-    $discoveredSendConnectorSettings = @()
+    $activity = "Send Connectors"
+    $discoveredSendConnectors = @()
     $ldapFilter = "(objectClass=msExchRoutingSMTPConnector)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
     $searchRoot = "$DomainDN"
@@ -16,7 +16,7 @@ function Get-ExchangeSendConnectors
     try
     {
         Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Send Connector Settings." -WriteProgress
-        $exchangeSendConnectorSettings = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        $sendConnectorSettings = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
     {
@@ -24,25 +24,26 @@ function Get-ExchangeSendConnectors
         return
     }
 
-    foreach ($exchangeSendConnectorSetting in $exchangeSendConnectorSettings)
+    foreach ($sendConnectorSetting in $sendConnectorSettings)
     {
-        $sendConnectorSettings = $null
-        $sendConnectorSettings = ""| Select-Object ConnectorGUID, SMTPSendPort, TLSEnabled, ConnectionTimeout, MaxMessagesPerConnection 
-        $sendConnectorSettings.ConnectorGUID = [GUID]$($exchangeSendConnectorSetting.objectGUID | Select-Object -First 1)
-        $sendConnectorSettings.SMTPSendPort= $exchangeSendConnectorSetting.msExchSmtpSendPort
-        if ($exchangeSendConnectorSetting.msExchSmtpSendTlsDomain)
+        $sendConnector = $null
+        $sendConnector = ""| Select-Object ConnectorGUID, SMTPSendPort, TLSEnabled, ConnectionTimeout, MaxMessagesPerConnection 
+        $sendConnector.ConnectorGUID = [GUID]$($sendConnectorSetting.objectGUID | Select-Object -First 1)
+        $sendConnector.SMTPSendPort= $sendConnectorSetting.msExchSmtpSendPort
+        $sendConnector.ConnectionTimeout = $sendConnectorSetting.msExchSmtpSendConnectionTimeout
+        $sendConnector.MaxMessagesPerConnection = $sendConnectorSetting.msExchSmtpMaxMessagesPerConnection
+
+        if ($sendConnectorSetting.msExchSmtpSendTlsDomain)
         {
-            $sendConnectorSettings.TLSEnabled = $true
+            $sendConnector.TLSEnabled = $true
         }
         else 
         {
-            $sendConnectorSettings.TLSEnabled = $false
+            $sendConnector.TLSEnabled = $false
         }
-        $sendConnectorSettings.ConnectionTimeout = $exchangeSendConnectorSetting.msExchSmtpSendConnectionTimeout
-        $sendConnectorSettings.MaxMessagesPerConnection = $exchangeSendConnectorSetting.msExchSmtpMaxMessagesPerConnection
         
-        $discoveredSendConnectorSettings += $sendConnectorSettings
+        $discoveredSendConnectors += $sendConnector
     }
 
-    $discoveredSendConnectorSettings
+    $discoveredSendConnectors
 }
