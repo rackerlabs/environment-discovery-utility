@@ -6,7 +6,7 @@ function Get-ExchangeReceiveConnectors
         $DomainDN
     )
 
-    $activity = "Receive Connector"
+    $activity = "Receive Connectors"
     $discoveredReceiveConnectors = @()
     $ldapFilter = "(objectClass=msExchSmtpReceiveConnector)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
