@@ -37,5 +37,3 @@ function Start-PublicFolderDiscovery
         $publicFolders
     }
 }
-
-

@@ -29,8 +29,8 @@ function Get-ExchangePublicFolderMailboxes
         foreach ($modernPublicFolder in $modernPublicFolders)
         {
             $discoveredModernPublicFolder = $null
-            $discoveredModernPublicFolder = "" | Select-Object ObjectGUID, MailboxDatabase, ParentDatabase
-            $discoveredModernPublicFolder.ObjectGUID = [GUID]$($modernPublicFolder.objectGUID | Select-Object -First 1)
+            $discoveredModernPublicFolder = "" | Select-Object ObjectGuid, MailboxDatabase, ParentDatabase
+            $discoveredModernPublicFolder.ObjectGuid = [GUID]$($modernPublicFolder.objectGUID | Select-Object -First 1)
             $discoveredModernPublicFolder.MailboxDatabase = $modernPublicFolder.homeMDB
 
             $discoveredModernPublicFolders += $discoveredModernPublicFolder
