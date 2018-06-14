@@ -54,7 +54,7 @@
                     "ad"
                     {
                         $activeDirectoryObject = Start-ActiveDirectoryDiscovery
-                        $environment.Add("Active-Directory",$activeDirectoryObject)
+                        $environment.Add("ActiveDirectory",$activeDirectoryObject)
                     }
                     "exchange"
                     {

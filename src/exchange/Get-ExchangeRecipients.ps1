@@ -47,7 +47,7 @@ function Get-ExchangeRecipients
             }
 
             $recipientStatistics = $null
-            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RemoteRecipientType, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount
+            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RemoteRecipientType, RecipientDisplayType, PrimaryMatchesUpn, TotalItemSizeKB, ItemCount
             $currentRecipient.ObjectGuid = [GUID]$($recipient.objectGuid | Select-Object -First 1)
             $currentRecipient.PrimarySmtpDomain = $($recipient.mail | Select-Object -First 1).Split("@")[1]
             $currentRecipient.RecipientTypeDetails = $recipient.msexchRecipientTypeDetails | Select-Object -First 1
@@ -57,7 +57,7 @@ function Get-ExchangeRecipients
             if ([array]$recipient.ObjectClass -contains "user")
             {
                 $currentRecipient.UserPrincipalNameSuffix = $($recipient.userPrincipalName | Select-Object -First 1).Split("@")[1]
-                $currentRecipient.PrimaryMatchesUPN = $($recipient.mail | Select-Object -First 1) -eq $($recipient.userPrincipalName | Select-Object -First 1)
+                $currentRecipient.PrimaryMatchesUpn = $($recipient.mail | Select-Object -First 1) -eq $($recipient.userPrincipalName | Select-Object -First 1)
             }
 
             if ($ExchangeShellConnected)
