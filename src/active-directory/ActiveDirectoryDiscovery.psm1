@@ -27,9 +27,9 @@ function Start-ActiveDirectoryDiscovery
 
         if ($forest)
         {
-            $domains = Get-ActiveDirectoryDomains $forest.Domains
-            $sites = Get-ActiveDirectorySites $forest.Sites
-            $applicationPartitions = @()
+            [array]$domains = Get-ActiveDirectoryDomains $forest.Domains
+            [array]$sites = Get-ActiveDirectorySites $forest.Sites
+            [array]$applicationPartitions = @()
 
             foreach ($applicationPartition in $forest.ApplicationPartitions)
             {
@@ -45,7 +45,7 @@ function Start-ActiveDirectoryDiscovery
             $forestDetails.NamingRoleOwner = $forest.NamingRoleOwner.ToString()
             $forestDetails.Domains = $domains
             $forestDetails.Sites = $sites
-            $forestDetails.SiteLinks = $Global:siteLinks
+            $forestDetails.SiteLinks = [array]$Global:siteLinks
             $forestDetails.ApplicationPartitions = $applicationPartitions
         }
 
