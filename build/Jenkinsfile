@@ -45,6 +45,7 @@ pipeline {
     post {
         success {		
             archiveArtifacts artifacts: "build/edu.v${env.BUILD_NUMBER}.zip"
+            archiveArtifacts artifacts: "build/*.json"
 
             slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Success (<${env.BUILD_URL}|Open>)"
             slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} (<https://jenkins.mseng.mlsrvr.com/view/EDU/job/edu_ci/${env.BUILD_NUMBER}/artifact/build/edu.v${env.BUILD_NUMBER}.zip|Download Zip>)"
