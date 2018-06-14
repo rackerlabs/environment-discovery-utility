@@ -14,7 +14,7 @@ function Get-ExchangeRecipients
     $ldapFilter = "(&(msExchRecipientTypeDetails=*)(mail=*))"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$($DomainDN)"
-    [array]$properties = "msexchRecipientTypeDetails", "msexchRecipientDisplayType", "msExchRemoteRecipientType", "objectGuid", "mail", "userPrincipalName", "objectClass"
+    [array]$properties = "msexchRecipientTypeDetails", "msexchRecipientDisplayType", "msExchRemoteRecipientType", "objectGuid", "mail", "userPrincipalName", "objectClass", "userAccountControl"
     Write-Log -Level "VERBOSE" -Activity $activity -Message "Gathering Exchange recipient details." -PercentComplete 0 -WriteProgress
 
     if (-not $ExchangeShellConnected)
@@ -47,17 +47,18 @@ function Get-ExchangeRecipients
             }
 
             $recipientStatistics = $null
-            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RemoteRecipientType, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount
-            $currentRecipient.ObjectGuid = [GUID]$($recipient.objectGuid | Select-Object -First 1)
-            $currentRecipient.PrimarySmtpDomain = $($recipient.mail | Select-Object -First 1).Split("@")[1]
+            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RemoteRecipientType, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, UserAccountControl
+            $currentRecipient.ObjectGuid = [GUID]($recipient.objectGuid | Select-Object -First 1)
+            $currentRecipient.PrimarySmtpDomain = ($recipient.mail | Select-Object -First 1).Split("@")[1]
             $currentRecipient.RecipientTypeDetails = $recipient.msexchRecipientTypeDetails | Select-Object -First 1
             $currentRecipient.RemoteRecipientType = $recipient.msExchRemoteRecipientType | Select-Object -First 1
             $currentRecipient.RecipientDisplayType = $recipient.msexchRecipientDisplayType | Select-Object -First 1
 
             if ([array]$recipient.ObjectClass -contains "user")
             {
-                $currentRecipient.UserPrincipalNameSuffix = $($recipient.userPrincipalName | Select-Object -First 1).Split("@")[1]
-                $currentRecipient.PrimaryMatchesUPN = $($recipient.mail | Select-Object -First 1) -eq $($recipient.userPrincipalName | Select-Object -First 1)
+                $currentRecipient.UserPrincipalNameSuffix = ($recipient.userPrincipalName | Select-Object -First 1).Split("@")[1]
+                $currentRecipient.PrimaryMatchesUPN = ($recipient.mail | Select-Object -First 1) -eq ($recipient.userPrincipalName | Select-Object -First 1)
+                $currentRecipient.UserAccountControl = $recipient.userAccountControl | Select-Object -First 1
             }
 
             if ($ExchangeShellConnected)
