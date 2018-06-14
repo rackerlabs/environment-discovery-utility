@@ -19,7 +19,7 @@ function Get-ActiveDirectoryDomainDetails
         $parentDomain = $domain.Parent.Name
     }
 
-    $domainDetails = "" | Select-Object Name,DomainMode,PdcRoleOwner,RidRoleOwner,InfrastructureRoleOwner,Parent,Children,DomainControllers
+    $domainDetails = "" | Select-Object Name, DomainMode, PdcRoleOwner, RidRoleOwner, InfrastructureRoleOwner, Parent, Children, DomainControllers
     $domainDetails.Name = $Domain.Name
     $domainDetails.DomainMode = $Domain.DomainMode.ToString()
     $domainDetails.PdcRoleOwner = $Domain.PdcRoleOwner.Name.ToString()
