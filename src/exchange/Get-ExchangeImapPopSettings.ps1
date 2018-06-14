@@ -29,15 +29,15 @@ function Get-ExchangeImapPopSettings
         foreach ($exchangeImapPopSetting in $exchangeImapPopSettings)
         {
             $imapPopSetting = $null
-            $imapPopSetting = "" | Select-Object ObjectGUID, SecureBindings, ServerBindings, portNumber
-            $imapPopSetting.ObjectGUID = [GUID]$($exchangeImapPopSetting.objectGUID | Select-Object -First 1)
+            $imapPopSetting = "" | Select-Object ObjectGuid, SecureBindings, ServerBindings, Port
+            $imapPopSetting.ObjectGuid = [GUID]$($exchangeImapPopSetting.objectGUID | Select-Object -First 1)
             $imapPopSetting.SecureBindings = $exchangeImapPopSetting.msExchSecureBindings
             $imapPopSetting.ServerBindings = $exchangeImapPopSetting.msExchServerBindings
-            $imapPopSetting.portNumber = $exchangeImapPopSetting.portNumber
+            $imapPopSetting.Port = $exchangeImapPopSetting.portNumber
 
             $discoveredImapPopSettings += $imapPopSetting
         }
-    }    
-    
+    }
+
     $discoveredImapPopSettings
 }

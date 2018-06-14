@@ -6,7 +6,7 @@ function Get-ActiveDirectoryDomainDetails
         $Domain
     )
 
-    $childDomains = @()
+    [array]$childDomains = @()
     $parentDomain = $null
 
     foreach ($childDomain in $Domain.Children)
@@ -19,14 +19,15 @@ function Get-ActiveDirectoryDomainDetails
         $parentDomain = $domain.Parent.Name
     }
 
-    $domainDetails = "" | Select-Object Name,DomainMode,PdcRoleOwner,RidRoleOwner,InfrastructureRoleOwner,Parent,Children,DomainControllers
+    $domainDetails = "" | Select-Object Name, Mode, PdcRoleOwner, RidRoleOwner, InfrastructureRoleOwner, Parent, Children, DomainControllers
     $domainDetails.Name = $Domain.Name
-    $domainDetails.DomainMode = $Domain.DomainMode.ToString()
+    $domainDetails.Mode = $Domain.DomainMode.ToString()
     $domainDetails.PdcRoleOwner = $Domain.PdcRoleOwner.Name.ToString()
     $domainDetails.RidRoleOwner = $Domain.RidRoleOwner.Name.ToString()
     $domainDetails.InfrastructureRoleOwner = $Domain.InfrastructureRoleOwner.Name.ToString()
     $domainDetails.Children = $childDomains
     $domainDetails.Parent = $parentDomain
+    $domainDetails.DomainControllers = [array]$Domain.DomainControllers | Select-Object @{Name='Roles';expression={[array]$_.Roles}}, SiteName, OSVersion
 
     $domainDetails
 }
