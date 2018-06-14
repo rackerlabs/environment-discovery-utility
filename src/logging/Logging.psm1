@@ -77,10 +77,12 @@ function Write-Log
             {
                 $progressArgs.Add("Id",$progressId)
             }
+
             if ($ProgressComplete)
             {
                 $progressArgs.Add("Completed",$null)
             }
+
             if ($PercentComplete)
             {
                 $progressArgs.Add("PercentComplete",$PercentComplete)
