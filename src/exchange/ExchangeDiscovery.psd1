@@ -71,13 +71,15 @@ NestedModules = @(
     "Initialize-ExchangePowershell.ps1", 
     "Get-ExchangeRecipientDataStatistics.ps1", 
     "Get-ExchangePublicFolderStatistics.ps1", 
-    "Get-ExchangePublicFolderInfrastructure.ps1", 
+    "Get-ExchangePublicFolderMailboxes.ps1", 
+    "Get-ExchangePublicFolderDatabases.ps1",
     "Get-ExchangeDynamicGroups.ps1",
     "Get-ExchangeFederationTrust.ps1",
-    "Get-ExchangeFederation.ps1", 
+    "Get-ExchangeOrganizationalRelationship.ps1", 
     "Get-ExchangeDatabaseJournaling.ps1",
     "Get-ExchangeImapPopSettings.ps1", 
-    "Get-ExchangeTransportRules.ps1", 
+    "Get-ExchangeTransportRules.ps1",
+    "Start-PublicFolderDiscovery.ps1" 
     "..\Common\Common.psd1",
     "..\Logging\Logging.psd1"
 )

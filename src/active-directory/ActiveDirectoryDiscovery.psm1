@@ -27,26 +27,26 @@ function Start-ActiveDirectoryDiscovery
 
         if ($forest)
         {
-            $domains = Get-ActiveDirectoryDomains $forest.Domains
-            $sites = Get-ActiveDirectorySites $forest.Sites
-            $applicationPartitions = @()
+            [array]$domains = Get-ActiveDirectoryDomains $forest.Domains
+            [array]$sites = Get-ActiveDirectorySites $forest.Sites
+            [array]$applicationPartitions = @()
 
             foreach ($applicationPartition in $forest.ApplicationPartitions)
             {
                 $applicationPartitions += $applicationPartition.Name
             }
 
-            $forestDetails = "" | Select-Object Name,ForestMode,RootDomain,SchemaRoleOwner,NamingRoleOwner,Schema,ApplicationPartitions,SiteLinks,Domains,Sites
+            $forestDetails = "" | Select-Object Name, Mode, RootDomain, SchemaRoleOwner, NamingRoleOwner, Schema, ApplicationPartitions, SiteLinks, Domains, Sites
             $forestDetails.Name = $forest.Name
-            $forestDetails.ForestMode = $forest.ForestMode.ToString()
+            $forestDetails.Mode = $forest.ForestMode.ToString()
             $forestDetails.RootDomain = $forest.RootDomain.ToString()
             $forestDetails.Schema = $forest.Schema.ToString()
             $forestDetails.SchemaRoleOwner = $forest.SchemaRoleOwner.ToString()
             $forestDetails.NamingRoleOwner = $forest.NamingRoleOwner.ToString()
-            $forestDetails.Domains = $domains
-            $forestDetails.Sites = $sites
-            $forestDetails.SiteLinks = $Global:siteLinks
-            $forestDetails.ApplicationPartitions = $applicationPartitions
+            $forestDetails.Domains = [array]$domains
+            $forestDetails.Sites = [array]$sites
+            $forestDetails.SiteLinks = [array]$Global:siteLinks
+            $forestDetails.ApplicationPartitions = [array]$applicationPartitions
         }
 
         $activeDirectoryEnvironment.Add("Forest",$forestDetails)

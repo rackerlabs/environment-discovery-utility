@@ -28,7 +28,7 @@ function Get-ExchangeAcceptedDomains
     {
         foreach ($acceptedDomain in $acceptedDomains)
         {
-            $currentAcceptedDomain = "" | Select-Object Name,AcceptedDomainFlags
+            $currentAcceptedDomain = "" | Select-Object Name, AcceptedDomainFlags
             $currentAcceptedDomain.Name = $acceptedDomain.name
             $currentAcceptedDomain.AcceptedDomainFlags = $acceptedDomain.msExchAcceptedDomainFlags | Select-Object -First 1
 

@@ -29,10 +29,9 @@ function Get-ExchangeServers
 
         foreach ($exchangeServer in $exchangeServers)
         {
-            $currentServer = "" | Select-Object Name, Version, DatabaseAvailabilityGroup, InstalledRoles, Site, DistinguishedName
+            $currentServer = "" | Select-Object Name, Version, InstalledRoles, Site, DistinguishedName
             $currentServer.Name = $exchangeServer.name
             $currentServer.Version = $exchangeServer.serialNumber
-            $currentServer.DatabaseAvailabilityGroup = $exchangeServer.msExchMDBAvailabilityGroupLink
             $currentServer.Site = $exchangeServer.msExchServerSite
             $currentServer.DistinguishedName = $exchangeServer.distinguishedName
             $currentServer.InstalledRoles = $exchangeServer.msExchCurrentServerRoles

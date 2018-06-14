@@ -39,10 +39,10 @@ function Get-ExchangeDatabaseJournaling
                 $journalingTarget = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
                 
                 $databaseJournaling = $null
-                $databaseJournaling = "" | Select-Object DatabaseGUID, JournalTargetGUID, JournalTargetObjectClass
-                $databaseJournaling.DatabaseGUID = [GUID]$($database.objectGUID | Select-Object -First 1)
-                $databaseJournaling.JournalTargetGUID = [GUID]$($journalingTarget.objectGUID | Select-Object -First 1)
-                $databaseJournaling.JournalTargetObjectClass = [array]$journalingTarget.objectClass
+                $databaseJournaling = "" | Select-Object ObjectGuid, TargetGuid, TargetObjectClass
+                $databaseJournaling.ObjectGuid = [GUID]$($database.objectGUID | Select-Object -First 1)
+                $databaseJournaling.TargetGuid = [GUID]$($journalingTarget.objectGUID | Select-Object -First 1)
+                $databaseJournaling.TargetObjectClass = [array]$journalingTarget.objectClass
                 
                 $discoveredDatabaseJournaling += $DatabaseJournaling
             }
