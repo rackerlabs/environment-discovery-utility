@@ -39,6 +39,7 @@ function Start-ExchangeDiscovery
         $exchangeEnvironment.Add("DatabaseJournaling", [array]$(Get-ExchangeDatabaseJournaling -DomainDN $forestDN))
         $exchangeEnvironment.Add("ImapPopSettings", [array]$(Get-ExchangeImapPopSettings -DomainDN $forestDN))
         $exchangeEnvironment.Add("TransportRules", [array]$(Get-ExchangeTransportRules -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected))
+        $exchangeEnvironment.Add("TransportSettings", [array]$(Get-ExchangeTransportConfig -DomainDN $forestDN))
 
         Write-Log -Level "VERBOSE" -Activity "Exchange Discovery" -Message "Completed Exchange Discovery." -WriteProgress
 
