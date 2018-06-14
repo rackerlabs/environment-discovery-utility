@@ -35,7 +35,7 @@ function Start-ExchangeDiscovery
         $exchangeEnvironment.Add("PublicFolders", $(Start-PublicFolderDiscovery -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected))
         $exchangeEnvironment.Add("DynamicGroups", $(Get-ExchangeDynamicGroups -DomainDN $forestDN))
         $exchangeEnvironment.Add("FederationTrust", $(Get-ExchangeFederationTrust -DomainDN $forestDN))
-        $exchangeEnvironment.Add("OrganizationalRelationship", $(Get-ExchangeOrganizationalRelationship -DomainDN $forestDN))
+        $exchangeEnvironment.Add("OrganizationalRelationships", [array]$(Get-ExchangeOrganizationalRelationship -DomainDN $forestDN))
         $exchangeEnvironment.Add("DatabaseJournaling", $(Get-ExchangeDatabaseJournaling -DomainDN $forestDN))
         $exchangeEnvironment.Add("ImapPopSettings", $(Get-ExchangeImapPopSettings -DomainDN $forestDN))
         $exchangeEnvironment.Add("TransportRules", $(Get-ExchangeTransportRules -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected))
