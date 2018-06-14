@@ -27,7 +27,7 @@ function Get-ActiveDirectoryDomainDetails
     $domainDetails.InfrastructureRoleOwner = $Domain.InfrastructureRoleOwner.Name.ToString()
     $domainDetails.Children = $childDomains
     $domainDetails.Parent = $parentDomain
-    $domainDetails.DomainControllers = [array]$Domain.DomainControllers | Select-Object @{Name='Roles';expression={[array]$_.Roles}}, SiteName, OSVersion, Name
+    $domainDetails.DomainControllers = [array]$Domain.DomainControllers | Select-Object @{Name='Roles';expression={[array]$_.Roles}}, SiteName, OSVersion
 
     $domainDetails
 }
