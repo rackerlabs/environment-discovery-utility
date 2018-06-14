@@ -27,15 +27,15 @@ function Get-ExchangeFederationTrust
 
     if ($exchangeFederationTrusts)
     {
-        foreach ($exchangefederationTrust in $exchangeFederationTrusts)
+        foreach ($exchangeFederationTrust in $exchangeFederationTrusts)
         {
             $federationTrust = $null
             $federationTrust = "" | Select-Object ObjectGuid
-            $federationTrust.ObjectGuid = [GUID]$($exchangefederationTrust.objectGUID | Select-Object -First 1)
+            $federationTrust.ObjectGuid = [GUID]$($exchangeFederationTrust.objectGUID | Select-Object -First 1)
 
             $discoveredFederationTrusts += $federationTrust
         }
     }
-    
+
     $discoveredFederationTrusts
 }
