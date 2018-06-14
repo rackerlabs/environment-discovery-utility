@@ -27,8 +27,8 @@ function Get-ExchangeReceiveConnectors
     foreach ($receiveConnectorSetting in $receiveConnectorSettings)
     {
         $receiveConnector = $null
-        $receiveConnector = ""| Select-Object ConnectorGUID, SMTPReceiveBindings, SMTPInactivityTimeOut, ConnectionTimeout, MaxMessageSize, MaxRecipientsPerMessage 
-        $receiveConnector.ConnectorGUID = [GUID]$($receiveConnectorSetting.objectGUID | Select-Object -First 1)
+        $receiveConnector = ""| Select-Object ConnectorGuid, SMTPReceiveBindings, SMTPInactivityTimeOut, ConnectionTimeout, MaxMessageSize, MaxRecipientsPerMessage 
+        $receiveConnector.ConnectorGuid = [GUID]$($receiveConnectorSetting.objectGUID | Select-Object -First 1)
         $receiveConnector.SMTPReceiveBindings = $receiveConnectorSetting.msExchSmtpReceiveBindings
         $receiveConnector.SMTPInactivityTimeOut = $receiveConnectorSetting.msExchSmtpReceiveConnectionInactivityTimeout
         $receiveConnector.ConnectionTimeout = $receiveConnectorSetting.msExchSmtpReceiveConnectionTimeout

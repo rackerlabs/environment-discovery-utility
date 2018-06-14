@@ -27,8 +27,8 @@ function Get-ExchangeSendConnectors
     foreach ($sendConnectorSetting in $sendConnectorSettings)
     {
         $sendConnector = $null
-        $sendConnector = ""| Select-Object ConnectorGUID, SMTPSendPort, TLSEnabled, ConnectionTimeout, MaxMessagesPerConnection 
-        $sendConnector.ConnectorGUID = [GUID]$($sendConnectorSetting.objectGUID | Select-Object -First 1)
+        $sendConnector = ""| Select-Object ConnectorGuid, SMTPSendPort, TLSEnabled, ConnectionTimeout, MaxMessagesPerConnection 
+        $sendConnector.ConnectorGuid = [GUID]$($sendConnectorSetting.objectGUID | Select-Object -First 1)
         $sendConnector.SMTPSendPort= $sendConnectorSetting.msExchSmtpSendPort
         $sendConnector.ConnectionTimeout = $sendConnectorSetting.msExchSmtpSendConnectionTimeout
         $sendConnector.MaxMessagesPerConnection = $sendConnectorSetting.msExchSmtpMaxMessagesPerConnection
