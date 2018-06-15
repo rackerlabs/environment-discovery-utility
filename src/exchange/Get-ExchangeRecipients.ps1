@@ -11,7 +11,7 @@ function Get-ExchangeRecipients
 
     $activity = "Exchange Recipients"
     $discoveredRecipients = @()
-    $ldapFilter = "(&(msExchRecipientTypeDetails=*)(mail=*))"
+    $ldapFilter = "(&(msexchRecipientDisplayType=*)(mail=*))"
     $context = "LDAP://$($DomainDN)"
     $searchRoot = "$($DomainDN)"
     [array]$properties = "msexchRecipientTypeDetails", "msexchRecipientDisplayType", "msExchRemoteRecipientType", "objectGuid", "mail", "userPrincipalName", "objectClass", "userAccountControl"
