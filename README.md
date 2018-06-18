@@ -6,13 +6,12 @@ A set of powershell scripts used to gather information about Active Directory an
 
 ### Installing the EDU Module
 
-- Import Module Local Directory
+#### Import Module Local Directory
 
 1. Download and extract the latest release of EDU into a local directory.
 2. Open PowerShell as Administrator and run 'Import-Module ./EnvironmentDiscoveryUtility.psm1'.
 
-
-- Install Module Using Windows PowerShell Modules Directory
+#### Install Module Using Windows PowerShell Modules Directory
 
 1. Download and extract the latest release of EDU into the [Powershell Module Installation Directory.](https://msdn.microsoft.com/en-us/library/dd878350(v=vs.85).aspx#Anchor_0) (TODO: link to download latest release).
 2. Open powershell and run 'Import-Module EnvironmentDiscoveryUtility'
@@ -23,7 +22,8 @@ A set of powershell scripts used to gather information about Active Directory an
 - The module can be run without parameters to use the default configuration and run all modules.
 - The alias 'sedu' can be used in place of Start-EnvironmentDiscovery.
 - You may have to change your execution policy in order to run the module, depending on your organization's configuration.
-  - 'Set-ExecutionPolicy Unrestricted' will allow you to run the module.  You can get your current Execution Policy using Get-ExecutionPolicy and set it back to the original once completed if desired.
+  - 'Set-ExecutionPolicy Unrestricted' will allow you to run the module.  
+  - You can view your current Execution Policy using Get-ExecutionPolicy cmdlet and revert the change once the module is completed if desired.
 
 1. Ensure the module is loaded into the current PowerShell session.
 2. Type 'Start-EnvironmentDiscovery'.
@@ -55,3 +55,4 @@ https://passwordsafe.corp.rackspace.com/projects/22502
 |Mailbox / Hub Transport| CHM01  | 172.29.20.13  |
 
 #### What do we collect?
+
