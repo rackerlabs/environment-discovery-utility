@@ -38,7 +38,14 @@
         clear
         $sessionGuid = [GUID]::NewGuid()
         try {
-            mkdir -Path $OutputFolder -name EnvironmentDiscovery
+            if (Test-Path "$OutputFolder\EnvironmentDiscovery")
+            {
+                mkdir -Path $OutputFolder -name EnvironmentDiscovery
+            }
+            else 
+            {
+                Write-Host "File Location already created. Skipping Folder Creation"    
+            }
         }
         catch {
             Write-Host "The user does not have the required permissions to create objects in $OutputFolder. Reverting to UserProfile's Desktop"
