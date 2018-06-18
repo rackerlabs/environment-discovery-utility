@@ -11,7 +11,7 @@
             An array of strings indicating which modules the Environment Discovery Utility should run.  This defaults to 'All'
 
         .PARAMETER OutputFolder
-            A string to designate the file path they want all files to be created on. This defaults to the Users Desktop
+            A string to designate the file path they want all files to be created on. This defaults to the Users AppData Temp file location
 
         .OUTPUTS
             A JSON representation of the discovered environment.
