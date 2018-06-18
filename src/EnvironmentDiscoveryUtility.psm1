@@ -38,7 +38,7 @@
         clear
         $sessionGuid = [GUID]::NewGuid()
         try {
-            if (Test-Path "$OutputFolder\EnvironmentDiscovery")
+            if (!(Test-Path "$OutputFolder\EnvironmentDiscovery"))
             {
                 mkdir -Path $OutputFolder -name EnvironmentDiscovery
             }
