@@ -58,7 +58,7 @@ https://passwordsafe.corp.rackspace.com/projects/22502
 
 We make an effort to only include data that is relevant to the discovery phase of the project.  We do not store email addresses, usernames, public folder names, or other sensitive information.  In some cases, if we need to be able to relate one object to another we will use a GUID.  The full list of properties that are included in the module's output are listed below.
 
-* Exchange
+##### Exchange
   * Servers
     * DistinguishedName
     * InstalledRoles
@@ -117,7 +117,7 @@ We make an effort to only include data that is relevant to the discovery phase o
     * Enabled
     * EnabledActions
     * ObjectGuid
-* ActiveDirectory
+##### ActiveDirectory
   * Forest
     * Name
     * Mode
