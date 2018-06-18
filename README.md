@@ -54,5 +54,90 @@ https://passwordsafe.corp.rackspace.com/projects/22502
 |Client Access| CAS01  | 172.29.20.12 |
 |Mailbox / Hub Transport| CHM01  | 172.29.20.13  |
 
-#### What do we collect?
+#### What Do We Collect?
 
+We make an effort to only include data that is relevant to the discovery phase of the project.  We do not store email addresses, usernames, public folder names, or other sensitive information.  In some cases, if we need to be able to relate one object to another we will use a GUID.  The full list of properties that are included in the module's output are listed below.
+
+* Exchange
+  * Servers
+    * DistinguishedName
+    * InstalledRoles
+    * Name
+    * Site
+    * Version
+  * DatabaseJournaling
+    * TargetGuid
+    * TargetObjectClass
+  * FederationTrust
+    * ObjectGuid
+  * DynamicGroups
+    * MemberCount
+    * ObjectGuid
+  * AcceptedDomains
+    * AcceptedDomainFlags
+    * Name
+  * Recipients
+    * ItemCount
+    * ObjectGuid
+    * PrimaryMatchesUpn
+    * PrimarySmtpDomain
+    * RecipientDisplayType
+    * RecipientTypeDetails
+    * RemoteRecipientType
+    * TotalItemSizeKB
+    * UserPrincipalNameSuffix
+  * VirtualDirectories
+    * ComputerName
+    * DistinguishedName
+    * ExternalAuthenticationMethods
+    * ExternalHostName
+    * InternalAuthenticationMethods
+    * InternalHostName
+    * Name
+    * ObjectClasses
+  * PublicFolders
+    * Databases
+      * ObjectGuid
+      * ParentServer
+    * Mailboxes
+      * MailboxDatabase
+      * ObjectGuid
+      * ParentDatabase
+    * Statistics
+      * Identity
+      * ItemCount
+      * TotalItemSizeKB
+  * TransportRules
+    * Action
+    * Condition
+    * Exemption
+    * ObjectGuid
+    * Type
+  * OrganizationalRelationships
+    * Enabled
+    * EnabledActions
+    * ObjectGuid
+* ActiveDirectory
+  * Forest
+    * Name
+    * Mode
+    * NamingRoleOwner
+    * RootDomain
+    * Schema
+    * SchemaRoleOwner
+    * SiteLinks
+    * Sites
+      * Name
+      * AdjacentSites
+      * SiteLinks
+      * Subnets
+    * ApplicationPartitions
+    * Domains
+      * Children
+      * DomainControllers
+      * Mode
+      * InfrastructureRoleOwner
+      * Name
+      * Parent
+      * PdcRoleOwner
+      * RidRoleOwner
