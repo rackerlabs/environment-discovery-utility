@@ -4,9 +4,16 @@ A set of powershell scripts used to gather information about Active Directory an
 
 ## Getting Started
 
-1. Download and extract the latest zip file from the releases into the [Powershell Module Installation Directory.](https://msdn.microsoft.com/en-us/library/dd878350(v=vs.85).aspx#Anchor_0) (TODO: link to download latest release).
+### Install Module
+#### Run From Directory
+1. Download and extract the latest release of EDU into a local directory.
+2. Open PowerShell and run 'Import-Module ./EnvironmentDiscoveryUtility.psm1'
+3. Run 'Start-EnvironmentDiscovery' (or use the alias, SEDU) to run the module.  Use 'Get-Help Start-EnvironmentDiscovery' for more details.
+
+#### Install Module
+1. Download and extract the latest release of EDU into the [Powershell Module Installation Directory.](https://msdn.microsoft.com/en-us/library/dd878350(v=vs.85).aspx#Anchor_0) (TODO: link to download latest release).
 2. Open powershell and run 'Import-Module EnvironmentDiscoveryUtility'
-3. Run 'Start-EnvironmentDiscovery' to run the module.  Use 'Get-Help Start-EnvironmentDiscovery' for more details.
+3. Run 'Start-EnvironmentDiscovery' (or use the alias, SEDU) to run the module.  Use 'Get-Help Start-EnvironmentDiscovery' for more details.
 
 ### Minimum Requirements
 
