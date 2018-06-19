@@ -24,26 +24,29 @@ function Get-ExchangeSendConnectors
         return
     }
 
-    foreach ($sendConnectorSetting in $sendConnectorSettings)
+    if ($sendConnectorSettings)
     {
-        $sendConnector = $null
-        $sendConnector = ""| Select-Object ConnectorGuid, SMTPSendPort, TLSEnabled, ConnectionTimeout, MaxMessagesPerConnection 
-        $sendConnector.ConnectorGuid = [GUID]$($sendConnectorSetting.objectGUID | Select-Object -First 1)
-        $sendConnector.SMTPSendPort= $sendConnectorSetting.msExchSmtpSendPort
-        $sendConnector.ConnectionTimeout = $sendConnectorSetting.msExchSmtpSendConnectionTimeout
-        $sendConnector.MaxMessagesPerConnection = $sendConnectorSetting.msExchSmtpMaxMessagesPerConnection
+        foreach ($sendConnectorSetting in $sendConnectorSettings)
+        {
+            $sendConnector = $null
+            $sendConnector = ""| Select-Object ConnectorGuid, SMTPSendPort, TLSEnabled, ConnectionTimeout, MaxMessagesPerConnection 
+            $sendConnector.ConnectorGuid = [GUID]$($sendConnectorSetting.objectGUID | Select-Object -First 1)
+            $sendConnector.SMTPSendPort= $sendConnectorSetting.msExchSmtpSendPort
+            $sendConnector.ConnectionTimeout = $sendConnectorSetting.msExchSmtpSendConnectionTimeout
+            $sendConnector.MaxMessagesPerConnection = $sendConnectorSetting.msExchSmtpMaxMessagesPerConnection
 
-        if ($sendConnectorSetting.msExchSmtpSendTlsDomain)
-        {
-            $sendConnector.TLSEnabled = $true
+            if ($sendConnectorSetting.msExchSmtpSendTlsDomain)
+            {
+                $sendConnector.TLSEnabled = $true
+            }
+            else 
+            {
+                $sendConnector.TLSEnabled = $false
+            }
+            
+            $discoveredSendConnectors += $sendConnector
         }
-        else 
-        {
-            $sendConnector.TLSEnabled = $false
-        }
-        
-        $discoveredSendConnectors += $sendConnector
     }
-
+    
     $discoveredSendConnectors
 }

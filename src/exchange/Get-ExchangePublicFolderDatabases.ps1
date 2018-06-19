@@ -6,6 +6,7 @@ function Get-ExchangePublicFolderDatabases
         $DomainDN
     )
 
+    $activity = "Public Folder Databases"
     $discoveredLegacyPublicFolders = @()
     $ldapFilter = "(objectClass=msExchPublicMDB)"
     $context = "LDAP://CN=Configuration,$($DomainDN)"
