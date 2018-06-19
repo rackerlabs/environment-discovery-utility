@@ -23,8 +23,8 @@
         
     .PARAMETER Username
         Username used to log onto the server specified by LabIpAddress.
-        
-    .PARAMETER ZipFile
+
+    .PARAMETER EduZipFile
         Path to zip file containing EDU module files.
         
     .PARAMETER ZipLibrary
@@ -41,7 +41,12 @@ param (
     [ValidateNotNullOrEmpty()]
     [string]
     $BuildNumber,
-
+    
+    [Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    $EduZipFile,
+    
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [string]
@@ -55,15 +60,10 @@ param (
     [string]
     [ValidateNotNullOrEmpty()]
     $PsExec = ".\build\PsExec.exe",
-
+        
     [string]
     [ValidateNotNullOrEmpty()]
     $Username,
-    
-    [Parameter(Mandatory=$true)]
-    [ValidateNotNullOrEmpty()]
-    [string]
-    $ZipFile,
     
     [string]
     [ValidateNotNullOrEmpty()]
@@ -75,36 +75,36 @@ $Script:result = $false
 $securePassword = ConvertTo-SecureString $Password -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential $Username, $securePassword
 
-$eduFolderUnc = "\\$LabIpAddress\c$\edu_ci"
-$buildFolderUnc = "$eduFolderUnc\$BuildNumber"
+$remoteBaseFolder = "\\$LabIpAddress\c$\edu_ci"
+$remoteBuildFolder = "$remoteBaseFolder\$BuildNumber"
 
-$remoteBuildFolder = "c:\edu_ci\$BuildNumber"   
+$buildFolder = "c:\edu_ci\$BuildNumber"   
 
 function Map-PSDrive()
 {
     $labName = $LabIpAddress.Replace(".", "")
 
-    Write-Host "Connecting PSDrive to $eduFolderUnc"
+    Write-Host "Connecting PSDrive to $remoteBaseFolder"
 
-    New-PSDrive -Name "EDU_CI_$labName" -PSProvider FileSystem -Root $eduFolderUnc -Credential $credential 
+    New-PSDrive -Name "EDU_CI_$labName" -PSProvider FileSystem -Root $remoteBaseFolder -Credential $credential 
 
     Verify-RemoteFolders
 }
 
 function Verify-RemoteFolders()
 {
-    Write-Host "Verifying $buildFolderUnc exists"
+    Write-Host "Verifying $remoteBuildFolder exists"
 
-    if (!(Test-Path -Path $buildFolderUnc))
+    if (!(Test-Path -Path $remoteBuildFolder))
     {
-        Write-Host "Folder $buildFolderUnc was not found, creating new folder"
-        New-Item -ItemType Directory -Path $buildFolderUnc
+        Write-Host "Folder $remoteBuildFolder was not found, creating new folder"
+        New-Item -ItemType Directory -Path $remoteBuildFolder
     }
     else
     {
-        Write-Host "Folder $buildFolderUnc was found, clearing existing folder"
-        Remove-Item "$buildFolderUnc" -Force -Recurse
-        New-Item -ItemType Directory -Path $buildFolderUnc
+        Write-Host "Folder $remoteBuildFolder was found, clearing existing folder"
+        Remove-Item "$remoteBuildFolder" -Force -Recurse
+        New-Item -ItemType Directory -Path $remoteBuildFolder
     }
 
     Transfer-Files
@@ -112,27 +112,27 @@ function Verify-RemoteFolders()
 
 function Transfer-Files()
 {
-    Write-Host "Copying $ZipFile to $buildFolderUnc"
-    Copy-Item $ZipFile -Destination $buildFolderUnc
+    Write-Host "Copying $EduZipFile to $remoteBuildFolder"
+    Copy-Item $EduZipFile -Destination $remoteBuildFolder
 
-    Write-Host "Copying $ZipLibrary to $buildFolderUnc"
-    Copy-Item $ZipLibrary -Destination $buildFolderUnc
+    Write-Host "Copying $ZipLibrary to $remoteBuildFolder"
+    Copy-Item $ZipLibrary -Destination $remoteBuildFolder
     
     Extract-ZipContents
 }
 
 function Extract-ZipContents()
 {
-    $zipName = [System.IO.Path]::GetFileName($ZipFile)
+    $zipName = [System.IO.Path]::GetFileName($EduZipFile)
     $remoteZipFile = "c:\edu_ci\$BuildNumber\$zipName"
 
-    Write-Host "Extracting zip files from $remoteZipFile to $remoteBuildFolder on $LabIpAddress"
+    Write-Host "Extracting zip files from $remoteZipFile to $buildFolder on $LabIpAddress"
 
     $scriptBlock = 
     {
         param(
             [string]
-            $ZipFile,
+            $EduZipFile,
 
             [string]
             $OutputPath
@@ -140,11 +140,11 @@ function Extract-ZipContents()
         
         Add-Type -Path "$OutputPath\Ionic.Zip.dll"
         
-        $zip = [Ionic.Zip.ZIPFile]::Read($ZipFile)
+        $zip = [Ionic.Zip.ZIPFile]::Read($EduZipFile)
         $zip | ForEach-Object { $_.Extract($OutputPath, [Ionic.Zip.ExtractExistingFileAction]::OverWriteSilently) }
     }
     
-    Invoke-Command -ComputerName $LabIpAddress -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $remoteZipFile, $remoteBuildFolder
+    Invoke-Command -ComputerName $LabIpAddress -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $remoteZipFile, $buildFolder
 
     Run-EduCmdletRemotely
 }
@@ -153,27 +153,37 @@ function Run-EduCmdletRemotely()
 {
     Write-Host "Executing EDU script remotely on $LabIpAddress"
 
-    & $PsExec "\\$LabIpAddress" -w $remoteBuildFolder -u $Username -p $Password /accepteula cmd /c "echo . | powershell -noninteractive -command Import-Module $remoteBuildFolder\EnvironmentDiscoveryUtility.psd1; Start-EnvironmentDiscovery;"
+    & $PsExec "\\$LabIpAddress" -w $buildFolder -u $Username -p $Password /accepteula cmd /c "echo . | powershell -noninteractive -command Import-Module $buildFolder\EnvironmentDiscoveryUtility.psd1; Start-EnvironmentDiscovery -OutputFolder $buildFolder;"
+
+    Clear-StaleResults
+}
+
+function Clear-StaleResults()
+{
+    Remove-Item "$PSScriptRoot\EnviromentDiscovery-*.zip"
+
+    Copy-Results
+}
+
+function Copy-Results()
+{   
+    Copy-Item "$remoteBuildFolder\EnviromentDiscovery-*.zip" -Destination $PSScriptRoot
 
     Analyze-Results
 }
 
 function Analyze-Results()
 {
-    Remove-Item "$PSScriptRoot\*.json"
-
-    Copy-Item "$buildFolderUnc\*.json" -Destination $PSScriptRoot
-
-    $output = Get-ChildItem "$PSScriptRoot\*.json" | Select-Object -First 1
+    $output = Get-ChildItem "$PSScriptRoot\EnviromentDiscovery-*.zip" | Select-Object -First 1
 
     if ($output.length -gt 0kb) 
     {
-        Write-Host "File size was greater than 0, setting result to $true"      
+        Write-Host "EDU zip file size was greater than 0, setting result to $true"      
         $Script:result = $true
     }
     else
     {
-        throw "Json file size was 0, test failed"
+        throw "EDU zip file size was 0, test failed"
     }
     
     Output-TestResults
