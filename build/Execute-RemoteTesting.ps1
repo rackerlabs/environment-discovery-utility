@@ -24,9 +24,6 @@
     .PARAMETER Username
         Username used to log onto the server specified by LabIpAddress.
 
-    .PARAMETER RemoteOutputFolder
-        Remote location where we expect the find EDU output to be.
-        
     .PARAMETER EduZipFile
         Path to zip file containing EDU module files.
         
@@ -64,10 +61,6 @@ param (
     [ValidateNotNullOrEmpty()]
     $PsExec = ".\build\PsExec.exe",
         
-    [string]
-    [ValidateNotNullOrEmpty()]
-    $RemoteOutputFolder = "$env:USERPROFILE\Desktop",
-
     [string]
     [ValidateNotNullOrEmpty()]
     $Username,
