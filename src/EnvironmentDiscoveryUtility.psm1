@@ -11,7 +11,7 @@
             An array of strings indicating which modules the Environment Discovery Utility should run.  This defaults to 'All'
 
         .PARAMETER OutputFolder
-            A string to designate the file path they want all files to be created on. This defaults to the Users AppData Temp file location
+            A string to designate the file path they want all files to be created on. This defaults to the Users desktop file location
 
         .OUTPUTS
             A JSON representation of the discovered environment.
@@ -30,7 +30,7 @@
         [array]
         $Modules = @("all"),
         [string]
-        $OutputFolder = "$env:USERPROFILE\AppData\Local\Temp"
+        $OutputFolder = "$env:USERPROFILE\Desktop"
     )
 
     begin
@@ -49,7 +49,7 @@
         }
         catch {
             Write-Host "The user does not have the required permissions to create objects in $OutputFolder. Reverting to UserProfile's Desktop"
-            $outputFolder = "$env:USERPROFILE\AppData\Local\Temp"
+            $outputFolder = "$env:USERPROFILE\Desktop"
             mkdir -Path $OutputFolder -name EnvironmentDiscovery
         }
         $logPath = "$OutputFolder\EnvironmentDiscovery\environment-$sessionGuid.log"
