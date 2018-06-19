@@ -160,21 +160,21 @@ function Run-EduCmdletRemotely()
 
 function Clear-StaleResults()
 {
-    Remove-Item "$PSScriptRoot\environment-*.zip"
+    Remove-Item "$PSScriptRoot\EnviromentDiscovery-*.zip"
 
     Copy-Results
 }
 
 function Copy-Results()
 {   
-    Copy-Item "$remoteBuildFolder\environment-*.zip" -Destination $PSScriptRoot
+    Copy-Item "$remoteBuildFolder\EnviromentDiscovery-*.zip" -Destination $PSScriptRoot
 
     Analyze-Results
 }
 
 function Analyze-Results()
 {
-    $output = Get-ChildItem "$PSScriptRoot\environment-*.zip" | Select-Object -First 1
+    $output = Get-ChildItem "$PSScriptRoot\EnviromentDiscovery-*.zip" | Select-Object -First 1
 
     if ($output.length -gt 0kb) 
     {
