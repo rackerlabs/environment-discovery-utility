@@ -65,7 +65,8 @@ FormatsToProcess = @()
 # Modules to import as nested modules of the module specified in ModuleToProcess
 NestedModules = @(
     "SerializeTo-Json.ps1",
-    "Search-Directory.ps1"
+    "Search-Directory.ps1",
+    "New-ZipFile.ps1"
 )
 
 # Functions to export from this module
