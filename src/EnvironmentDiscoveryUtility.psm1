@@ -88,8 +88,8 @@
         try 
         {
             Write-Output "Zipping results of Environment Discover"
-            $zipFilename = New-ZipFile -OutputFolder $OutputFolder -JsonPath $jsonPath -LogPath $logPath -SessionGUID $sessionGuid 
-            Write-Output "Zip file $zipFilename created in $OutputFolder."
+            $zipFile = New-ZipFile -OutputFolder $OutputFolder -Files "$jsonPath","$logPath" -SessionGUID $sessionGuid 
+            Write-Output "Zip file created. $zipFile."
         }
         catch 
         {

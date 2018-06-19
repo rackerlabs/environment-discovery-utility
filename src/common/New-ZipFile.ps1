@@ -5,17 +5,14 @@ function New-ZipFile
         [string]
         $OutputFolder,
 
-        [string]
-        $JsonPath,
+        [array]
+        $Files,
 
         [string]
-        $LogPath,
-
-        [string]
-        $SessionGUID
+        $SessionGuid
     )
 
-    $zipFilename = "EnviromentDiscovery$SessionGUID.zip"
+    $zipFilename = "EnviromentDiscovery-$SessionGuid.zip"
     $zipFile = "$OutputFolder\$zipFilename"
 
     if (!(test-path($zipFile))) 
@@ -26,8 +23,7 @@ function New-ZipFile
 
     $shellApplication = new-object -com shell.application
     $zipPackage = $shellApplication.NameSpace($zipFile)
-    $files = @($JsonPath, $LogPath)
-
+    
     foreach ($file in $files) 
     { 
         $fileAttributes = Get-ChildItem $file
@@ -38,5 +34,5 @@ function New-ZipFile
         }
     }
 
-    $zipFilename
+    $zipFile
 }
