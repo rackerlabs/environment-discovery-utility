@@ -85,6 +85,7 @@
         $environment.Add("Log",$Global:logEntries)
         $environment | SerializeTo-Json | Set-Content -Path $jsonPath -Encoding UTF8 -Force
         Clear-Host
+    
         try 
         {
             Write-Output "Zipping results of Environment Discover"
@@ -95,7 +96,6 @@
         {
             Write-Error "Zip function failed to create zip file. Files are located in $tempFolder. $($_.Exception.Message)" -ErrorAction Stop    
         }
-        
     }
     end
     {
