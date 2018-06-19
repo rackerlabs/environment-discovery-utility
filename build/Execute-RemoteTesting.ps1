@@ -155,14 +155,14 @@ function Run-EduCmdletRemotely()
 
     & $PsExec "\\$LabIpAddress" -w $buildFolder -u $Username -p $Password /accepteula cmd /c "echo . | powershell -noninteractive -command Import-Module $buildFolder\EnvironmentDiscoveryUtility.psd1; Start-EnvironmentDiscovery -OutputFolder $buildFolder;"
 
-    Clear-LocalDirectory
+    Clear-StaleResults
 }
 
 function Clear-StaleResults()
 {
     Remove-Item "$PSScriptRoot\environment-*.zip"
 
-    Analyze-Results
+    Copy-Results
 }
 
 function Copy-Results()
