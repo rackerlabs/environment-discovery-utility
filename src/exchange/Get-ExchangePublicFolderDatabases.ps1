@@ -9,8 +9,8 @@ function Get-ExchangePublicFolderDatabases
     $activity = "Public Folder Databases"
     $discoveredLegacyPublicFolders = @()
     $ldapFilter = "(objectClass=msExchPublicMDB)"
-    $context = "LDAP://CN=Configuration,$($DomainDN)"
-    $searchRoot = "CN=Configuration,$($DomainDN)"
+    $context = "LDAP://CN=Configuration,$DomainDN"
+    $searchRoot = "CN=Configuration,$DomainDN"
     [array]$properties = "objectGUID","msExchOwningServer"
 
     try
@@ -21,7 +21,7 @@ function Get-ExchangePublicFolderDatabases
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Public Folder databases. $($_.Exception.Message)"
-        return
+        break
     }
 
     if ($legacyPublicFolders)

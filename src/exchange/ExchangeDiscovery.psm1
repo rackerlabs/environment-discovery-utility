@@ -27,7 +27,7 @@ function Start-ExchangeDiscovery
     {
         $domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain()
         $forestName = $domain.Forest.Name
-        $forestDN = "DC=$( $ForestName.Replace(".",",DC=") )"
+        $forestDN = "DC=$($ForestName.Replace(".",",DC="))"
         $exchangeEnvironment.Add("Servers", [array]$(Get-ExchangeServers -DomainDN $forestDN))
         $exchangeEnvironment.Add("AcceptedDomains", [array]$(Get-ExchangeAcceptedDomains -DomainDN $forestDN))
         $exchangeEnvironment.Add("VirtualDirectories", [array]$(Get-ExchangeVirtualDirectories -DomainDN $forestDN))

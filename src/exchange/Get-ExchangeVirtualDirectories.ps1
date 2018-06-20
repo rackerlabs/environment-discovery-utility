@@ -6,11 +6,11 @@ function Get-ExchangeVirtualDirectories
         $DomainDN
     )
 
-    $activity = "Exchange Virtual Directory"
+    $activity = "Virtual Directories"
     $discoveredVirtualDirectories = @()
     $ldapFilter = "(objectClass=msExchVirtualDirectory)"
-    $context = "LDAP://CN=Configuration,$($DomainDN)"
-    $searchRoot = "CN=Configuration,$($DomainDN)"
+    $context = "LDAP://CN=Configuration,$DomainDN"
+    $searchRoot = "CN=Configuration,$DomainDN"
     [array]$properties = "name", "distinguishedName", "msExchExternalHostName", "msExchInternalHostName", "msExchMetabasePath", "msExchExternalAuthenticationMethods", "msExchInternalAuthenticationMethods", "objectClass"
 
     try
@@ -21,7 +21,7 @@ function Get-ExchangeVirtualDirectories
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Virtual Direatories. $($_.Exception.Message)"
-        return
+        break
     }
 
     if ($virtualDirectories)

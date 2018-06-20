@@ -15,7 +15,7 @@ function New-ZipFile
     $zipFilename = "EnviromentDiscovery-$SessionGuid.zip"
     $zipFile = "$OutputFolder\$zipFilename"
 
-    if (!(test-path($zipFile))) 
+    if (!(test-path($zipFile)))
     {
         set-content $zipFile ("PK" + [char]5 + [char]6 + ("$([char]0)" * 18))
         (Get-ChildItem $zipFile).IsReadOnly = $false  
@@ -24,7 +24,7 @@ function New-ZipFile
     $shellApplication = new-object -com shell.application
     $zipPackage = $shellApplication.NameSpace($zipFile)
     
-    foreach ($file in $files) 
+    foreach ($file in $files)
     { 
         $fileAttributes = Get-ChildItem $file
         $zipPackage.CopyHere($fileAttributes.FullName)
