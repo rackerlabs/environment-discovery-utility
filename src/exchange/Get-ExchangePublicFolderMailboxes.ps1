@@ -20,7 +20,7 @@ function Get-ExchangePublicFolderMailboxes
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Public Folder mailboxes. $($_.Exception.Message)"
-        break
+        return
     }
 
     if ($modernPublicFolders)

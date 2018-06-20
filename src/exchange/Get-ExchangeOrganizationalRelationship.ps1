@@ -21,7 +21,7 @@ function Get-ExchangeOrganizationalRelationship
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Organizational Relationships. $($_.Exception.Message)"
-        break
+        return
     }
 
     if ($organizationalRelationshipSettings)

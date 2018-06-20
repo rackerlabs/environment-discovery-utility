@@ -20,7 +20,7 @@ function Get-ExchangeReceiveConnectors
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Receive Connector Settings. $($_.Exception.Message)"
-        break
+        return
     }
 
     foreach ($receiveConnectorSetting in $receiveConnectorSettings)

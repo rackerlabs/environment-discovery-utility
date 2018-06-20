@@ -21,7 +21,7 @@ function Get-ExchangeDatabaseJournaling
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Database Journaling. $($_.Exception.Message)"
-        break
+        return
     }
 
     if ($databases)

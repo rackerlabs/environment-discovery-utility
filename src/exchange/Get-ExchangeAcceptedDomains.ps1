@@ -21,7 +21,7 @@ function Get-ExchangeAcceptedDomains
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Accepted Domains. $($_.Exception.Message)"
-        break
+        return
     }
 
     if ($acceptedDomains)

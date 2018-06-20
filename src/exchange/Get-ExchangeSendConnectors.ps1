@@ -20,7 +20,7 @@ function Get-ExchangeSendConnectors
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Send Connector Settings. $($_.Exception.Message)"
-        break
+        return
     }
 
     if ($sendConnectorSettings)

@@ -21,7 +21,7 @@ function Get-ExchangeVirtualDirectories
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Virtual Direatories. $($_.Exception.Message)"
-        break
+        return
     }
 
     if ($virtualDirectories)

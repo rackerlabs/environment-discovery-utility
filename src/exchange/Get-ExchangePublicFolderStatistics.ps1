@@ -49,6 +49,6 @@ function Get-ExchangePublicFolderStatistics
     else
     {
         Write-Log -Level "WARNING" -Activity $activity -Message "Skipping Exchange Public Folder statistics. No connection to Exchange."
-        break
+        return
     }
 }

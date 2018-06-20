@@ -21,7 +21,7 @@ function Get-ExchangePublicFolderDatabases
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Public Folder databases. $($_.Exception.Message)"
-        break
+        return
     }
 
     if ($legacyPublicFolders)
