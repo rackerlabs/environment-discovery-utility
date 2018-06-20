@@ -10,13 +10,12 @@ function Get-ExchangeSendConnectors
     $discoveredSendConnectors = @()
     $ldapFilter = "(objectClass=msExchRoutingSMTPConnector)"
     $context = "LDAP://CN=Configuration,$DomainDN"
-    $searchRoot = "$DomainDN"
     [array]$properties = "objectGUID", "msExchSmtpSendPort", "msExchSmtpSendTlsDomain", "msExchSmtpSendConnectionTimeout", "msExchSmtpMaxMessagesPerConnection"
 
     try
     {
         Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Send Connector Settings." -WriteProgress
-        $sendConnectorSettings = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        $sendConnectorSettings = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $DomainDN
     }
     catch
     {
