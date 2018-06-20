@@ -21,7 +21,6 @@ function Start-ExchangeDiscovery
         Write-Log -Level "VERBOSE" -Activity "Exchange Discovery" -Message "Attempting to connect to Exchange PowerShell." -WriteProgress
         $exchangeEnvironment = @{}
         [bool]$exchangeShellConnected = Initialize-ExchangePowershell
-        clear
     }
     process
     {
