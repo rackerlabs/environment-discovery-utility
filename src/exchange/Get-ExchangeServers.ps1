@@ -8,9 +8,9 @@ function Get-ExchangeServers
 
     $activity = "Exchange Servers"
     $discoveredExchangeServers = @()
-    $searchRoot = "CN=Configuration,$($DomainDN)"
+    $searchRoot = "CN=Configuration,$DomainDN"
     $ldapFilter = "(&(objectClass=msExchExchangeServer)(msExchCurrentServerRoles=*)(!(objectClass=msExchExchangeTransportServer)))"
-    $context = "LDAP://CN=Configuration,$($DomainDN)"
+    $context = "LDAP://CN=Configuration,$DomainDN"
     [array]$properties = "name", "serialNumber", "msExchMDBAvailabilityGroupLink", "msExchCurrentServerRoles", "msExchServerSite", "whenCreated", "distinguishedName"
 
     try

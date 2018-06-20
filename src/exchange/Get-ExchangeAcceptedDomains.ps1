@@ -8,9 +8,9 @@ function Get-ExchangeAcceptedDomains
 
     $activity = "Accepted Domains"
     $discoveredAcceptedDomains = @()
-    $searchRoot = "CN=Configuration,$($DomainDN)"
+    $searchRoot = "CN=Configuration,$DomainDN"
     $ldapFilter = "(objectClass=msExchAcceptedDomain)"
-    $context = "LDAP://CN=Configuration,$($DomainDN)"
+    $context = "LDAP://CN=Configuration,$DomainDN"
     [array]$properties = "name", "msExchAcceptedDomainFlags"
 
     try

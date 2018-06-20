@@ -9,7 +9,7 @@ function Get-ExchangeDynamicGroups
     $activity = "Dynamic Group"
     $discoveredDynamicGroups = @()
     $ldapFilter = "(objectClass=msExchDynamicDistributionList)"
-    $context = "LDAP://$($DomainDN)"
+    $context = "LDAP://$DomainDN"
     $searchRoot = "$DomainDN"
     [array]$properties = "objectGUID", "msExchGroupMemberCount"
 

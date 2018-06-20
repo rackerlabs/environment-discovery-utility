@@ -9,8 +9,8 @@ function Get-ExchangePublicFolderDatabases
     $activity = "Public Folder Databases"
     $discoveredLegacyPublicFolders = @()
     $ldapFilter = "(objectClass=msExchPublicMDB)"
-    $context = "LDAP://CN=Configuration,$($DomainDN)"
-    $searchRoot = "CN=Configuration,$($DomainDN)"
+    $context = "LDAP://CN=Configuration,$DomainDN"
+    $searchRoot = "CN=Configuration,$DomainDN"
     [array]$properties = "objectGUID","msExchOwningServer"
 
     try

@@ -8,7 +8,7 @@ function Get-ActiveDirectorySiteLinkDetails
         $SiteLink
     )
 
-    $siteLinkDetails = "" | Select-Object Name,TransportType,Cost,Sites,ReplicationInterval,ReciprocalReplicationEnabled,NotificationEnabled,DataCompressionEnabled
+    $siteLinkDetails = "" | Select-Object Name, TransportType, Cost, Sites, ReplicationInterval, ReciprocalReplicationEnabled, NotificationEnabled, DataCompressionEnabled
     $sites = @()
 
     foreach ($site in $SiteLink.Sites)

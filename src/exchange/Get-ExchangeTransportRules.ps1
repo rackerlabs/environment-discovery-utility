@@ -12,11 +12,11 @@ function Get-ExchangeTransportRules
     try
     {
         $ErrorActionPreference = "silentlycontinue"
-        $activity = "Exchange Transport Rules"
+        $activity = "Transport Rules"
         $discoveredTransportRules = @()
-        $searchRoot = "CN=Configuration,$($DomainDN)"
+        $searchRoot = "CN=Configuration,$DomainDN"
         $ldapFilter = "(objectClass=msExchTransportRule)"
-        $context = "LDAP://CN=Configuration,$($DomainDN)"
+        $context = "LDAP://CN=Configuration,$DomainDN"
         [array] $properties = "objectGUID", "distinguishedName"
 
         try
@@ -27,9 +27,8 @@ function Get-ExchangeTransportRules
         catch
         {
             Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Transport Rules. $($_.Exception.Message)"
-            return
+            break
         }
-
         if ($transportRules)
         {
             foreach ($transportRule in $transportRules)
@@ -68,8 +67,7 @@ function Get-ExchangeTransportRules
             }
         }
     }
-
-    finally 
+    finally
     {
         $ErrorActionPreference = "continue"
     }

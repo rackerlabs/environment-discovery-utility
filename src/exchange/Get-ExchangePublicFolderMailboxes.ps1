@@ -8,7 +8,7 @@ function Get-ExchangePublicFolderMailboxes
 
     $activity = "Public Folder Mailboxes"
     $ldapFilter = "(msExchRecipientTypeDetails=68719476736)"
-    $context = "LDAP://$($DomainDN)"
+    $context = "LDAP://$DomainDN"
     $searchRoot = "$DomainDN"
     [array]$properties = "objectGUID","homeMDB"
 
@@ -20,6 +20,7 @@ function Get-ExchangePublicFolderMailboxes
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Public Folder mailboxes. $($_.Exception.Message)"
+        return
     }
 
     if ($modernPublicFolders)
