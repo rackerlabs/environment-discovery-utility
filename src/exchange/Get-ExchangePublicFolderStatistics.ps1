@@ -5,14 +5,14 @@ function Get-ExchangePublicFolderStatistics
         [bool]
         $ExchangeShellConnected,
 
-        [array]
+        [object]
         $PublicFolders
     )
 
     $activity = "Public Folder Statistics"
     $discoveredPublicFolderStatistics = @()
 
-    if (($publicFolders.Databases) -or ($publicFolders.Mailboxes))
+    if ($PublicFolders.Mailboxes -or $PublicFolders.Databases)
     {
         if ($ExchangeShellConnected)
         {
