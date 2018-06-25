@@ -19,7 +19,7 @@ function Initialize-ExchangePowershell
         }
         elseif (Test-Path "C:\Program Files\Microsoft\Exchange Server\bin\Exchange.ps1")
         {
-            Add-PSSnapIn Microsoft.Exchange.Management.PowerShell.Admin -RedirectStandardOutput $null| Out-Null
+            Add-PSSnapIn Microsoft.Exchange.Management.PowerShell.Admin | Out-Null
         }
     }
 
