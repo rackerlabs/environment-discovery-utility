@@ -31,7 +31,7 @@ function Start-PublicFolderDiscovery
     {
         $publicFolders.Add("Mailboxes", $(Get-ExchangePublicFolderMailboxes -DomainDN $DomainDN))
         $publicFolders.Add("Databases", $(Get-ExchangePublicFolderDatabases -DomainDN $DomainDN))
-        $publicFolders.Add("Statistics", $(Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected))
+        $publicFolders.Add("Statistics", $(Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected -PublicFolders $publicFolders))
         Write-Log -Level "VERBOSE" -Activity "Public Folder Discovery" -Message "Completed Public Folder Discovery." -WriteProgress
 
         $publicFolders

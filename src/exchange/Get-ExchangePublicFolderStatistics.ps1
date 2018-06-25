@@ -3,16 +3,19 @@ function Get-ExchangePublicFolderStatistics
     [CmdletBinding()]
     param (
         [bool]
-        $ExchangeShellConnected
+        $ExchangeShellConnected,
+
+        [object]
+        $PublicFolders
     )
 
     $activity = "Public Folder Statistics"
+    $discoveredPublicFolderStatistics = @()
 
-    if ($ExchangeShellConnected)
+    if ($PublicFolders.Mailboxes -or $PublicFolders.Databases)
     {
-        if (Get-PublicFolder -ErrorAction SilentlyContinue)
+        if ($ExchangeShellConnected)
         {
-            $discoveredPublicFolderStatistics = @()
             Write-Log -Level "VERBOSE" -Activity $activity -Message "Gathering Public Folder statistics. This may take some time without feedback." -WriteProgress
             $publicFolderStatistics = Get-PublicFolderStatistics -ResultSize Unlimited
 
@@ -42,13 +45,18 @@ function Get-ExchangePublicFolderStatistics
 
                 $discoveredPublicFolderStatistics += $publicFolderStats
             }
-
-            $discoveredPublicFolderStatistics
+        }
+        else
+        {
+            Write-Log -Level "WARNING" -Activity $activity -Message "Skipping Exchange Public Folder statistics. No connection to Exchange."
+            return
         }
     }
     else
     {
-        Write-Log -Level "WARNING" -Activity $activity -Message "Skipping Exchange Public Folder statistics. No connection to Exchange."
+        Write-Log -Level "WARNING" -Activity $activity -Message "Skipping Exchange Public Folder statistics, no public folders found."
         return
     }
+
+    $discoveredPublicFolderStatistics
 }
