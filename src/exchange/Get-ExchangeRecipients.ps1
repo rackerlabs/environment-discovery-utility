@@ -55,8 +55,13 @@ function Get-ExchangeRecipients
 
             if ([array]$recipient.ObjectClass -contains "user")
             {
-                $currentRecipient.UserPrincipalNameSuffix = ($recipient.userPrincipalName | Select-Object -First 1).Split("@")[1]
-                $currentRecipient.PrimaryMatchesUPN = ($recipient.mail | Select-Object -First 1) -eq ($recipient.userPrincipalName | Select-Object -First 1)
+                $userPrincipalName = ($recipient.userPrincipalName | Select-Object -First 1)
+                if(-not [String]::IsNullOrEmpty($userPrincipalName))
+                {
+                    $currentRecipient.UserPrincipalNameSuffix = ($recipient.userPrincipalName | Select-Object -First 1).Split("@")[1]
+                    $currentRecipient.PrimaryMatchesUPN = ($recipient.mail | Select-Object -First 1) -eq ($recipient.userPrincipalName | Select-Object -First 1)
+                }
+
                 $currentRecipient.UserAccountControl = $recipient.userAccountControl | Select-Object -First 1
             }
 
