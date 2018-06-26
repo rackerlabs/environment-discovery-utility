@@ -38,7 +38,6 @@ function Get-ExchangePublicFolderStatistics
                 $discoveredPublicFolderStatistics += $publicFolderStats
             }
         }
-        
         elseif ($PublicFolders.Databases)
         {
             Write-Log -Level "VERBOSE" -Activity $activity -Message "Gathering legacy public folder statistics. This may take some time without feedback." -WriteProgress
@@ -78,7 +77,6 @@ function Get-ExchangePublicFolderStatistics
                 $discoveredPublicFolderStatistics += $publicFolderStats
             }
         }
-        
         else
         {
             Write-Log -Level "WARNING" -Activity $activity -Message "Skipping Exchange Public Folder statistics. No connection to Exchange."
