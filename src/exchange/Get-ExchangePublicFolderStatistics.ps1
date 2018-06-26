@@ -43,6 +43,7 @@ function Get-ExchangePublicFolderStatistics
         {
             Write-Log -Level "VERBOSE" -Activity $activity -Message "Gathering legacy public folder statistics. This may take some time without feedback." -WriteProgress
             $publicFolderStatistics = @()
+            
             foreach ($database in ($PublicFolders.Databases))
             {
                 [string]$server = $database.ParentServer
