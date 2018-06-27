@@ -36,7 +36,7 @@
     begin
     {
         Clear-Host
-        $environmentName = $env:USERDNSDOMAIN.ToLower()
+        $environmentName = (Get-WmiObject Win32_ComputerSystem).Domain.ToLower()
         $tempFolder = "$env:USERPROFILE\AppData\Local\Temp"
         $sessionGuid = [GUID]::NewGuid()
         $logPath = "$tempFolder\edu-$environmentName.log"
