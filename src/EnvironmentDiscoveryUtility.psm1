@@ -36,10 +36,11 @@
     begin
     {
         Clear-Host
+        $environmentName = $env:USERDNSDOMAIN.ToLower()
         $tempFolder = "$env:USERPROFILE\AppData\Local\Temp"
         $sessionGuid = [GUID]::NewGuid()
-        $logPath = "$tempFolder\environment-$sessionGuid.log"
-        $jsonPath = "$tempFolder\environment-$sessionGuid.json"
+        $logPath = "$tempFolder\edu-$environmentName.log"
+        $jsonPath = "$tempFolder\edu-$environmentName.json"
         
         try 
         {
@@ -83,13 +84,19 @@
 
         Write-Log -Level "VERBOSE" -Message "Packaging EDU Results" -Activity "Environment Discovery Utility" -WriteProgress
         $environment.Add("Log",$Global:logEntries)
+        
+        if (Test-Path $jsonPath)
+        {
+            Remove-Item $jsonPath -Force
+        }
+
         $environment | SerializeTo-Json | Set-Content -Path $jsonPath -Encoding UTF8 -Force
         Clear-Host
     
         try 
         {
             Write-Output "Zipping results of Environment Discover"
-            $zipFile = New-ZipFile -OutputFolder $OutputFolder -Files "$jsonPath","$logPath" -SessionGUID $sessionGuid 
+            $zipFile = New-ZipFile -OutputFolder $OutputFolder -Files "$jsonPath","$logPath" -SessionGUID $sessionGuid -EnvironmentName $environmentName
             Write-Output "Zip file created. $zipFile."
         }
         catch 

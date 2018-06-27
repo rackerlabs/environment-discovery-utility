@@ -9,11 +9,19 @@ function New-ZipFile
         $Files,
 
         [string]
-        $SessionGuid
+        $SessionGuid,
+
+        [string]
+        $EnvironmentName
     )
 
-    $zipFilename = "EnviromentDiscovery-$SessionGuid.zip"
+    $zipFilename = "edu-$EnvironmentName.zip"
     $zipFile = "$OutputFolder\$zipFilename"
+
+    if (Test-Path $zipFile)
+    {
+        Remove-Item $zipFile -Force
+    }
 
     if (!(test-path($zipFile)))
     {
