@@ -64,7 +64,7 @@ function Get-ExchangeRecipients
                     }
                     else
                     {
-                        Write-Warning "The User Principal Name attribute for $($recipient.objectGuid) doesn't have a domain suffix."
+                        Write-Warning "The User Principal Name attribute for $($currentRecipient.ObjectGuid). doesn't have a domain suffix."
                     }
 
                     $currentRecipient.PrimaryMatchesUPN = ($recipient.mail | Select-Object -First 1) -eq ($recipient.userPrincipalName | Select-Object -First 1)
