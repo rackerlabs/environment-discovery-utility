@@ -56,9 +56,17 @@ function Get-ExchangeRecipients
             if ([array]$recipient.ObjectClass -contains "user")
             {
                 $userPrincipalName = ($recipient.userPrincipalName | Select-Object -First 1)
-                if(-not [String]::IsNullOrEmpty($userPrincipalName))
+                if (-not [String]::IsNullOrEmpty($userPrincipalName))
                 {
-                    $currentRecipient.UserPrincipalNameSuffix = ($recipient.userPrincipalName | Select-Object -First 1).Split("@")[1]
+                    if ($userPrincipalName.Contains("@"))
+                    {
+                        $currentRecipient.UserPrincipalNameSuffix = ($recipient.userPrincipalName | Select-Object -First 1).Split("@")[1]
+                    }
+                    else
+                    {
+                        Write-Warning "The User Principal Name attribute for $($recipient.objectGuid) doesn't have a domain suffix."
+                    }
+
                     $currentRecipient.PrimaryMatchesUPN = ($recipient.mail | Select-Object -First 1) -eq ($recipient.userPrincipalName | Select-Object -First 1)
                 }
 
