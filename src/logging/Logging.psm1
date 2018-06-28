@@ -112,6 +112,11 @@ function Enable-Logging
         $LogFilePath
     )
 
+    if (Test-Path $LogFilePath)
+    {
+        Remove-Item $LogFilePath -Force
+    }
+    
     $Global:logFilePath = $LogFilePath
     $Global:logEntries = @()
     $subscriberActions = @{
