@@ -32,7 +32,7 @@ function Get-ExchangeRecipients
         return
     }
 
-    if ($recipients)
+    if ($recipients.Count -gt 0)
     {
         $progressFrequency = 25
         $x = 0
