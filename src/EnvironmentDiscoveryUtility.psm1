@@ -84,11 +84,10 @@
         Write-Log -Level "VERBOSE" -Message "Packaging EDU Results" -Activity "Environment Discovery Utility" -WriteProgress
         $environment.Add("Log",$Global:logEntries)
         $environment | SerializeTo-Json | Set-Content -Path $jsonPath -Encoding UTF8 -Force
-        Clear-Host
-    
+            
         try 
         {
-            Write-Output "Zipping results of Environment Discover"
+            Write-Output "Zipping results of Environment Discovery"
             $zipFile = New-ZipFile -OutputFolder $OutputFolder -Files "$jsonPath","$logPath" -SessionGUID $sessionGuid 
             Write-Output "Zip file created. $zipFile."
         }
