@@ -91,8 +91,7 @@
         }
 
         $environment | SerializeTo-Json | Set-Content -Path $jsonPath -Encoding UTF8 -Force
-        Clear-Host
-    
+            
         try 
         {
             Write-Output "Zipping results of Environment Discover"
