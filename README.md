@@ -13,7 +13,7 @@ A set of powershell scripts used to gather information about Active Directory an
 
 #### Install Module Using Windows PowerShell Modules Directory
 
-1. Download and extract the latest release of EDU into the [Powershell Module Installation Directory.](https://msdn.microsoft.com/en-us/library/dd878350(v=vs.85).aspx#Anchor_0) (TODO: link to download latest release).
+1. Download and extract the latest release of EDU into the [Powershell Module Installation Directory.](https://msdn.microsoft.com/en-us/library/dd878350(v=vs.85).aspx#Anchor_0).
 2. Open powershell and run 'Import-Module EnvironmentDiscoveryUtility'
 
 ### Running the EDU Module
@@ -41,7 +41,7 @@ A set of powershell scripts used to gather information about Active Directory an
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/blob/master/CONTRIBUTING.md) for details.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 #### What Do We Collect?
 
