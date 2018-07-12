@@ -70,6 +70,8 @@ param (
     $ZipLibrary = ".\build\Ionic.Zip.dll"
 )
 
+$ErrorActionPreference = "Stop"
+
 $Script:result = $false
 
 $securePassword = ConvertTo-SecureString $Password -AsPlainText -Force
@@ -154,6 +156,11 @@ function Run-EduCmdletRemotely()
     Write-Host "Executing EDU script remotely on $LabIpAddress"
 
     & $PsExec "\\$LabIpAddress" -w $buildFolder -u $Username -p $Password /accepteula cmd /c "echo . | powershell -noninteractive -command Import-Module $buildFolder\EnvironmentDiscoveryUtility.psd1; Start-EnvironmentDiscovery -OutputFolder $buildFolder;"
+       
+    if ($LastExitCode -ne 0)
+    {
+	    throw "Detected failure condition when running edu in PsExec session"
+    }
 
     Clear-StaleResults
 }

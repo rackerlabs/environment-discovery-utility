@@ -2,6 +2,7 @@
 pipeline {
     agent any
     parameters {
+        string(name: 'branch', defaultValue: 'develop', description: '')
         string(name: 'slackChannel', defaultValue: 'edu', description: '')
         string(name: 'labIpAddress', defaultValue: '172.29.20.13', description: '')
     }
@@ -14,13 +15,25 @@ pipeline {
                     poll: true,
                     scm: [ 
                         $class: 'GitSCM', 
-                        branches: [[name: "develop"]], 
+                        branches: [[name: "master"]], 
                         doGenerateSubmoduleConfigurations: false, 
-                        extensions: [[$class: 'CleanBeforeCheckout']], 
+                        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'build\\tools']],
                         submoduleCfg: [], 
-                        userRemoteConfigs: [[credentialsId: 'james.blake', url: 'git@github.rackspace.com:MicrosoftEng/environment-discovery-utility.git']]
+                        userRemoteConfigs: [[credentialsId: 'james.blake', url: 'git@github.rackspace.com:MicrosoftEng/build-tools.git']]
                     ]
                 )
+            }
+        }
+		stage('Sign') {
+            steps {
+                slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Signing script files"
+
+				withCredentials([
+                    usernamePassword(credentialsId: '1e14ecee-ea70-4dc9-b1a6-7946fab6c8bb', passwordVariable: 'password', usernameVariable: 'username'),
+					file(credentialsId: '9dc4abad-d55c-4621-a70c-d73b1803d6fe', variable: 'certificate')
+                ]) {
+                    bat """powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Sign-ScriptFiles.ps1 -Password '%password%' -Username '%username%' -certificate %certificate%"""
+                }
             }
         }
         stage('Zip') {
