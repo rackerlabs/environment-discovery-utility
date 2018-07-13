@@ -46,3 +46,11 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 #### What Do We Collect?
 
 For an overview of the data collected, please see the included word document.
+
+## Licenses
+
+Original files contained with this distribution are licensed under the [MIT License](https://en.wikipedia.org/wiki/MIT_License).
+
+You must agree to the terms of this [license](LICENSE.txt) and abide by them before using, modifying, or distributing source code contained within this distribution.
+
+Some dependencies are under other licenses.
