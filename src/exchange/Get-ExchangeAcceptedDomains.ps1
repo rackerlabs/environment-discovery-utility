@@ -11,7 +11,7 @@ function Get-ExchangeAcceptedDomains
     $searchRoot = "CN=Configuration,$DomainDN"
     $ldapFilter = "(objectClass=msExchAcceptedDomain)"
     $context = "LDAP://CN=Configuration,$DomainDN"
-    [array]$properties = "name", "msExchAcceptedDomainFlags"
+    [array]$properties = "name", "msExchAcceptedDomainFlags", "msExchAcceptedDomainName"
 
     try
     {
@@ -28,8 +28,9 @@ function Get-ExchangeAcceptedDomains
     {
         foreach ($acceptedDomain in $acceptedDomains)
         {
-            $currentAcceptedDomain = "" | Select-Object Name, AcceptedDomainFlags
-            $currentAcceptedDomain.Name = $acceptedDomain.name
+            $currentAcceptedDomain = "" | Select-Object Name, AcceptedDomain, AcceptedDomainFlags
+            $currentAcceptedDomain.Name = $acceptedDomain.Name
+            $currentAcceptedDomain.AcceptedDomain = $acceptedDomain.msExchAcceptedDomainName
             $currentAcceptedDomain.AcceptedDomainFlags = $acceptedDomain.msExchAcceptedDomainFlags | Select-Object -First 1
 
             $discoveredAcceptedDomains += $currentAcceptedDomain
