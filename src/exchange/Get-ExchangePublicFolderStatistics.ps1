@@ -1,5 +1,19 @@
 function Get-ExchangePublicFolderStatistics
 {
+    <#
+    .SYNOPSIS
+        Discover Exchange public folder statistics.
+
+    .DESCRIPTION
+        Uses native Exchange cmdlets to discover public folder statistics.
+
+    .OUTPUTS
+        Returns a custom object containing public folder statistics.
+
+    .EXAMPLE
+        Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected -PublicFolders $publicFolders
+    #>
+
     [CmdletBinding()]
     param (
         [bool]

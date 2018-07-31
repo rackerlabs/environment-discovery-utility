@@ -1,5 +1,19 @@
 function Get-ExchangeServers
 {
+    <#
+    .SYNOPSIS
+        Discover all Exchange servers in an Active Directory forest.
+
+    .DESCRIPTION
+        Uses LDAP queries run against the Active Directory configuration partition to find all Exchange servers.
+
+    .OUTPUTS
+        Returns a custom object containing Exchange server settings.
+
+    .EXAMPLE
+        Get-ExchangeServers -DomainDN $domainDN
+    #>
+
     [CmdletBinding()]
     param (
         [string]

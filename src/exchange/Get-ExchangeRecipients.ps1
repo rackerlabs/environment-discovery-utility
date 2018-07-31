@@ -1,5 +1,19 @@
 function Get-ExchangeRecipients
 {
+    <#
+    .SYNOPSIS
+        Discover all recipients in Exchange that have the msexchRecipientDisplayType attribute set in Active Directory.
+
+    .DESCRIPTION
+        Runs LDAP queries against Active Directory to discover all Exchange recipients.  If an Exchange shell is detected it will extract additional recipient statistics.
+
+    .OUTPUTS
+        Returns a custom object containing recipient information.  Personally Identifiable Information (PII) is excluded.
+
+    .EXAMPLE
+        Get-ExchangeRecipients -DomainDN $domainDN -ExchangeShellConnected $exchangeShellConnected
+    #>
+
     [CmdletBinding()]
     param (
         [string]

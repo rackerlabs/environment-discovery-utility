@@ -1,5 +1,19 @@
 function Initialize-ExchangePowershell
 {
+    <#
+    .SYNOPSIS
+        Used to start the RemoteExchange.ps1 script which in turn opens an Exchange Shell.
+
+    .DESCRIPTION
+        Detect the Exchange version and start an Exchange shell using built-in Exchange scripts.
+
+    .OUTPUTS
+        Returns an Exchange shell or nothing if an Exchange shell is already loaded.
+
+    .EXAMPLE
+        Initialize-ExchangePowershell
+    #>
+
     [CmdletBinding()]
     param ()
 

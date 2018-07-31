@@ -1,5 +1,24 @@
 function Get-ExchangeImapPopSettings
 {
+    <#
+
+    .SYNOPSIS
+        Discover Exchange POP and IMAP protocol settings.
+
+    .DESCRIPTION
+        Run LDAP queries to retrieve Exchange POP and IMAP protocol settings.
+
+    .PARAMETER DomainDN
+        The current forest distinguished name to use in the LDAP query.
+
+    .OUTPUTS
+        Returns a custom object containing key Exchange POP/IMAP protocol settings.
+
+    .EXAMPLE
+        Get-ExchangeImapPopSettings -DomainDN $domainDN
+    
+    #>
+
     [CmdletBinding()]
     param (
         [string]

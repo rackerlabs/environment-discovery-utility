@@ -95,7 +95,7 @@
         try 
         {
             Write-Output "Zipping results of Environment Discover"
-            $zipFile = New-ZipFile -OutputFolder $OutputFolder -Files "$jsonPath","$logPath" -SessionGUID $sessionGuid -EnvironmentName $environmentName
+            $zipFile = New-ZipFile -OutputFolder $OutputFolder -Files "$jsonPath","$logPath" -EnvironmentName $environmentName
             Write-Output "Zip file created. $zipFile."
         }
         catch 

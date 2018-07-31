@@ -1,5 +1,24 @@
 function Get-ExchangeDynamicGroups
 {
+    <#
+
+    .SYNOPSIS
+        Discover Exchange dynamic groups.
+
+    .DESCRIPTION
+        Uses LDAP queries to find Exchange Dynamic Groups.
+
+    .PARAMETER DomainDN
+        The current forest distinguished name to use in the LDAP query.
+
+    .OUTPUTS
+        Returns a custom object containing Exchange dynamic distribution groups.
+
+    .EXAMPLE
+        Get-ExchangeDynamicGroups -DomainDN $domainDN
+    
+    #>
+
     [CmdletBinding()]
     param (
         [string]

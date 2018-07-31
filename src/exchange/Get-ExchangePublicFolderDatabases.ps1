@@ -1,5 +1,24 @@
 function Get-ExchangePublicFolderDatabases
 {
+    <#
+
+    .SYNOPSIS
+        Discover Active Directory attributes for legacy public folder databases in Exchange.
+    
+    .DESCRIPTION
+        Uses LDAP queries to find public folder database settings in Active Directory.
+    
+    .PARAMETER DomainDN
+        The current forest distinguished name to use in the LDAP query.
+
+    .OUTPUTS
+        Returns a custom object containing public folder database properties.
+    
+    .EXAMPLE
+        Get-ExchangePublicFolderDatabases -DomainDN $domainDN
+    
+    #>
+
     [CmdletBinding()]
     param (
         [string]

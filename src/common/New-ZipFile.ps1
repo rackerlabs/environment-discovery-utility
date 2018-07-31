@@ -1,5 +1,31 @@
 function New-ZipFile
 {
+    <#
+    
+    .SYNOPSIS
+        Function to zip all files provided.
+
+    .DESCRIPTION
+        Zips files provided to the desired output
+
+    .PARAMETER OutputFolder
+        Used to specify export directory location.
+
+    .PARAMETER Files
+        Used to specify files to be zipped.
+
+    .PARAMETER EnvironmentName
+        Unique Identifier to the envrionment to be used to name the zip file.
+    
+    .OUTPUTS
+        Returns zip file location to user.
+
+    .EXAMPLE
+        New-ZipFile -OutputFolder $OutputFolder -Files "$jsonPath","$logPath" -EnvironmentName $environmentName
+    
+    #>
+    
+
     [CmdletBinding()]
     param (
         [string]
@@ -7,9 +33,6 @@ function New-ZipFile
 
         [array]
         $Files,
-
-        [string]
-        $SessionGuid,
 
         [string]
         $EnvironmentName

@@ -1,5 +1,22 @@
 function Get-ActiveDirectoryDomainDetails
 {
+    <#
+
+    .SYNOPSIS
+        Get Active Directory attributes for a single domain.
+
+    .DESCRIPTION
+        Extract key attributes for an Active Directory domain.
+
+    .OUTPUTS
+        Returns a custom object containing details for the requested Active Directory domain.
+
+    .EXAMPLE
+        Get-ActiveDirectoryDomainDetails -Domain $domain
+
+    #>
+    
+    # The Active Directory domain to process.
     [CmdletBinding()]
     param (
         [System.DirectoryServices.ActiveDirectory.ActiveDirectoryPartition]
@@ -34,7 +51,25 @@ function Get-ActiveDirectoryDomainDetails
 
 function Get-ActiveDirectoryDomains
 {
-    [CmdletBinding()]
+    <#
+
+    .SYNOPSIS
+        Iterates through a list of Active Directory domains.
+
+    .DESCRIPTION
+        List all domains in an Active Directory DomainCollection, pass each one to Get-ActiveDirectoryDomainDetails for further analysis.
+
+    .OUTPUTS
+        A custom object containing a list of Active Directory domains with their key attributes.
+
+    .EXAMPLE
+        Get-ActiveDirectoryDomains -Domains $forest.Domains
+
+    #>
+    
+    # List of active directory domains using [System.DirectoryServices.ActiveDirectory.DomainCollection].
+    [CmdletBinding()]    
+    [Parameter(Mandatory=$true)]
     param (
         [System.DirectoryServices.ActiveDirectory.DomainCollection]
         $Domains

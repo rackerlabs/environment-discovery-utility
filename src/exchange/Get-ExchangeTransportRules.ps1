@@ -1,5 +1,19 @@
 function Get-ExchangeTransportRules
 {
+    <#
+    .SYNOPSIS
+        Find transport rule settings in Exchange.
+
+    .DESCRIPTION
+        Runs LDAP queries against the Active Directory configuration partition to return key settings for Exchange transport rules.
+
+    .OUTPUTS
+        Returns a custom object which contains key settings for Exchange transport rules.
+
+    .EXAMPLE
+        Get-ExchangeTransportRules -DomainDN $domainDN -ExchangeShellConnected $exchangeShellConnected
+    #>
+
     [CmdletBinding()]
     param (
         [string]

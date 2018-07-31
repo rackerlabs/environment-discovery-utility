@@ -2,13 +2,13 @@ function Start-PublicFolderDiscovery
 {
     <#
     .SYNOPSIS
-        This cmdlet will return information related to the configuration and state of Public Folder in the environment.
+        Calls a set of child scripts used to discover public folder settings.
 
     .DESCRIPTION
-        This cmdlet will return information related to the configuration and state of Public Folder in the environment.
+        Call public folder discovery scripts and return information related to the configuration and state of public folders in the environment.
 
     .OUTPUTS
-        A PSObject representation of the discovered Public Folders.
+        A custom object representing discovered public folders.
 
     .EXAMPLE
         Start-PublicFolderDiscovery
