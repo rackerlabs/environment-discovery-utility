@@ -1,6 +1,7 @@
 function Write-Log
 {
     <#
+
         .SYNOPSIS
             This function writes to the configured log file, as well as PowerShell progress bars.
 
@@ -21,7 +22,9 @@ function Write-Log
         .EXAMPLE
             Write a verbose message with progress and completion percentage 
             Write-Log -Level 'DEBUG' -Activity $activity -Message "Gathering Exchange recipient details $x / $($recipients.Count)" -PercentComplete $percentComplete -WriteProgress
+
     #>
+
     [CmdletBinding()]
     param (
         # Level A string representation of Logging Level. Can be one of DEBUG, VERBOSE, ERROR, WARNING, INFO.
@@ -96,6 +99,7 @@ function Write-Log
 function Enable-Logging
 {
     <#
+
         .SYNOPSIS
             This function enables logging using the PowerShellLogging module to intercept streams and write to log files.
 
@@ -104,7 +108,9 @@ function Enable-Logging
 
         .EXAMPLE
             Enable-Logging -LogFilePath somefile.log
+
     #>
+
     [CmdletBinding()]
     param (
         # LogFilePath The path for the log file.
@@ -144,6 +150,7 @@ function Disable-Logging
         .EXAMPLE
             Disable-Logging
     #>
+
     [CmdletBinding()]
     param ()
 
@@ -162,6 +169,7 @@ function Get-LogEntries
         .EXAMPLE
             Get-LogEntries
     #>
+
     [CmdletBinding()]
     param ()
 

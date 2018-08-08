@@ -2,20 +2,20 @@ function Get-ExchangeDatabaseJournaling
 {
     <#
 
-    .SYNOPSIS
-        Discover Exchange database journaling settings.
+        .SYNOPSIS
+            Discover Exchange database journaling settings.
     
-    .DESCRIPTION
-        Uses LDAP queries to find Exchange database journaling settings.
+        .DESCRIPTION
+            Uses LDAP queries to find Exchange database journaling settings.
     
-    .PARAMETER DomainDN
-        The current forest distinguished name to use in the LDAP query.
+        .PARAMETER DomainDN
+            The current forest distinguished name to use in the LDAP query.
 
-    .OUTPUTS
-        Returns a custom object containing Exchange database journaling settings.
+        .OUTPUTS
+            Returns a custom object containing Exchange database journaling settings.
     
-    .EXAMPLE
-        Get-ExchangeDatabaseJournaling -DomainDN $domainDN
+        .EXAMPLE
+            Get-ExchangeDatabaseJournaling -DomainDN $domainDN
     
     #>
     

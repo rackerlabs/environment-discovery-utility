@@ -1,17 +1,19 @@
 function Get-ExchangeRecipients
 {
     <#
-    .SYNOPSIS
-        Discover all recipients in Exchange that have the msexchRecipientDisplayType attribute set in Active Directory.
 
-    .DESCRIPTION
-        Runs LDAP queries against Active Directory to discover all Exchange recipients.  If an Exchange shell is detected it will extract additional recipient statistics.
+        .SYNOPSIS
+            Discover all recipients in Exchange that have the msexchRecipientDisplayType attribute set in Active Directory.
 
-    .OUTPUTS
-        Returns a custom object containing recipient information.  Personally Identifiable Information (PII) is excluded.
+        .DESCRIPTION
+            Runs LDAP queries against Active Directory to discover all Exchange recipients.  If an Exchange shell is detected it will extract additional recipient statistics.
 
-    .EXAMPLE
-        Get-ExchangeRecipients -DomainDN $domainDN -ExchangeShellConnected $exchangeShellConnected
+        .OUTPUTS
+            Returns a custom object containing recipient information.  Personally Identifiable Information (PII) is excluded.
+
+        .EXAMPLE
+            Get-ExchangeRecipients -DomainDN $domainDN -ExchangeShellConnected $exchangeShellConnected
+
     #>
 
     [CmdletBinding()]
@@ -62,26 +64,34 @@ function Get-ExchangeRecipients
             $recipientStatistics = $null
             $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RemoteRecipientType, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, UserAccountControl
             $currentRecipient.ObjectGuid = [GUID]($recipient.objectGuid | Select-Object -First 1)
-            $currentRecipient.PrimarySmtpDomain = ($recipient.mail | Select-Object -First 1).Split("@")[1]
             $currentRecipient.RecipientTypeDetails = $recipient.msexchRecipientTypeDetails | Select-Object -First 1
             $currentRecipient.RemoteRecipientType = $recipient.msExchRemoteRecipientType | Select-Object -First 1
             $currentRecipient.RecipientDisplayType = $recipient.msexchRecipientDisplayType | Select-Object -First 1
+            
+            $recipientMail = $recipient.mail | Select-Object -First 1
+            if ($recipientMail.Contains("@"))
+            {
+                $currentRecipient.PrimarySmtpDomain = $recipientMail.Split("@")[1]
+            }
 
             if ([array]$recipient.ObjectClass -contains "user")
             {
-                $userPrincipalName = ($recipient.userPrincipalName | Select-Object -First 1)
+                $userPrincipalName = $recipient.userPrincipalName | Select-Object -First 1
+
                 if (-not [String]::IsNullOrEmpty($userPrincipalName))
                 {
                     if ($userPrincipalName.Contains("@"))
                     {
-                        $currentRecipient.UserPrincipalNameSuffix = ($recipient.userPrincipalName | Select-Object -First 1).Split("@")[1]
+                        $splitUserPrincipalName = $userPrincipalName.Split("@")
+                        $domain = $splitUserPrincipalName[1]
+                        $currentRecipient.UserPrincipalNameSuffix = $domain
                     }
                     else
                     {
                         Write-Warning "The User Principal Name attribute for $($currentRecipient.ObjectGuid). doesn't have a domain suffix."
                     }
 
-                    $currentRecipient.PrimaryMatchesUPN = ($recipient.mail | Select-Object -First 1) -eq ($recipient.userPrincipalName | Select-Object -First 1)
+                    $currentRecipient.PrimaryMatchesUPN = ($recipient.mail | Select-Object -First 1) -eq $userPrincipalName
                 }
 
                 $currentRecipient.UserAccountControl = $recipient.userAccountControl | Select-Object -First 1

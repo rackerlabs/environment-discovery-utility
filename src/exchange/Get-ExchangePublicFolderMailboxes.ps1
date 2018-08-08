@@ -1,17 +1,19 @@
 function Get-ExchangePublicFolderMailboxes
 {
     <#
-    .SYNOPSIS
-        Load attributes for a single "modern" public folder mailbox information in Exchange.
 
-    .DESCRIPTION
-        Use LDAP queries to pull modern public folder information.
+        .SYNOPSIS
+            Load attributes for a single "modern" public folder mailbox information in Exchange.
 
-    .OUTPUTS
-        Returns a custom object containing modern public folder mailbox objectGUID and the database it is mounted on.
+        .DESCRIPTION
+            Use LDAP queries to pull modern public folder information.
 
-    .EXAMPLE
-        Get-ExchangePublicFolderMailboxes -DomainDN $domainDN
+        .OUTPUTS
+            Returns a custom object containing modern public folder mailbox objectGUID and the database it is mounted on.
+
+        .EXAMPLE
+            Get-ExchangePublicFolderMailboxes -DomainDN $domainDN
+
     #>
 
     [CmdletBinding()]

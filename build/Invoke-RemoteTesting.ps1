@@ -148,14 +148,17 @@ function Extract-ZipContents()
     
     Invoke-Command -ComputerName $LabIpAddress -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $remoteZipFile, $buildFolder
 
-    Run-EduCmdletRemotely
+    Invoke-RemoteEduModule
 }
 
-function Run-EduCmdletRemotely()
+function Invoke-RemoteEduModule()
 {
-    Write-Host "Executing EDU script remotely on $LabIpAddress"
+    $command = "$buildFolder\Invoke-Discovery.ps1";
+    $outputFolder = "-OutputFolder $buildFolder";
 
-    & $PsExec "\\$LabIpAddress" -w $buildFolder -u $Username -p $Password /accepteula cmd /c "echo . | powershell -noninteractive -command Import-Module $buildFolder\EnvironmentDiscoveryUtility.psd1; Start-EnvironmentDiscovery -OutputFolder $buildFolder;"
+    Write-Host "Executing EDU script remotely on $LabIpAddress, remote command is $command, output folder is $outputFolder"
+
+    & $PsExec "\\$LabIpAddress" -w $buildFolder -u $Username -p $Password /accepteula cmd /c "powershell -noninteractive -command $command $outputFolder;"
        
     if ($LastExitCode -ne 0)
     {

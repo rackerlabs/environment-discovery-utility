@@ -2,20 +2,20 @@ function Get-ExchangeAcceptedDomains
 {
     <#
 
-    .SYNOPSIS
-        Discover Exchange accepted domains.
+        .SYNOPSIS
+            Discover Exchange accepted domains.
     
-    .DESCRIPTION
-        Uses LDAP queries to find Exchange accepted domains.
+        .DESCRIPTION
+            Uses LDAP queries to find Exchange accepted domains.
     
-    .PARAMETER DomainDN
-        The current forest distinguished name to use in the LDAP query.
+        .PARAMETER DomainDN
+            The current forest distinguished name to use in the LDAP query.
 
-    .OUTPUTS
-        Returns a custom object containing Exchange accepted domains.
+        .OUTPUTS
+            Returns a custom object containing Exchange accepted domains.
     
-    .EXAMPLE
-        Get-ExchangeAcceptedDomains -DomainDN $domainDN
+        .EXAMPLE
+            Get-ExchangeAcceptedDomains -DomainDN $domainDN
     
     #>
     

@@ -1,17 +1,19 @@
 function Get-ExchangeReceiveConnectors
 {
     <#
-    .SYNOPSIS
-        Discovers Exchange recieve connector settings.
 
-    .DESCRIPTION
-        Run an LDAP queries against the Active Directory configuration partition which finds all Exchange recieve connector settings.
+        .SYNOPSIS
+            Discovers Exchange recieve connector settings.
 
-    .OUTPUTS
-        Returns a custom object containing several key settings for the recieve connectors.
+        .DESCRIPTION
+            Run an LDAP queries against the Active Directory configuration partition which finds all Exchange recieve connector settings.
 
-    .EXAMPLE
-        Get-ExchangeRecieveConnectors -DomainDN $domainDN
+        .OUTPUTS
+            Returns a custom object containing several key settings for the recieve connectors.
+
+        .EXAMPLE
+            Get-ExchangeRecieveConnectors -DomainDN $domainDN
+
     #>
 
     [CmdletBinding()]

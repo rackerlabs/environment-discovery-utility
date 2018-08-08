@@ -1,17 +1,19 @@
 function Initialize-ExchangePowershell
 {
     <#
-    .SYNOPSIS
-        Used to start the RemoteExchange.ps1 script which in turn opens an Exchange Shell.
 
-    .DESCRIPTION
-        Detect the Exchange version and start an Exchange shell using built-in Exchange scripts.
+        .SYNOPSIS
+            Used to start the RemoteExchange.ps1 script which in turn opens an Exchange Shell.
 
-    .OUTPUTS
-        Returns an Exchange shell or nothing if an Exchange shell is already loaded.
+        .DESCRIPTION
+            Detect the Exchange version and start an Exchange shell using built-in Exchange scripts.
 
-    .EXAMPLE
-        Initialize-ExchangePowershell
+        .OUTPUTS
+            Returns an Exchange shell or nothing if an Exchange shell is already loaded.
+
+        .EXAMPLE
+            Initialize-ExchangePowershell
+
     #>
 
     [CmdletBinding()]
@@ -38,7 +40,7 @@ function Initialize-ExchangePowershell
     }
 
     $testCommand = Get-Command Get-ExchangeServer -ErrorAction SilentlyContinue
-
+    
     if ($testCommand)
     {
         Write-Log -Level "VERBOSE" -Activity $MyInvocation.MyCommand.Name -Message "Successfully connected Exchange PowerShell."
@@ -48,6 +50,6 @@ function Initialize-ExchangePowershell
     {
         Write-Log -Level "WARNING" -Activity $MyInvocation.MyCommand.Name -Message "Failed to connect to Exchange PowerShell."
     }
-
+    
     $connectedToExchange
 }

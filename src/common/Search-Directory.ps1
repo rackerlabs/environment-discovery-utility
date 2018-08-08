@@ -2,29 +2,29 @@ function Search-Directory
 {
     <#
     
-    .SYNOPSIS
-        Query active directory through LDAP.
+        .SYNOPSIS
+            Query active directory through LDAP.
 
-    .DESCRIPTION
-        Creates LDAP queries using provided parameters dynamically.
+        .DESCRIPTION
+            Creates LDAP queries using provided parameters dynamically.
 
-    .PARAMETER Context
-        Specifies active directory partition to search in.
+        .PARAMETER Context
+            Specifies active directory partition to search in.
 
-    .PARAMETER Filter
-        Specifies LDAP filter used to target objects.
+        .PARAMETER Filter
+            Specifies LDAP filter used to target objects.
 
-    .PARAMETER Properties
-        Specifies properties that need to be returned.
+        .PARAMETER Properties
+            Specifies properties that need to be returned.
 
-    .PARAMETER SearchRoot
-        Specifies partition search root.
+        .PARAMETER SearchRoot
+            Specifies partition search root.
     
-    .OUTPUTS
-        Returns all properties provided to the calling script.
+        .OUTPUTS
+            Returns all properties provided to the calling script.
 
-    .EXAMPLE
-        Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        .EXAMPLE
+            Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     
     #>
 

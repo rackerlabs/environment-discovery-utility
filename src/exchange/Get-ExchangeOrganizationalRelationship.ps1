@@ -2,20 +2,20 @@ function Get-ExchangeOrganizationalRelationship
 {
     <#
 
-    .SYNOPSIS
-        Discover Federation Sharing settings.
+        .SYNOPSIS
+            Discover Federation Sharing settings.
     
-    .DESCRIPTION
-        Run LDAP queries to find Federation Sharing settings in Active Directory.
+        .DESCRIPTION
+            Run LDAP queries to find Federation Sharing settings in Active Directory.
     
-    .PARAMETER DomainDN
-        The current forest distinguished name to use in the LDAP query.
+        .PARAMETER DomainDN
+            The current forest distinguished name to use in the LDAP query.
 
-    .OUTPUTS
-        Returns a custom object containing federation sharing properties.
+        .OUTPUTS
+            Returns a custom object containing federation sharing properties.
     
-    .EXAMPLE
-        Get-ExchangeOrganizationalRelationship -DomainDN $domainDN
+        .EXAMPLE
+            Get-ExchangeOrganizationalRelationship -DomainDN $domainDN
     
     #>
 

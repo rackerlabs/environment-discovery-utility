@@ -1,17 +1,19 @@
 function Get-ExchangeRecipientDataStatistics
 {
     <#
-    .SYNOPSIS
-        Load mailbox statistics for a mailbox.
 
-    .DESCRIPTION
-        Analyzes the mailbox type and conditionally loads mailbox statistics if appropriate.
+        .SYNOPSIS
+            Load mailbox statistics for a mailbox.
 
-    .OUTPUTS
-        Returns a custom object containing mailbox statistics for a mailbox.
+        .DESCRIPTION
+            Analyzes the mailbox type and conditionally loads mailbox statistics if appropriate.
 
-    .EXAMPLE
-        Get-ExchangeRecipientDataStatistics -Recipient $currentRecipient
+        .OUTPUTS
+            Returns a custom object containing mailbox statistics for a mailbox.
+
+        .EXAMPLE
+            Get-ExchangeRecipientDataStatistics -Recipient $currentRecipient
+
     #>
 
     [CmdletBinding()]

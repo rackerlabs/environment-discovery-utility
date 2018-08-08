@@ -1,20 +1,22 @@
 function Get-ExchangeFederationTrust
 {
     <#
-    .SYNOPSIS
-        Discover Exchange federation trust settings.
 
-    .DESCRIPTION
-        Run LDAP queries to get all Exchangefederation trusts in Active Directory.
+        .SYNOPSIS
+            Discover Exchange federation trust settings.
 
-    .PARAMETER DomainDN
-        The current forest distinguished name to use in the LDAP query.
+        .DESCRIPTION
+            Run LDAP queries to get all Exchangefederation trusts in Active Directory.
 
-    .OUTPUTS
-        Returns a custom object representing key federation trust properties.
+        .PARAMETER DomainDN
+            The current forest distinguished name to use in the LDAP query.
 
-    .EXAMPLE
-        Get-ExchangeFederationTrust -DomainDN $domainDN
+        .OUTPUTS
+            Returns a custom object representing key federation trust properties.
+
+        .EXAMPLE
+            Get-ExchangeFederationTrust -DomainDN $domainDN
+
     #>
 
     [CmdletBinding()]

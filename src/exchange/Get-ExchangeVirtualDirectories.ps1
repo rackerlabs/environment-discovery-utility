@@ -1,17 +1,19 @@
 function Get-ExchangeVirtualDirectories
 {
     <#
-    .SYNOPSIS
-        Find Exchange virtual directory settings.
 
-    .DESCRIPTION
-        Runs LDAP queries against the Active Directory configuration partition to find all Exchange virtual directory settings.
+        .SYNOPSIS
+            Find Exchange virtual directory settings.
 
-    .OUTPUTS
-        Returns a custom object containing settings for all Exchange virtual directories.
+        .DESCRIPTION
+            Runs LDAP queries against the Active Directory configuration partition to find all Exchange virtual directory settings.
 
-    .EXAMPLE
-        Get-ExchangeVirtualDirectories -DomainDN $domainDN
+        .OUTPUTS
+            Returns a custom object containing settings for all Exchange virtual directories.
+
+        .EXAMPLE
+            Get-ExchangeVirtualDirectories -DomainDN $domainDN
+
     #>
 
     [CmdletBinding()]

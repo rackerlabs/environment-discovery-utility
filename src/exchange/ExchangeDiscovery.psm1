@@ -1,17 +1,19 @@
 function Start-ExchangeDiscovery
 {
     <#
-    .SYNOPSIS
-        This cmdlet will return information related to the configuration and state of Exchange in the environment.
 
-    .DESCRIPTION
-        This cmdlet will return information related to the configuration and state of Exchange in the environment.  This is not meant to be run independently and is part of the Environment Discovery Utility package.
+        .SYNOPSIS
+            This cmdlet will return information related to the configuration and state of Exchange in the environment.
 
-    .OUTPUTS
-        A PSObject representation of the discovered Exchange environment.
+        .DESCRIPTION
+            This cmdlet will return information related to the configuration and state of Exchange in the environment.  This is not meant to be run independently and is part of the Environment Discovery Utility package.
 
-    .EXAMPLE
-        Start-ExchangeDiscovery
+        .OUTPUTS
+            A PSObject representation of the discovered Exchange environment.
+
+        .EXAMPLE
+            Start-ExchangeDiscovery
+
     #>
 
     [CmdletBinding()]

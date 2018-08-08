@@ -1,6 +1,7 @@
 ﻿function Start-EnvironmentDiscovery
 {
     <#
+
         .SYNOPSIS
             This cmdlet will start a run of the Environment Discovery Utility.  
 
@@ -21,6 +22,7 @@
 
         .EXAMPLE
             Start-EnvironmentDiscovery -Modules Exchange,AD -OutputFolder c:\temp
+
     #>
 
     [CmdletBinding()]
@@ -29,6 +31,7 @@
         [ValidateSet("ad","exchange","all")]
         [array]
         $Modules = @("all"),
+
         [string]
         $OutputFolder = "$env:USERPROFILE\Desktop"
     )
@@ -36,9 +39,11 @@
     begin
     {
         Clear-Host
+
         $environmentName = (Get-WmiObject Win32_ComputerSystem).Domain.ToLower()
         $tempFolder = "$env:USERPROFILE\AppData\Local\Temp"
         $sessionGuid = [GUID]::NewGuid()
+
         $logPath = "$tempFolder\edu-$environmentName.log"
         $jsonPath = "$tempFolder\edu-$environmentName.json"
         
@@ -55,6 +60,13 @@
         $environment.Add("SessionId", $sessionGuid)
         $environment.Add("TimeStamp", $(([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")))
         
+        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Modules: $Modules"
+        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Output Folder: $OutputFolder"
+        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Environment Name: $environmentName"
+        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Session GUID: $sessionGuid"
+        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Temp Folder: $tempFolder"
+        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Log Path: $logPath"
+        Write-Log -Level "DEBUG" -Activity "Setup" -Message "JSON Path: $jsonPath"
     }
     process
     {
@@ -64,6 +76,7 @@
         foreach ($module in $allModules)
         {
             Write-Log -Level "VERBOSE" -Message "Executing $($module.ToUpper()) Module." -Activity "Environment Discovery Utility"
+
             if (($Modules -like "all") -or ($Modules -contains $module))
             {
                 switch ($module)
@@ -96,11 +109,11 @@
         {
             Write-Output "Zipping results of Environment Discover"
             $zipFile = New-ZipFile -OutputFolder $OutputFolder -Files "$jsonPath","$logPath" -EnvironmentName $environmentName
-            Write-Output "Zip file created. $zipFile."
+            Write-Output "Zip file created at $zipFile."
         }
         catch 
         {
-            Write-Error "Zip function failed to create zip file. Files are located in $tempFolder. $($_.Exception.Message)" -ErrorAction Stop    
+            Write-Error "Zip function failed to create zip file. Files are located in $tempFolder. $($_.Exception)" -ErrorAction Stop    
         }
     }
     end

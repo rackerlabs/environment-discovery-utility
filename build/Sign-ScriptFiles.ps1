@@ -33,7 +33,7 @@ param (
     
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]    
-	[string]
+    [string]
     $CertificateFile,
 
     [Parameter(Mandatory=$true)]
@@ -77,7 +77,7 @@ Function Get-CertificatePassword()
 
     if ($LastExitCode -ne 0)
     {
-	    throw "Failed to retrieve certificate password from PasswordSafe"
+        throw "Failed to retrieve certificate password from PasswordSafe"
     }
 
     $Script:certificatePassword = $creds.credential.Password

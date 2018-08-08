@@ -2,17 +2,17 @@ function Get-ActiveDirectoryDomainDetails
 {
     <#
 
-    .SYNOPSIS
-        Get Active Directory attributes for a single domain.
+        .SYNOPSIS
+            Discover Active Directory attributes for a single domain.
 
-    .DESCRIPTION
-        Extract key attributes for an Active Directory domain.
+        .DESCRIPTION
+            Extract key attributes from a ActiveDirectoryPartition object for an Active Directory domain.
 
-    .OUTPUTS
-        Returns a custom object containing details for the requested Active Directory domain.
+        .OUTPUTS
+            Returns a custom object containing details for the requested Active Directory domain.
 
-    .EXAMPLE
-        Get-ActiveDirectoryDomainDetails -Domain $domain
+        .EXAMPLE
+            Get-ActiveDirectoryDomainDetails -Domain $domain
 
     #>
     
@@ -53,17 +53,17 @@ function Get-ActiveDirectoryDomains
 {
     <#
 
-    .SYNOPSIS
-        Iterates through a list of Active Directory domains.
+        .SYNOPSIS
+            Iterates through a list of Active Directory domains.
 
-    .DESCRIPTION
-        List all domains in an Active Directory DomainCollection, pass each one to Get-ActiveDirectoryDomainDetails for further analysis.
+        .DESCRIPTION
+            List all domains in an Active Directory DomainCollection, pass each one to Get-ActiveDirectoryDomainDetails for further analysis.
 
-    .OUTPUTS
-        A custom object containing a list of Active Directory domains with their key attributes.
+        .OUTPUTS
+            A custom object containing a list of Active Directory domains with their key attributes.
 
-    .EXAMPLE
-        Get-ActiveDirectoryDomains -Domains $forest.Domains
+        .EXAMPLE
+            Get-ActiveDirectoryDomains -Domains $forest.Domains
 
     #>
     

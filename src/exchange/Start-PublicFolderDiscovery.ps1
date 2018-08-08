@@ -1,17 +1,19 @@
 function Start-PublicFolderDiscovery
 {
     <#
-    .SYNOPSIS
-        Calls a set of child scripts used to discover public folder settings.
 
-    .DESCRIPTION
-        Call public folder discovery scripts and return information related to the configuration and state of public folders in the environment.
+        .SYNOPSIS
+            Calls a set of child scripts used to discover public folder settings.
 
-    .OUTPUTS
-        A custom object representing discovered public folders.
+        .DESCRIPTION
+            Call public folder discovery scripts and return information related to the configuration and state of public folders in the environment.
 
-    .EXAMPLE
-        Start-PublicFolderDiscovery
+        .OUTPUTS
+            A custom object representing discovered public folders.
+
+        .EXAMPLE
+            Start-PublicFolderDiscovery
+
     #>
 
     [CmdletBinding()]

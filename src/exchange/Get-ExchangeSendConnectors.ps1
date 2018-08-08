@@ -1,17 +1,19 @@
 function Get-ExchangeSendConnectors
 {
     <#
-    .SYNOPSIS
-        Discover all send connector settings within Exchange.
 
-    .DESCRIPTION
-        Uses LDAP queries run against the Active Directory configuration partition to discover all Exchange send connector settings.
+        .SYNOPSIS
+            Discover all send connector settings within Exchange.
 
-    .OUTPUTS
-        Returns a custom object containing key settings for Exchange send connectors.
+        .DESCRIPTION
+            Uses LDAP queries run against the Active Directory configuration partition to discover all Exchange send connector settings.
 
-    .EXAMPLE
-        Get-ExchangeSendConnectors -DomainDN $domainDN
+        .OUTPUTS
+            Returns a custom object containing key settings for Exchange send connectors.
+
+        .EXAMPLE
+            Get-ExchangeSendConnectors -DomainDN $domainDN
+
     #>
 
     [CmdletBinding()]

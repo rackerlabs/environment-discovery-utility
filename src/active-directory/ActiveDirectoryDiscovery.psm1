@@ -1,17 +1,19 @@
 function Start-ActiveDirectoryDiscovery
 {
     <#
-    .SYNOPSIS
-        This cmdlet will return information related to the current Active Directory Forest as well as its Domains and Sites.
 
-    .DESCRIPTION
-        This cmdlet will return information related to the current Active Directory Forest as well as its Domains and Sites.  This is not meant to be run independently and is part of the Environment Discovery Utility package.
+        .SYNOPSIS
+            This cmdlet will return information related to the current Active Directory Forest as well as its Domains and Sites.
 
-    .OUTPUTS
-        A PSObject representation of the discovered Active Directory environment.
+        .DESCRIPTION
+            This cmdlet will return information related to the current Active Directory Forest as well as its Domains and Sites.  This is not meant to be run independently and is part of the Environment Discovery Utility package.
 
-    .EXAMPLE
-        Start-ActiveDirectoryDiscovery
+        .OUTPUTS
+            A PSObject representation of the discovered Active Directory environment.
+
+        .EXAMPLE
+            Start-ActiveDirectoryDiscovery
+
     #>
 
     [CmdletBinding()]

@@ -4,17 +4,17 @@ function Get-ActiveDirectorySiteLinkDetails
 {
     <#
 
-    .SYNOPSIS
-        Function to return all sites within active directory
+        .SYNOPSIS
+            Discover all active directory sites using an ActiveDirectorySiteLink object.
 
-    .DESCRIPTION
-        Utilizing built in .net libraries to pull all site settings within the active directory forest
+        .DESCRIPTION
+            Use built in .Net libraries to find all site settings within the active directory forest
 
-    .OUTPUTS
-        Returns all key settings for sites with in active directory to be serialized into the JSON output
+        .OUTPUTS
+            Returns all key settings for sites with in active directory to be serialized into the JSON output
 
-    .EXAMPLE
-        Get-ActiveDirectorySiteLinkDetails -SiteLink $forest.Sites
+        .EXAMPLE
+            Get-ActiveDirectorySiteLinkDetails -SiteLink $forest.Sites
 
     #>
     

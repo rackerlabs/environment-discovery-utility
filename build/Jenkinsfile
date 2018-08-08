@@ -3,7 +3,7 @@ pipeline {
     agent any
     parameters {
         string(name: 'branch', defaultValue: 'develop', description: '')
-        string(name: 'slackChannel', defaultValue: 'edu', description: '')
+        string(name: 'slackChannel', defaultValue: 'edu-cicd', description: '')
         string(name: 'labIpAddress', defaultValue: '172.29.20.13', description: '')
     }
     stages {
@@ -40,7 +40,7 @@ pipeline {
             steps {
                 slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Zipping files"
 
-                bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Build-ZipFile.ps1 -BuildNumber %BUILD_NUMBER%'
+                bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\New-ZipFile.ps1 -BuildNumber %BUILD_NUMBER%'
             }
         }
         stage('Run Static Lab Test') {
@@ -50,7 +50,7 @@ pipeline {
                 withCredentials([
                     usernamePassword(credentialsId: '03bbc260-f717-48f0-b16a-c97ba14e6d85', passwordVariable: 'password', usernameVariable: 'username')
                 ]) {
-                    bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Execute-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress %labIpAddress% -Password %password% -Username %username% -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip'
+                    bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Invoke-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress %labIpAddress% -Password %password% -Username %username% -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip'
                 }				
             }
         }
