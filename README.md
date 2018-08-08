@@ -6,7 +6,7 @@ A set of powershell scripts used to gather information about Active Directory an
 
 ### What Do We Collect?
 
-For an overview of the data collected, please see the [included word document](/src/edu-data-collection-summary.docx).
+For an overview of the data collected, please see the [included word document](/src/edu-data-collection-summary.pdf).
 
 ### Minimum Requirements
 
@@ -19,7 +19,7 @@ For an overview of the data collected, please see the [included word document](/
 
 ### Running the EDU Module
 
-1. Download and extract the [latest release of EDU](/releases/latest) to a local directory.
+1. Download and extract the [latest release of EDU](https://github.com/rackerlabs/environment-discovery-utility/releases/latest) to a local directory.
 2. Open PowerShell.
 3. Run *Set-ExecutionPolicy RemoteSigned*. 
 2. Browse to the directory, run *Invoke-Discovery.ps1*.
