@@ -6,7 +6,7 @@ A set of powershell scripts used to gather information about Active Directory an
 
 ### What Do We Collect?
 
-For an overview of the data collected, please see the [included word document](/src/edu-data-collection-summary.pdf).
+For an overview of the data collected, please see the [included document](/src/edu-data-collection-summary.pdf).
 
 ### Minimum Requirements
 
