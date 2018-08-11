@@ -41,6 +41,8 @@
         Clear-Host
 
         $environmentName = (Get-WmiObject Win32_ComputerSystem).Domain.ToLower()
+        $powershellVersion = [string]$PSVersionTable.PSVersion
+        $netVersion = [string]$PSVersionTable.CLRVersion
         $tempFolder = "$env:USERPROFILE\AppData\Local\Temp"
         $sessionGuid = [GUID]::NewGuid()
 
@@ -67,6 +69,8 @@
         Write-Log -Level "DEBUG" -Activity "Setup" -Message "Temp Folder: $tempFolder"
         Write-Log -Level "DEBUG" -Activity "Setup" -Message "Log Path: $logPath"
         Write-Log -Level "DEBUG" -Activity "Setup" -Message "JSON Path: $jsonPath"
+        Write-Log -Level "DEBUG" -Activity "Setup" -Message "PowerShell Version: $powershellVersion"
+        Write-Log -Level "DEBUG" -Activity "Setup" -Message ".NET Version: $netVersion"
     }
     process
     {
