@@ -43,15 +43,7 @@ function Get-ExchangePublicFolderStatistics
                     $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB
                     $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
                     $publicFolderStats.Identity = $publicFolderStatistic.identity.objectGUID
-
-                    if ($PSVersionTable.PSVersion.Major -ge 3)
-                    {
-                        $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.ToKB()
-                    }
-                    else
-                    {
-                        $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.value.ToKB()
-                    }
+                    $publicFolderStats.TotalItemSizeKB = Convert-ExchangeDataStatisticToKB -Property $publicFolderStatistic.totalItemSize
 
                     $discoveredPublicFolderStatistics += $publicFolderStats
                 }
@@ -90,15 +82,7 @@ function Get-ExchangePublicFolderStatistics
                     $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB
                     $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
                     $publicFolderStats.Identity = $publicFolderStatistic.entryID
-
-                    if ($PSVersionTable.PSVersion.Major -ge 3)
-                    {
-                        $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.ToKB()
-                    }
-                    else
-                    {
-                        $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.value.ToKB()
-                    }
+                    $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.value.ToKB()
 
                     $discoveredPublicFolderStatistics += $publicFolderStats
                 }
