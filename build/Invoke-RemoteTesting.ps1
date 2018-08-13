@@ -165,26 +165,28 @@ function Invoke-RemoteEduModule()
 	    throw "Detected failure condition when running edu in PsExec session"
     }
 
-    Clear-StaleResults
+    Prepare-OutputDirectory
 }
 
-function Clear-StaleResults()
+function Prepare-OutputDirectory()
 {
-    Remove-Item "$PSScriptRoot\edu-*.zip"
+     New-Item -ItemType Directory -Force -Path "$PSScriptRoot\$LabIpAddress"
 
-    Copy-Results
+     Remove-Item "$PSScriptRoot\$LabIpAddress\edu-*.zip" -Force | Out-Null
+
+     Copy-Results
 }
 
 function Copy-Results()
 {   
-    Copy-Item "$remoteBuildFolder\edu-*.zip" -Destination $PSScriptRoot
+    Copy-Item "$remoteBuildFolder\edu-*.zip" -Destination "$PSScriptRoot\$LabIpAddress"
 
     Analyze-Results
 }
 
 function Analyze-Results()
 {
-    $output = Get-ChildItem "$PSScriptRoot\edu-*.zip" | Select-Object -First 1
+    $output = Get-ChildItem "$PSScriptRoot\$LabIpAddress\edu-*.zip" | Select-Object -First 1
 
     if ($output.length -gt 0kb) 
     {
@@ -209,6 +211,13 @@ function Output-TestResults()
     {
         throw "Tests failed, please check the log file for more information"
     }
+
+    Clean-OutputDirectory
+}
+
+function Clean-OutputDirectory()
+{
+    Remove-Item "$PSScriptRoot\$LabIpAddress\edu-*.zip" -Force | Out-Null    
 }
 
 Map-PSDrive

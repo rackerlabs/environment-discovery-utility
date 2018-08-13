@@ -4,7 +4,8 @@ pipeline {
     parameters {
         string(name: 'branch', defaultValue: 'develop', description: '')
         string(name: 'slackChannel', defaultValue: 'edu-cicd', description: '')
-        string(name: 'labIpAddress', defaultValue: '172.29.20.13', description: '')
+        string(name: 'staticLabIpAddress', defaultValue: '172.29.20.13', description: '')
+        string(name: 'jmlLabIpAddress', defaultValue: '172.29.12.224', description: '')
     }
     stages {
         stage('Checkout') {
@@ -24,13 +25,13 @@ pipeline {
                 )
             }
         }
-		stage('Sign') {
+        stage('Sign') {
             steps {
                 slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Signing script files"
 
-				withCredentials([
+                withCredentials([
                     usernamePassword(credentialsId: '1e14ecee-ea70-4dc9-b1a6-7946fab6c8bb', passwordVariable: 'password', usernameVariable: 'username'),
-					file(credentialsId: '9dc4abad-d55c-4621-a70c-d73b1803d6fe', variable: 'certificate')
+                    file(credentialsId: '9dc4abad-d55c-4621-a70c-d73b1803d6fe', variable: 'certificate')
                 ]) {
                     bat """powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Sign-ScriptFiles.ps1 -Password '%password%' -Username '%username%' -certificate %certificate%"""
                 }
@@ -43,15 +44,32 @@ pipeline {
                 bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\New-ZipFile.ps1 -BuildNumber %BUILD_NUMBER%'
             }
         }
-        stage('Run Static Lab Test') {
+        stage('Run Remote Tests') {
             steps {
-                slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Running static lab tests"
+                parallel (
+                    "Run Exchange 2010 / PowerShell v2 lab tests" : {
+                        slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Running Exchange 2010 / PowerShell v2 lab tests"
 
-                withCredentials([
-                    usernamePassword(credentialsId: '03bbc260-f717-48f0-b16a-c97ba14e6d85', passwordVariable: 'password', usernameVariable: 'username')
-                ]) {
-                    bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Invoke-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress %labIpAddress% -Password %password% -Username %username% -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip'
-                }				
+                        withCredentials([
+                            usernamePassword(credentialsId: '03bbc260-f717-48f0-b16a-c97ba14e6d85', passwordVariable: 'password', usernameVariable: 'username')
+                        ]) {
+                            bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Invoke-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress %staticLabIpAddress% -Password %password% -Username %username% -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip'
+                        }
+
+                        slackSend channel: "${slackChannel}", color: 'good',  message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Exchange 2010 / PowerShell v2 lab tests successful"
+                    },
+                    "Run JML tests" : {
+                        slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Running JML tests"
+
+                        withCredentials([
+                            usernamePassword(credentialsId: '5de43889-57c2-41ad-a17b-06cf6eb92ffd', passwordVariable: 'password', usernameVariable: 'username')
+                        ]) {
+                            bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Invoke-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress %jmlLabIpAddress% -Password %password% -Username %username% -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip'
+                        }
+
+                        slackSend channel: "${slackChannel}", color: 'good',  message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} JML tests successful" 
+                    },
+                )				
             }
         }
     }
