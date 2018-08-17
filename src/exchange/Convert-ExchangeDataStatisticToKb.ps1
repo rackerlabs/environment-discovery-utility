@@ -32,13 +32,13 @@ function Convert-ExchangeDataStatisticToKB
     {
         $valueType = $Property.Value.GetType()
 
-        if ($valueType -eq "Microsoft.Exchange.Data.ByteQuantifiedSize")
+        if ($valueType -eq [Microsoft.Exchange.Data.ByteQuantifiedSize])
         {
             $Property = $Property.Value
         }
     }
 
-    if ($Property.GetType() -eq "Microsoft.Exchange.Data.ByteQuantifiedSize")
+    if ($Property.GetType() -eq [Microsoft.Exchange.Data.ByteQuantifiedSize])
     {
         $kbValue = [Microsoft.Exchange.Data.ByteQuantifiedSize] $Property.ToKB()
     }
