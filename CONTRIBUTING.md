@@ -217,7 +217,7 @@ This module is simply a wrapper module for the [Enhanced Script Logging module](
 We use Enable-OutputSubscriber from the PowerShellLogging module to intercept the different streams and use our own Write-Log function to write to file.  We are still unable to stop the Exchange tips from coming to the screen, but we can/do clear the screen once we can.
 
 ### Log File
-We are logging to the environment-session.log file in the current directory.
+We are logging to the edu-environmentname.log file in the current directory.  The log file is zipped and cleaned up after module execution.
 
 ### Sample log file from JMLLab
 [environment-4a884b49-11ad-4b18-a095-15e8fe58c477_log.txt](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/files/344/environment-4a884b49-11ad-4b18-a095-15e8fe58c477_log.txt)

@@ -3,7 +3,7 @@
     <#
 
         .SYNOPSIS
-            This cmdlet will start a run of the Environment Discovery Utility.  
+            This cmdlet will start a run of the Environment Discovery Utility.
 
         .DESCRIPTION
             This cmdlet will start a run of the Environment Discovery Utility.  This utility gathers important information regarding Microsoft products for the purpose of evaluating customer environments to aid in the scoping of projects.
@@ -33,23 +33,23 @@
         $Modules = @("all"),
 
         [string]
-        $OutputFolder = "$env:USERPROFILE\Desktop"
+        $OutputFolder = "$((Get-Location).Path)"
     )
 
     begin
     {
         Clear-Host
 
+        $OutputFolder = "$($OutputFolder.TrimEnd('/\'))"
         $environmentName = (Get-WmiObject Win32_ComputerSystem).Domain.ToLower()
         $powershellVersion = [string]$PSVersionTable.PSVersion
         $netVersion = [string]$PSVersionTable.CLRVersion
-        $tempFolder = "$env:USERPROFILE\AppData\Local\Temp"
         $sessionGuid = [GUID]::NewGuid()
 
-        $logPath = "$tempFolder\edu-$environmentName.log"
-        $jsonPath = "$tempFolder\edu-$environmentName.json"
-        
-        try 
+        $logPath = "$($OutputFolder)\edu-$environmentName.log"
+        $jsonPath = "$($OutputFolder)\edu-$environmentName.json"
+
+        try
         {
             Enable-Logging $logPath
         }
@@ -57,11 +57,11 @@
         {
             Write-Error "Failed to enable logging check to ensure $tempFolder exists and the account has write permissions. $($_.Exception.Message)" -ErrorAction Stop
         }
-        
+
         $environment = @{}
         $environment.Add("SessionId", $sessionGuid)
-        $environment.Add("TimeStamp", $(([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")))
-        
+        $environment.Add("TimeStamp", $([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ"))
+
         Write-Log -Level "DEBUG" -Activity "Setup" -Message "Modules: $Modules"
         Write-Log -Level "DEBUG" -Activity "Setup" -Message "Output Folder: $OutputFolder"
         Write-Log -Level "DEBUG" -Activity "Setup" -Message "Environment Name: $environmentName"
@@ -101,17 +101,18 @@
 
         Write-Log -Level "VERBOSE" -Message "Packaging EDU Results" -Activity "Environment Discovery Utility" -WriteProgress
         $environment.Add("Log",$Global:logEntries)
-        
+
         if (Test-Path $jsonPath)
         {
+            Write-Log -Level "DEBUG" -Message "Found an existing json file in the destination directory.  Cleaning it up." -Activity "Environment Discovery Utility" -WriteProgress
             Remove-Item $jsonPath -Force
         }
 
         $environment | SerializeTo-Json | Set-Content -Path $jsonPath -Encoding UTF8 -Force
-            
-        try 
+
+        try
         {
-            Write-Output "Zipping results of Environment Discover"
+            Write-Output "Zipping EDU results."
             $zipFile = New-ZipFile -OutputFolder $OutputFolder -Files "$jsonPath","$logPath" -EnvironmentName $environmentName
             Write-Output "Zip file created at $zipFile."
         }
@@ -125,7 +126,7 @@
         Disable-Logging
         Write-Output "Removing files from temp location."
         Remove-Item $logPath -Force
-        Remove-Item $jsonPath -Force  
+        Remove-Item $jsonPath -Force
         Write-Output "Cleanup completed."
     }
 }

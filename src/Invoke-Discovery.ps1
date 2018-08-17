@@ -31,7 +31,7 @@ param (
     $Modules = @("all"),
 
     [string]
-    $OutputFolder = "$env:USERPROFILE\Desktop"
+    $OutputFolder = "$((Get-Location).Path)"
 )
 
 Import-Module .\EnvironmentDiscoveryUtility.psd1 -Force
