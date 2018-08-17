@@ -24,7 +24,7 @@ function Get-ExchangeTransportConfig
 
     begin
     {
-        Write-Log -Level "VERBOSE" -Activity "Transport Configuration Discovery" -Message "Attempting Transport Configuration Discovery." -WriteProgress
+        Write-Log -Level "INFO" -Activity "Transport Configuration Discovery" -Message "Attempting Transport Configuration Discovery." -WriteProgress
         $transportSettings = @{}
     }
 
@@ -32,7 +32,7 @@ function Get-ExchangeTransportConfig
     {
         $transportSettings.Add("RecieveConnectors", $(Get-ExchangeReceiveConnectors -DomainDN $DomainDN))
         $transportSettings.Add("SendConnectors", $(Get-ExchangeSendConnectors -DomainDN $DomainDN))
-        Write-Log -Level "VERBOSE" -Activity "Transport Configuration Discovery" -Message "Completed Transport Configuration Discovery." -WriteProgress
+        Write-Log -Level "INFO" -Activity "Transport Configuration Discovery" -Message "Completed Transport Configuration Discovery." -WriteProgress
 
         $transportSettings
     }

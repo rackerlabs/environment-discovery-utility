@@ -30,7 +30,7 @@ function Write-Log
         # Level A string representation of Logging Level. Can be one of DEBUG, VERBOSE, ERROR, WARNING, INFO.
         [ValidateSet("DEBUG","VERBOSE","ERROR","WARNING","INFO")]
         [string]
-        $Level = "DEBUG",
+        $Level = "VERBOSE",
 
         # Message The string to log. This will be used as the status if writing to Progress as well.
         [string]
@@ -66,32 +66,52 @@ function Write-Log
         $logEntry.Level = $Level
         $logEntry.Activity = $Activity
         $logEntry.Message = $Message
-        $Global:logEntries += $logEntry
-        "$utcDate,$Level,$Activity,`"$Message`"" | Out-File -Append -Encoding utf8 -FilePath $Global:logFilePath -NoClobber
+        $writeEntry = $true
 
-        if ($WriteProgress)
+        if ($Level -like "DEBUG")
         {
-            $progressArgs = @{
-                Status = $Message
-                Activity = $Activity
-            }
-
-            if ($ProgressId)
+            if ($Global:DebugPreference -like 'SilentlyContinue')
             {
-                $progressArgs.Add("Id",$progressId)
+                $writeEntry = $false
             }
+        }
 
-            if ($ProgressComplete)
+        if ($Level -like 'VERBOSE')
+        {
+            if ($Global:VerbosePreference -like 'SilentlyContinue')
             {
-                $progressArgs.Add("Completed",$null)
+                $writeEntry = $false
             }
+        }
 
-            if ($PercentComplete)
+        if ($writeEntry -eq $true)
+        {
+            Export-LogEntry $logEntry
+            $Global:logEntries += $logEntry
+            if ($WriteProgress)
             {
-                $progressArgs.Add("PercentComplete",$PercentComplete)
-            }
+                $progressArgs = @{
+                    Status = $Message
+                    Activity = $Activity
+                }
 
-            Write-Progress @progressArgs
+                if ($ProgressId)
+                {
+                    $progressArgs.Add("Id",$progressId)
+                }
+
+                if ($ProgressComplete)
+                {
+                    $progressArgs.Add("Completed",$null)
+                }
+
+                if ($PercentComplete)
+                {
+                    $progressArgs.Add("PercentComplete",$PercentComplete)
+                }
+
+                Write-Progress @progressArgs
+            }
         }
     }
 }
@@ -122,9 +142,12 @@ function Enable-Logging
     {
         Remove-Item $LogFilePath -Force
     }
-    
+
     $Global:logFilePath = $LogFilePath
     $Global:logEntries = @()
+    $Global:debugPreference = $DebugPreference
+    $Global:verbosePreference = $VerbosePreference
+
     $subscriberActions = @{
         OnWriteError = {Write-Log -Level "ERROR" -Message $args[0] -Activity "StreamInterception"}
         OnWriteWarning = {Write-Log -Level "WARNING" -Message $args[0] -Activity "StreamInterception"}
@@ -132,6 +155,7 @@ function Enable-Logging
         OnWriteDebug = {Write-Log -Level "DEBUG" -Message $args[0] -Activity "StreamInterception"}
         OnWriteVerbose = {Write-Log -Level "VERBOSE" -Message $args[0] -Activity "StreamInterception"}
     }
+
     $Global:logSubscriber = Enable-OutputSubscriber @subscriberActions
 
     $logEntry = "DateTime,Level,Activity,Message"
@@ -155,6 +179,33 @@ function Disable-Logging
     param ()
 
     $Global:logSubscriber | Disable-OutputSubscriber
+    Remove-Variable -Scope Global logFilePath
+    Remove-Variable -Scope Global logEntries
+    Remove-Variable -Scope Global debugPreference
+    Remove-Variable -Scope Global verbosePreference
+    Remove-Variable -Scope Global logSubscriber
+}
+
+function Export-LogEntry
+{
+    <#
+        .SYNOPSIS
+            This function saves a log entry to the log file on disk.
+
+        .DESCRIPTION
+            This function saves a log entry to the log file on disk.
+
+        .EXAMPLE
+            Export-LogEntry
+    #>
+
+    [CmdletBinding()]
+    param (
+        [object]
+        $LogEntry
+    )
+
+    "$($logEntry.Date),$($logEntry.Level),$($Activity),`"$($logEntry.Message)`"" | Out-File -Append -Encoding utf8 -FilePath $Global:logFilePath -NoClobber
 }
 
 function Get-LogEntries

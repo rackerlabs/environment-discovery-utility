@@ -33,7 +33,7 @@ function Get-ExchangeFederationTrust
 
     try
     {
-        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Federation Trusts." -WriteProgress
+        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Federation Trusts." -WriteProgress
         [array]$exchangeFederationTrusts = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $DomainDN
     }
     catch

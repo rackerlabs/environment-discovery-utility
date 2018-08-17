@@ -34,7 +34,7 @@ function Get-ExchangeDynamicGroups
 
     try
     {
-        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Dynamic Groups." -WriteProgress
+        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Dynamic Groups." -WriteProgress
         $exchangeDynamicGroups = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch

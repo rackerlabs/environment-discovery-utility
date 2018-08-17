@@ -34,7 +34,7 @@ function Get-ExchangeDatabaseJournaling
 
     try
     {
-        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Database Journaling." -WriteProgress
+        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Database Journaling." -WriteProgress
         $databases = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch

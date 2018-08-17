@@ -34,7 +34,7 @@ function Get-ExchangeAcceptedDomains
 
     try
     {
-        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Accepted Domains." -WriteProgress
+        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Accepted Domains." -WriteProgress
         $acceptedDomains = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch

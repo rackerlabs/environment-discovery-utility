@@ -36,4 +36,4 @@ param (
 
 Import-Module .\EnvironmentDiscoveryUtility.psd1 -Force
 
-Start-EnvironmentDiscovery -Modules $Modules -OutputFolder $OutputFolder
+Start-EnvironmentDiscovery -Modules $Modules -OutputFolder $OutputFolder -Verbose:$VerbosePreference -Debug:$DebugPreference

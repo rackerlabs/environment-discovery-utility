@@ -34,7 +34,7 @@ function Get-ExchangeOrganizationalRelationship
 
     try
     {
-        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Organizational Relationships." -WriteProgress
+        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Organizational Relationships." -WriteProgress
         $organizationalRelationshipSettings = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $DomainDN
     }
     catch

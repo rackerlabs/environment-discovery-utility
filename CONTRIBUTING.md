@@ -238,7 +238,21 @@ Sample log entry
 [environment-4a884b49-11ad-4b18-a095-15e8fe58c477_json.txt](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/files/343/environment-4a884b49-11ad-4b18-a095-15e8fe58c477_json.txt)
 
 ### Logging Something
-Functions have an 'activity' variable for logging.  I'm not extremely fond of this and have considered using a method I found to set the activity to the name of the function
+Functions have an 'activity' variable for logging.  The activity should be descriptive enough to know what portion of the module was running when the entry was logged.
+
+#### Activity
+Functions have an 'activity' variable for logging.  The activity should be descriptive enough to know what portion of the module was running when the entry was logged.
+
+#### Level
+Level | Use Case
+------------ | -------------
+VERBOSE | Used to more log detailed information, that would not be included by default.
+DEBUG | Trace-level entries that would be useful to a developer or engineer in diagnosing issues with the module or system.
+INFO | General useful information that we want logged in any case.  Info log entries show the flow of the module and provide context to the log reader on the process that errored.
+WARNING | Entries describe things that may or may not be a problem.  A warning should be investigated in case of oddities in the script.
+ERROR | Entries describe errors that were caught in the module.  An error should be investigated in any case.
+
+Content in the first column | Content in the second column
 
 ### Example Usage
 - Write a warning message without writing progress bar

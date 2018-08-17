@@ -43,7 +43,7 @@ function Initialize-ExchangePowershell
     
     if ($testCommand)
     {
-        Write-Log -Level "VERBOSE" -Activity $MyInvocation.MyCommand.Name -Message "Successfully connected Exchange PowerShell."
+        Write-Log -Level "INFO" -Activity $MyInvocation.MyCommand.Name -Message "Successfully connected Exchange PowerShell."
         $connectedToExchange = $true
     }
     else

@@ -3,7 +3,7 @@
     <#
 
         .SYNOPSIS
-            This cmdlet will start a run of the Environment Discovery Utility.
+            This cmdlet will start a run of the Environment Discovery Utility.  
 
         .DESCRIPTION
             This cmdlet will start a run of the Environment Discovery Utility.  This utility gathers important information regarding Microsoft products for the purpose of evaluating customer environments to aid in the scoping of projects.
@@ -40,10 +40,10 @@
     {
         Clear-Host
 
-        $OutputFolder = "$($OutputFolder.TrimEnd('/\'))"
         $environmentName = (Get-WmiObject Win32_ComputerSystem).Domain.ToLower()
         $powershellVersion = [string]$PSVersionTable.PSVersion
         $netVersion = [string]$PSVersionTable.CLRVersion
+        $tempFolder = "$env:USERPROFILE\AppData\Local\Temp"
         $sessionGuid = [GUID]::NewGuid()
 
         $logPath = "$($OutputFolder)\edu-$environmentName.log"
@@ -51,7 +51,7 @@
 
         try
         {
-            Enable-Logging $logPath
+            Enable-Logging $logPath -Verbose:$VerbosePreference -Debug:$DebugPreference
         }
         catch 
         {
@@ -60,26 +60,28 @@
 
         $environment = @{}
         $environment.Add("SessionId", $sessionGuid)
-        $environment.Add("TimeStamp", $([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ"))
+        $environment.Add("TimeStamp", $(([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")))
 
-        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Modules: $Modules"
-        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Output Folder: $OutputFolder"
-        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Environment Name: $environmentName"
-        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Session GUID: $sessionGuid"
-        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Temp Folder: $tempFolder"
-        Write-Log -Level "DEBUG" -Activity "Setup" -Message "Log Path: $logPath"
-        Write-Log -Level "DEBUG" -Activity "Setup" -Message "JSON Path: $jsonPath"
-        Write-Log -Level "DEBUG" -Activity "Setup" -Message "PowerShell Version: $powershellVersion"
-        Write-Log -Level "DEBUG" -Activity "Setup" -Message ".NET Version: $netVersion"
+        Write-Log -Level "INFO" -Activity "Setup" -Message "Modules: $Modules"
+        Write-Log -Level "INFO" -Activity "Setup" -Message "Output Folder: $OutputFolder"
+        Write-Log -Level "INFO" -Activity "Setup" -Message "Environment Name: $environmentName"
+        Write-Log -Level "INFO" -Activity "Setup" -Message "Session GUID: $sessionGuid"
+        Write-Log -Level "INFO" -Activity "Setup" -Message "Temp Folder: $tempFolder"
+        Write-Log -Level "INFO" -Activity "Setup" -Message "Log Path: $logPath"
+        Write-Log -Level "INFO" -Activity "Setup" -Message "JSON Path: $jsonPath"
+        Write-Log -Level "INFO" -Activity "Setup" -Message "VebosePreference: $VerbosePreference"
+        Write-Log -Level "INFO" -Activity "Setup" -Message "DebugPreference: $DebugPreference"
+        Write-Log -Level "INFO" -Activity "Setup" -Message "PowerShell Version: $powershellVersion"
+        Write-Log -Level "INFO" -Activity "Setup" -Message ".NET Version: $netVersion"
     }
     process
     {
         $allModules = @("ad","exchange")
-        Write-Log -Level "VERBOSE" -Message "Initializing EDU Module" -Activity "Environment Discovery Utility" -WriteProgress
+        Write-Log -Level "INFO" -Message "Initializing EDU Module" -Activity "Environment Discovery Utility" -WriteProgress
 
         foreach ($module in $allModules)
         {
-            Write-Log -Level "VERBOSE" -Message "Executing $($module.ToUpper()) Module." -Activity "Environment Discovery Utility"
+            Write-Log -Level "INFO" -Message "Executing $($module.ToUpper()) Module." -Activity "Environment Discovery Utility"
 
             if (($Modules -like "all") -or ($Modules -contains $module))
             {
@@ -99,26 +101,25 @@
             }
         }
 
-        Write-Log -Level "VERBOSE" -Message "Packaging EDU Results" -Activity "Environment Discovery Utility" -WriteProgress
+        Write-Log -Level "INFO" -Message "Packaging EDU Results" -Activity "Environment Discovery Utility" -WriteProgress
         $environment.Add("Log",$Global:logEntries)
 
         if (Test-Path $jsonPath)
         {
-            Write-Log -Level "DEBUG" -Message "Found an existing json file in the destination directory.  Cleaning it up." -Activity "Environment Discovery Utility" -WriteProgress
             Remove-Item $jsonPath -Force
         }
 
-        $environment | SerializeTo-Json | Set-Content -Path $jsonPath -Encoding UTF8 -Force
+        $environment | SerializeTo-Json -Verbose:$False -Debug:$DebugPreference | Set-Content -Path $jsonPath -Encoding UTF8 -Force
 
-        try
+        try 
         {
-            Write-Output "Zipping EDU results."
+            Write-Output "Zipping results of Environment Discovery"
             $zipFile = New-ZipFile -OutputFolder $OutputFolder -Files "$jsonPath","$logPath" -EnvironmentName $environmentName
             Write-Output "Zip file created at $zipFile."
         }
         catch 
         {
-            Write-Error "Zip function failed to create zip file. Files are located in $tempFolder. $($_.Exception)" -ErrorAction Stop    
+            Write-Error "Zip function failed to create zip file. Files are located in $tempFolder. $($_.Exception)" -ErrorAction Stop
         }
     }
     end

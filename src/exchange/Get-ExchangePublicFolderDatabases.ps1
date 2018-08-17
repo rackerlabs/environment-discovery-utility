@@ -34,7 +34,7 @@ function Get-ExchangePublicFolderDatabases
 
     try
     {
-        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Public Folder databases." -WriteProgress
+        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Public Folder databases." -WriteProgress
         $legacyPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
@@ -57,7 +57,7 @@ function Get-ExchangePublicFolderDatabases
     }
     else
     {
-        Write-Log -Level "VERBOSE" -Activity $activity -Message "Did not find Public Folder databases in Active Directory." -WriteProgress
+        Write-Log -Level "INFO" -Activity $activity -Message "Did not find Public Folder databases in Active Directory." -WriteProgress
     }
 
     $discoveredLegacyPublicFolders

@@ -30,7 +30,7 @@ function Get-ExchangeReceiveConnectors
 
     try
     {
-        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Receive Connector Settings." -WriteProgress
+        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Receive Connector Settings." -WriteProgress
         $receiveConnectorSettings = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $DomainDN
     }
     catch

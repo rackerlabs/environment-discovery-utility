@@ -32,7 +32,7 @@ function Get-ExchangePublicFolderStatistics
     {
         if ($PublicFolders.Mailboxes)
         {
-            Write-Log -Level "VERBOSE" -Activity $activity -Message "Gathering modern public folder statistics. This may take some time without feedback." -WriteProgress
+            Write-Log -Level "INFO" -Activity $activity -Message "Gathering modern public folder statistics. This may take some time without feedback." -WriteProgress
             $publicFolderStatistics = Get-PublicFolderStatistics
 
             if ($publicFolderStatistics.Count -gt 0)
@@ -55,7 +55,7 @@ function Get-ExchangePublicFolderStatistics
         }
         elseif ($PublicFolders.Databases)
         {
-            Write-Log -Level "VERBOSE" -Activity $activity -Message "Gathering legacy public folder statistics. This may take some time without feedback." -WriteProgress
+            Write-Log -Level "INFO" -Activity $activity -Message "Gathering legacy public folder statistics. This may take some time without feedback." -WriteProgress
             $publicFolderStatistics = @()
 
             foreach ($database in ($PublicFolders.Databases))

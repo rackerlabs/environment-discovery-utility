@@ -37,7 +37,7 @@ function Get-ExchangeTransportRules
 
         try
         {
-            Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Transport Rules." -WriteProgress
+            Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Transport Rules." -WriteProgress
             $transportRules = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
         }
         catch

@@ -30,7 +30,7 @@ function Get-ExchangePublicFolderMailboxes
 
     try
     {
-        Write-Log -Level "VERBOSE" -Activity $activity -Message "Searching Active Directory for Public Folder mailboxes." -WriteProgress
+        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Public Folder mailboxes." -WriteProgress
         $modernPublicFolders = Search-Directory -Context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
     }
     catch
