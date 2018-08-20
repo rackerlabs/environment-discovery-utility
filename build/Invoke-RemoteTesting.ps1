@@ -198,6 +198,13 @@ function Analyze-Results()
         throw "EDU zip file size was 0, test failed"
     }
     
+    Rename-Artifact
+}
+
+function Rename-Artifact()
+{
+    Get-ChildItem "$PSScriptRoot\$LabIpAddress\edu-*.zip" | Select-Object -First 1 | Rename-Item -NewName "edu-$LabIpAddress.zip"
+
     Output-TestResults
 }
 
@@ -211,13 +218,6 @@ function Output-TestResults()
     {
         throw "Tests failed, please check the log file for more information"
     }
-
-    Clean-OutputDirectory
-}
-
-function Clean-OutputDirectory()
-{
-    Remove-Item "$PSScriptRoot\$LabIpAddress\edu-*.zip" -Force | Out-Null    
 }
 
 Map-PSDrive

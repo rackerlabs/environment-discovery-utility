@@ -6,11 +6,13 @@ pipeline {
         string(name: 'slackChannel', defaultValue: 'edu-cicd', description: '')
         string(name: 'staticLabIpAddress', defaultValue: '172.29.20.13', description: '')
         string(name: 'jmlLabIpAddress', defaultValue: '172.29.12.224', description: '')
+        string(name: 'multiDomainLabIpAddress', defaultValue: '172.29.23.157', description: '')
     }
     stages {
         stage('Checkout') {
             steps {
-                slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Started (<${env.BUILD_URL}|Open>)"
+                slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Started (<${env.BUILD_URL}|Open>)."
+
                 checkout (
                     changelog: true,
                     poll: true,
@@ -18,7 +20,7 @@ pipeline {
                         $class: 'GitSCM', 
                         branches: [[name: "master"]], 
                         doGenerateSubmoduleConfigurations: false, 
-                        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'build\\tools']],
+                        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'build\\tools']] + [[$class: 'CleanCheckout']],
                         submoduleCfg: [], 
                         userRemoteConfigs: [[credentialsId: 'james.blake', url: 'git@github.rackspace.com:MicrosoftEng/build-tools.git']]
                     ]
@@ -27,7 +29,7 @@ pipeline {
         }
         stage('Sign') {
             steps {
-                slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Signing script files"
+                slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Signing script files."
 
                 withCredentials([
                     usernamePassword(credentialsId: '1e14ecee-ea70-4dc9-b1a6-7946fab6c8bb', passwordVariable: 'password', usernameVariable: 'username'),
@@ -39,7 +41,7 @@ pipeline {
         }
         stage('Zip') {
             steps {
-                slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Zipping files"
+                slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Zipping files."
 
                 bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\New-ZipFile.ps1 -BuildNumber %BUILD_NUMBER%'
             }
@@ -47,8 +49,8 @@ pipeline {
         stage('Run Remote Tests') {
             steps {
                 parallel (
-                    "Run Exchange 2010 / PowerShell v2 lab tests" : {
-                        slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Running Exchange 2010 / PowerShell v2 lab tests"
+                    "Single domain / Exchange 2010 / PowerShell v2 lab" : {
+                        slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Running single domain / Exchange 2010 / PowerShell v2 lab tests."
 
                         withCredentials([
                             usernamePassword(credentialsId: '03bbc260-f717-48f0-b16a-c97ba14e6d85', passwordVariable: 'password', usernameVariable: 'username')
@@ -56,10 +58,10 @@ pipeline {
                             bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Invoke-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress %staticLabIpAddress% -Password %password% -Username %username% -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip'
                         }
 
-                        slackSend channel: "${slackChannel}", color: 'good',  message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Exchange 2010 / PowerShell v2 lab tests successful"
+                        slackSend channel: "${slackChannel}", color: 'good',  message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Single domain / Exchange 2010 / PowerShell v2 lab tests successful."
                     },
-                    "Run JML tests" : {
-                        slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Running JML tests"
+                    "Single domain / Exchange 2013/2016 / PowerShell v4 / JML lab" : {
+                        slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Running single domain / Exchange 2013/2016 / PowerShell v4 / JML lab tests."
 
                         withCredentials([
                             usernamePassword(credentialsId: '5de43889-57c2-41ad-a17b-06cf6eb92ffd', passwordVariable: 'password', usernameVariable: 'username')
@@ -67,7 +69,18 @@ pipeline {
                             bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Invoke-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress %jmlLabIpAddress% -Password %password% -Username %username% -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip'
                         }
 
-                        slackSend channel: "${slackChannel}", color: 'good',  message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} JML tests successful" 
+                        slackSend channel: "${slackChannel}", color: 'good',  message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Single domain / Exchange 2013/2016 / PowerShell v4 / JML lab tests successful." 
+                    },
+                    "Multi-domain / Exchange 2013 / PowerShell v4 lab" : {
+                        slackSend channel: "${slackChannel}", message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Running multi-domain / Exchange 2013 / PowerShell v4 lab tests."
+
+                        withCredentials([
+                            usernamePassword(credentialsId: 'f344bfd0-63dd-4426-92dd-4e9016e0c526', passwordVariable: 'password', usernameVariable: 'username')
+                        ]) {
+                            bat 'powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Invoke-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress %multiDomainLabIpAddress% -Password %password% -Username %username% -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip'
+                        }
+
+                        slackSend channel: "${slackChannel}", color: 'good',  message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Multi-domain / Exchange 2013 / PowerShell v4 lab tests successful." 
                     },
                 )				
             }
@@ -76,13 +89,18 @@ pipeline {
     post {
         success {		
             archiveArtifacts artifacts: "build/edu.v${env.BUILD_NUMBER}.zip"
-            archiveArtifacts artifacts: "build/edu-*.zip"
+            archiveArtifacts artifacts: "build/${env.staticLabIpAddress}/edu-${env.staticLabIpAddress}.zip"
+            archiveArtifacts artifacts: "build/${env.jmlLabIpAddress}/edu-${env.jmlLabIpAddress}.zip"
+            archiveArtifacts artifacts: "build/${env.multiDomainLabIpAddress}/edu-${env.multiDomainLabIpAddress}.zip"
 
-            slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Success (<${env.BUILD_URL}|Open>)"
-            slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} (<https://jenkins.mseng.mlsrvr.com/view/EDU/job/edu_ci/${env.BUILD_NUMBER}/artifact/build/edu.v${env.BUILD_NUMBER}.zip|Download Zip>)"
+            slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} All tests were successful (<${env.BUILD_URL}|Open>)."
+            slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Distributable: (<https://jenkins.mseng.mlsrvr.com/view/EDU/job/edu_ci/${env.BUILD_NUMBER}/artifact/build/edu.v${env.BUILD_NUMBER}.zip|Download Zip>)."
+            slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Single domain / Exchange 2010 / PowerShell v2 results: (<https://jenkins.mseng.mlsrvr.com/view/EDU/job/edu_ci/${env.BUILD_NUMBER}/artifact/build/${env.staticLabIpAddress}/edu-${env.staticLabIpAddress}.zip|Download Zip>)."
+            slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Single domain / Exchange 2013/2016 / PowerShell v4 / JML results: (<https://jenkins.mseng.mlsrvr.com/view/EDU/job/edu_ci/${env.BUILD_NUMBER}/artifact/build/${env.jmlLabIpAddress}/edu-${env.jmlLabIpAddress}.zip|Download Zip>)."
+            slackSend channel: "${slackChannel}", color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Multi-domain / Exchange 2013 / PowerShell v4 results: (<https://jenkins.mseng.mlsrvr.com/view/EDU/job/edu_ci/${env.BUILD_NUMBER}/artifact/build/${env.multiDomainLabIpAddress}/edu-${env.multiDomainLabIpAddress}.zip|Download Zip>)."
         }
         failure {
-            slackSend channel: "${slackChannel}", color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open>)"
+            slackSend channel: "${slackChannel}", color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open>)."
         }
     }
 }
