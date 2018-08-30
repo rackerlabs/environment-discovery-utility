@@ -104,7 +104,7 @@ function Get-ExchangeRecipients
             }
             else
             {
-                Write-Log -Level "WARNING" -Activity $activity -Message "Unable to get recipient statistics for $($currentRecipient.ObjectGuid)." -PercentComplete $percentComplete -WriteProgress
+                Write-Log -Level "VERBOSE" -Activity $activity -Message "Unable to get recipient statistics for $($currentRecipient.ObjectGuid)." -PercentComplete $percentComplete -WriteProgress
             }
 
             $x++
