@@ -20,30 +20,39 @@ function Start-ExchangeDiscovery
     param ()
     begin
     {
-        Write-Log -Level "INFO" -Activity "Exchange Discovery" -Message "Attempting to connect to Exchange PowerShell." -WriteProgress
+        $activity = "Exchange Discovery"
+        Write-Log -Level "INFO" -Activity  $activity -Message "Attempting to connect to Exchange PowerShell." -WriteProgress
         $exchangeEnvironment = @{}
         [bool]$exchangeShellConnected = Initialize-ExchangePowershell
     }
     process
     {
-        $domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain()
-        $forestName = $domain.Forest.Name
-        $forestDN = $ForestName.Replace(".",",DC=")
-        $forestDN = "DC=$forestDN"
-        $exchangeEnvironment.Add("Servers", [array]$(Get-ExchangeServers -DomainDN $forestDN))
-        $exchangeEnvironment.Add("AcceptedDomains", [array]$(Get-ExchangeAcceptedDomains -DomainDN $forestDN))
-        $exchangeEnvironment.Add("VirtualDirectories", [array]$(Get-ExchangeVirtualDirectories -DomainDN $forestDN))
-        $exchangeEnvironment.Add("Recipients", [array]$(Get-ExchangeRecipients -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected))
-        $exchangeEnvironment.Add("PublicFolders", $(Start-PublicFolderDiscovery -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected))
-        $exchangeEnvironment.Add("DynamicGroups", [array]$(Get-ExchangeDynamicGroups -DomainDN $forestDN))
-        $exchangeEnvironment.Add("FederationTrusts", [array]$(Get-ExchangeFederationTrust -DomainDN $forestDN))
-        $exchangeEnvironment.Add("OrganizationalRelationships", [array]$(Get-ExchangeOrganizationalRelationship -DomainDN $forestDN))
-        $exchangeEnvironment.Add("DatabaseJournaling", [array]$(Get-ExchangeDatabaseJournaling -DomainDN $forestDN))
-        $exchangeEnvironment.Add("ImapPopSettings", [array]$(Get-ExchangeImapPopSettings -DomainDN $forestDN))
-        $exchangeEnvironment.Add("TransportRules", [array]$(Get-ExchangeTransportRules -DomainDN $forestDN -ExchangeShellConnected $exchangeShellConnected))
-        $exchangeEnvironment.Add("TransportSettings", [array]$(Get-ExchangeTransportConfig -DomainDN $forestDN))
+        if ($exchangeShellConnected -eq $true)
+        {
+            [array]$exchangeServers = Get-ExchangeServers
+            [array]$acceptedDomains = Get-ExchangeAcceptedDomains
 
-        Write-Log -Level "INFO" -Activity "Exchange Discovery" -Message "Completed Exchange Discovery." -WriteProgress
+            $exchangeEnvironment.Add("Servers", $exchangeServers)
+            $exchangeEnvironment.Add("AcceptedDomains", $acceptedDomains)
+            $exchangeEnvironment.Add("VirtualDirectories", [array](Get-ExchangeVirtualDirectories -Servers $exchangeServers))
+            $exchangeEnvironment.Add("Recipients", [array]$(Get-ExchangeRecipients))
+            $exchangeEnvironment.Add("PublicFolders", $(Start-PublicFolderDiscovery))
+            $exchangeEnvironment.Add("DynamicGroups", [array]$(Get-ExchangeDynamicGroups))
+            $exchangeEnvironment.Add("FederationTrusts", [array]$(Get-ExchangeFederationTrust))
+            $exchangeEnvironment.Add("OrganizationalRelationships", [array]$(Get-ExchangeOrganizationalRelationship))
+            $exchangeEnvironment.Add("DatabaseJournaling", [array]$(Get-ExchangeDatabaseJournaling -AcceptedDomains $acceptedDomains))
+            $exchangeEnvironment.Add("ImapPopSettings", [array]$(Get-ExchangeImapPopSettings -Servers $exchangeServers))
+            $exchangeEnvironment.Add("TransportRules", [array]$(Get-ExchangeTransportRules))
+            $exchangeEnvironment.Add("TransportSettings", [array]$(Get-ExchangeTransportConfig))
+            $exchangeEnvironment.Add("OrganizationConfig", $(Get-ExchangeOrganizationConfig))
+            $exchangeEnvironment.Add("ClientAccessServerSettings", [array]$(Get-ExchangeClientAccessConfig))
+
+            Write-Log -Level "INFO" -Activity  $activity -Message "Completed Exchange Discovery." -WriteProgress
+        }
+        else
+        {
+            Write-Log -Level "WARNING" -Activity $activity -Message "Unable to execute Exchange Discovery because no Exchange PowerShell session could be established." -WriteProgress
+        }
 
         $exchangeEnvironment
     }

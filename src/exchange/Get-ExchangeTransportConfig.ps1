@@ -12,26 +12,22 @@ function Get-ExchangeTransportConfig
             Returns a custom object containing key send/recieve connector settings from Exchange.
 
         .EXAMPLE
-            Get-ExchangeTransportConfig -DomainDN $domainDN
+            Get-ExchangeTransportConfig
 
     #>
 
     [CmdletBinding()]
-    param (
-        [string]
-        $DomainDN
-    )
+    param ()
 
     begin
     {
         Write-Log -Level "INFO" -Activity "Transport Configuration Discovery" -Message "Attempting Transport Configuration Discovery." -WriteProgress
         $transportSettings = @{}
     }
-
     process
     {
-        $transportSettings.Add("RecieveConnectors", $(Get-ExchangeReceiveConnectors -DomainDN $DomainDN))
-        $transportSettings.Add("SendConnectors", $(Get-ExchangeSendConnectors -DomainDN $DomainDN))
+        $transportSettings.Add("RecieveConnectors", $(Get-ExchangeReceiveConnectors))
+        $transportSettings.Add("SendConnectors", $(Get-ExchangeSendConnectors))
         Write-Log -Level "INFO" -Activity "Transport Configuration Discovery" -Message "Completed Transport Configuration Discovery." -WriteProgress
 
         $transportSettings

@@ -4,38 +4,31 @@ function Get-ExchangeAcceptedDomains
 
         .SYNOPSIS
             Discover Exchange accepted domains.
-    
+
         .DESCRIPTION
-            Uses LDAP queries to find Exchange accepted domains.
-    
+            Uses Exchange PowerShell to enumerate accepted domains.
+
         .PARAMETER DomainDN
             The current forest distinguished name to use in the LDAP query.
 
         .OUTPUTS
             Returns a custom object containing Exchange accepted domains.
-    
+
         .EXAMPLE
-            Get-ExchangeAcceptedDomains -DomainDN $domainDN
-    
+            Get-ExchangeAcceptedDomains
+
     #>
-    
+
     [CmdletBinding()]
-    param (
-        [string]
-        $DomainDN
-    )
+    param ()
 
     $activity = "Accepted Domains"
     $discoveredAcceptedDomains = @()
-    $searchRoot = "CN=Configuration,$DomainDN"
-    $ldapFilter = "(objectClass=msExchAcceptedDomain)"
-    $context = "LDAP://CN=Configuration,$DomainDN"
-    [array]$properties = "name", "msExchAcceptedDomainFlags", "msExchAcceptedDomainName"
 
     try
     {
-        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Accepted Domains." -WriteProgress
-        $acceptedDomains = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        Write-Log -Level "INFO" -Activity $activity -Message "Discovering Accepted Domains." -WriteProgress
+        $acceptedDomains = Get-AcceptedDomain
     }
     catch
     {
@@ -47,14 +40,21 @@ function Get-ExchangeAcceptedDomains
     {
         foreach ($acceptedDomain in $acceptedDomains)
         {
-            $currentAcceptedDomain = "" | Select-Object Name, AcceptedDomain, AcceptedDomainFlags
+            $currentAcceptedDomain = "" | Select-Object Name, AcceptedDomain, DomainType, IsDefault
             $currentAcceptedDomain.Name = $acceptedDomain.Name
-            $currentAcceptedDomain.AcceptedDomain = $acceptedDomain.msExchAcceptedDomainName
-            $currentAcceptedDomain.AcceptedDomainFlags = $acceptedDomain.msExchAcceptedDomainFlags | Select-Object -First 1
+            $currentAcceptedDomain.AcceptedDomain = $acceptedDomain.DomainName
+            $currentAcceptedDomain.DomainType = $acceptedDomain.DomainType
+            $currentAcceptedDomain.IsDefault = $acceptedDomain.Default
 
             $discoveredAcceptedDomains += $currentAcceptedDomain
         }
     }
+    else
+    {
+        Write-Log -Level "WARNING" -Activity $activity -Message "No Accepted Domains detected.  This condition should not occur."
+    }
+
+    Write-Log -Level "INFO" -Activity $activity -Message "Accepted Domain Count: $($discoveredAcceptedDomains.Count)"
 
     $discoveredAcceptedDomains
 }

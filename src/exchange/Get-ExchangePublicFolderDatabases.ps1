@@ -3,14 +3,11 @@ function Get-ExchangePublicFolderDatabases
     <#
 
         .SYNOPSIS
-            Discover Active Directory attributes for legacy public folder databases in Exchange.
+            Discover attributes for legacy public folder databases in Exchange.
     
         .DESCRIPTION
-            Uses LDAP queries to find public folder database settings in Active Directory.
+            Query Exchange to find public folder database settings in Active Directory.
     
-        .PARAMETER DomainDN
-            The current forest distinguished name to use in the LDAP query.
-
         .OUTPUTS
             Returns a custom object containing public folder database properties.
     
@@ -20,26 +17,19 @@ function Get-ExchangePublicFolderDatabases
     #>
 
     [CmdletBinding()]
-    param (
-        [string]
-        $DomainDN
-    )
+    param ()
 
     $activity = "Public Folder Databases"
     $discoveredLegacyPublicFolders = @()
-    $ldapFilter = "(objectClass=msExchPublicMDB)"
-    $context = "LDAP://CN=Configuration,$DomainDN"
-    $searchRoot = "CN=Configuration,$DomainDN"
-    [array]$properties = "objectGUID","msExchOwningServer"
 
     try
     {
-        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Public Folder databases." -WriteProgress
-        $legacyPublicFolders = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        Write-Log -Level "INFO" -Activity $activity -Message "Query Exchange for Public Folder databases." -WriteProgress
+        $legacyPublicFolders = Get-PublicFolderDatabase
     }
     catch
     {
-        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Public Folder databases. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to query Exchange for Public Folder databases. $($_.Exception.Message)"
         return
     }
 
@@ -48,16 +38,16 @@ function Get-ExchangePublicFolderDatabases
         foreach ($legacyPublicFolder in $legacyPublicFolders)
         {
             $discoveredLegacyPublicFolder = $null
-            $discoveredLegacyPublicFolder = "" | Select-Object ObjectGuid, ParentServer, ParentDatabase
-            $discoveredLegacyPublicFolder.ObjectGuid = [GUID]$($legacyPublicFolder.objectGUID | Select-Object -First 1)
-            $discoveredLegacyPublicFolder.ParentServer = $legacyPublicFolder.msExchOwningServer
+            $discoveredLegacyPublicFolder = "" | Select-Object ObjectGuid, Server
+            $discoveredLegacyPublicFolder.ObjectGuid = $legacyPublicFolder.GUID
+            $discoveredLegacyPublicFolder.Server = $legacyPublicFolder.Server
 
             $discoveredLegacyPublicFolders += $discoveredLegacyPublicFolder
         }
     }
     else
     {
-        Write-Log -Level "INFO" -Activity $activity -Message "Did not find Public Folder databases in Active Directory." -WriteProgress
+        Write-Log -Level "INFO" -Activity $activity -Message "Did not find Legacy Public Folder databases in Exchange." -WriteProgress
     }
 
     $discoveredLegacyPublicFolders

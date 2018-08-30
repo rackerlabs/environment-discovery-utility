@@ -201,6 +201,7 @@ function Export-LogEntry
 
     [CmdletBinding()]
     param (
+        # LogEntry The LogEntry object to export
         [object]
         $LogEntry
     )

@@ -20,27 +20,43 @@ function Initialize-ExchangePowershell
     param ()
 
     $connectedToExchange = $false
+    $activity = "Initialize Exchange PowerShell"
 
     if (-not (Get-Command Get-ExchangeServer -ErrorAction SilentlyContinue))
     {
-        if (Test-Path "C:\Program Files\Microsoft\Exchange Server\V15\bin\RemoteExchange.ps1")
+        $v14Path = "C:\Program Files\Microsoft\Exchange Server\V14\bin\RemoteExchange.ps1"
+        $v15Path = "C:\Program Files\Microsoft\Exchange Server\V15\bin\RemoteExchange.ps1"
+        $legacyPath = "C:\Program Files\Microsoft\Exchange Server\bin\Exchange.ps1"
+
+        if (Test-Path $v15Path)
         {
-            . "C:\Program Files\Microsoft\Exchange Server\V15\bin\RemoteExchange.ps1" -RedirectStandardOutput $null | Out-Null
+
+            . $v15Path -RedirectStandardOutput $null | Out-Null
             Connect-ExchangeServer -Auto -RedirectStandardOutput $null | Out-Null
+            Set-AdServerSettings -ViewEntireForest $true
+            Write-Log -Level "VERBOSE" -Activity $activity -Message "Connected using $v15Path"
         }
-        elseif (Test-Path "C:\Program Files\Microsoft\Exchange Server\V14\bin\RemoteExchange.ps1")
+        elseif (Test-Path $v14Path)
         {
-            . "C:\Program Files\Microsoft\Exchange Server\V14\bin\RemoteExchange.ps1" -RedirectStandardOutput $null | Out-Null
+            . $v14Path -RedirectStandardOutput $null | Out-Null
             Connect-ExchangeServer -Auto -RedirectStandardOutput $null | Out-Null
+            Set-AdServerSettings -ViewEntireForest $true
+            Write-Log -Level "VERBOSE" -Activity $activity -Message "Connected to Exchange PowerShell using $v15Path"
         }
-        elseif (Test-Path "C:\Program Files\Microsoft\Exchange Server\bin\Exchange.ps1")
+        elseif (Test-Path $legacyPath)
         {
             Add-PSSnapIn Microsoft.Exchange.Management.PowerShell.Admin | Out-Null
+            $AdminSessionADSettings.ViewEntireForest = $true
+            Write-Log -Level "VERBOSE" -Activity $activity -Message "Connected to Exchange PowerShell using legacy PSSnapin."
+        }
+        else
+        {
+            Write-Log -Level "WARNING" -Activity $activity -Message "Failed to find method to connect to Exchange PowerShell."
         }
     }
 
     $testCommand = Get-Command Get-ExchangeServer -ErrorAction SilentlyContinue
-    
+
     if ($testCommand)
     {
         Write-Log -Level "INFO" -Activity $MyInvocation.MyCommand.Name -Message "Successfully connected Exchange PowerShell."
@@ -48,8 +64,8 @@ function Initialize-ExchangePowershell
     }
     else
     {
-        Write-Log -Level "WARNING" -Activity $MyInvocation.MyCommand.Name -Message "Failed to connect to Exchange PowerShell."
+        Write-Log -Level "ERROR" -Activity $MyInvocation.MyCommand.Name -Message "Failed to Initialize Exchange PowerShell."
     }
-    
+
     $connectedToExchange
 }

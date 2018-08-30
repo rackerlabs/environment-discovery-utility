@@ -6,39 +6,30 @@ function Get-ExchangeFederationTrust
             Discover Exchange federation trust settings.
 
         .DESCRIPTION
-            Run LDAP queries to get all Exchangefederation trusts in Active Directory.
-
-        .PARAMETER DomainDN
-            The current forest distinguished name to use in the LDAP query.
+            Query Exchange to get all Exchange federation trusts.
 
         .OUTPUTS
             Returns a custom object representing key federation trust properties.
 
         .EXAMPLE
-            Get-ExchangeFederationTrust -DomainDN $domainDN
+            Get-ExchangeFederationTrust
 
     #>
 
     [CmdletBinding()]
-    param (
-        [string]
-        $DomainDN
-    )
+    param ()
 
     $activity = "Federation Trusts"
     $discoveredFederationTrusts = @()
-    $ldapFilter = "(objectClass=msExchFedTrust)"
-    $context = "LDAP://CN=Configuration,$DomainDN"
-    [array]$properties = "objectGUID"
 
     try
     {
-        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Federation Trusts." -WriteProgress
-        [array]$exchangeFederationTrusts = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $DomainDN
+        Write-Log -Level "INFO" -Activity $activity -Message "Query Exchange for Federation Trusts." -WriteProgress
+        [array]$exchangeFederationTrusts = Get-FederatedOrganizationIdentifier
     }
     catch
     {
-        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Federation Trusts. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to query Exchange for Federation Trusts. $($_.Exception.Message)"
         return
     }
 
@@ -47,8 +38,12 @@ function Get-ExchangeFederationTrust
         foreach ($exchangeFederationTrust in $exchangeFederationTrusts)
         {
             $federationTrust = $null
-            $federationTrust = "" | Select-Object ObjectGuid
-            $federationTrust.ObjectGuid = [GUID]$($exchangeFederationTrust.objectGUID | Select-Object -First 1)
+            $federationTrust = "" | Select-Object ObjectGuid, Enabled, Domains, DelegationTrustLink, IsValid
+            $federationTrust.ObjectGuid = $exchangeFederationTrust.GUID
+            $federationTrust.Enabled = [bool]$exchangeFederationTrust.Enabled
+            $federationTrust.Domains = [array]$exchangeFederationTrust.Domains
+            $federationTrust.DelegationTrustLink = $exchangeFederationTrust.DelegationTrustLink
+            $federationTrust.IsValid = [bool]$exchangeFederationTrust.IsValid
 
             $discoveredFederationTrusts += $federationTrust
         }

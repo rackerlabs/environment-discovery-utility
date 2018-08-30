@@ -12,15 +12,13 @@ function Get-ExchangePublicFolderStatistics
             Returns a custom object containing public folder statistics.
 
         .EXAMPLE
-            Get-ExchangePublicFolderStatistics -ExchangeShellConnected $exchangeShellConnected -PublicFolders $publicFolders
+            Get-ExchangePublicFolderStatistics -PublicFolders $publicFolders
 
     #>
 
     [CmdletBinding()]
     param (
-        [bool]
-        $ExchangeShellConnected,
-
+        # PublicFolders The PublicFolders object from Exchange Discovery
         [object]
         $PublicFolders
     )
@@ -28,80 +26,63 @@ function Get-ExchangePublicFolderStatistics
     $activity = "Public Folder Statistics"
     $discoveredPublicFolderStatistics = @()
 
-    if ($ExchangeShellConnected)
+    if ($PublicFolders.Mailboxes)
     {
-        if ($PublicFolders.Mailboxes)
+        Write-Log -Level "INFO" -Activity $activity -Message "Gathering modern public folder statistics. This may take some time without feedback." -WriteProgress
+        $publicFolderStatistics = Get-PublicFolderStatistics
+    }
+    elseif ($PublicFolders.Databases)
+    {
+        Write-Log -Level "INFO" -Activity $activity -Message "Gathering legacy public folder statistics. This may take some time without feedback." -WriteProgress
+
+        foreach ($database in ($PublicFolders.Databases))
         {
-            Write-Log -Level "INFO" -Activity $activity -Message "Gathering modern public folder statistics. This may take some time without feedback." -WriteProgress
-            $publicFolderStatistics = Get-PublicFolderStatistics
+            [string]$server = $database.Server
 
-            if ($publicFolderStatistics.Count -gt 0)
+            $version = Get-ExchangeServer $server | Select-Object AdminDisplayVersion
+            if ($version -like "*14.*")
             {
-                foreach ($publicFolderStatistic in $publicFolderStatistics)
-                {
-                    $publicFolderStats = $null
-                    $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB
-                    $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
-                    $publicFolderStats.Identity = $publicFolderStatistic.identity.objectGUID
-                    $publicFolderStats.TotalItemSizeKB = Convert-ExchangeDataStatisticToKB -Property $publicFolderStatistic.totalItemSize
-
-                    $discoveredPublicFolderStatistics += $publicFolderStats
-                }
+                $publicFolderStatistics += Get-PublicFolderStatistics -Server $server -ResultSize Unlimited
             }
             else
             {
-                Write-Log -Level "WARNING" -Activity $activity -Message "Did not get any results from Get-PublicFolderStatistics."
+                $publicFolderStatistics += Get-PublicFolderStatistics -Server $server
             }
         }
-        elseif ($PublicFolders.Databases)
+
+        $publicFolderStatistics = $publicFolderStatistics | Sort-Object entryID -unique
+    }
+    else
+    {
+        Write-Log -Level "INFO" -Activity $activity -Message "Did not find any Legacy or Modern Public Folders.  Skipping Statistics."
+        return
+    }
+
+    if ($publicFolderStatistics.Count -gt 0)
+    {
+        foreach ($publicFolderStatistic in $publicFolderStatistics)
         {
-            Write-Log -Level "INFO" -Activity $activity -Message "Gathering legacy public folder statistics. This may take some time without feedback." -WriteProgress
-            $publicFolderStatistics = @()
-
-            foreach ($database in ($PublicFolders.Databases))
+            $publicFolder = Get-PublicFolder -Identity ($publicFolderStatistic.EntryID.tostring())
+            $publicFolderStats = $null
+            $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB, IsMailEnabled
+            $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
+            $publicFolderStats.Identity = $publicFolderStatistic.entryID
+            $publicFolderStats.IsMailEnabled = [bool]$publicFolder.MailEnabled
+            if ($version -like "*14.*")
             {
-                [string]$server = $database.ParentServer
-                $version = Get-ExchangeServer $server | Select-Object AdminDisplayVersion
-                if ($version -like "*14.*")
-                {
-                    $publicFolderStatistics += Get-PublicFolderStatistics -Server $server -ResultSize Unlimited
-                }
-                else
-                {
-                    $publicFolderStatistics += Get-PublicFolderStatistics -Server $server
-                }
+                $publicFolderStats.TotalItemSizeKB = Convert-ExchangeDataStatisticToKB -Property $publicFolderStatistic.totalItemSize.value
+            }
+            elseif ($PublicFolders.Mailboxes)
+            {
+                $publicFolderStats.TotalItemSizeKB = Convert-ExchangeDataStatisticToKB -Property $publicFolderStatistic.totalItemSize
             }
 
-            $publicFolderStatistics = $publicFolderStatistics | Sort-Object entryID -unique
-
-            if ($publicFolderStatistics.Count -gt 0)
-            {
-                foreach ($publicFolderStatistic in $publicFolderStatistics)
-                {
-                    $publicFolderStats = $null
-                    $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB
-                    $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
-                    $publicFolderStats.Identity = $publicFolderStatistic.entryID
-                    $publicFolderStats.TotalItemSizeKB = $publicFolderStatistic.totalItemSize.value.ToKB()
-
-                    $discoveredPublicFolderStatistics += $publicFolderStats
-                }
-            }
-            else
-            {
-                Write-Log -Level "WARNING" -Activity $activity -Message "Did not get any results from Get-PublicFolderStatistics."
-            }
-        }
-        else
-        {
-            Write-Log -Level "WARNING" -Activity $activity -Message "Skipping Exchange Public Folder statistics. No connection to Exchange."
-            return
+            $discoveredPublicFolderStatistics += $publicFolderStats
         }
     }
     else
     {
-        Write-Log -Level "WARNING" -Activity $activity -Message "Skipping Exchange Public Folder statistics, no public folders found."
-        return
+        Write-Log -Level "WARNING" -Activity $activity -Message "Did not get any results from Get-PublicFolderStatistics."
     }
 
     $discoveredPublicFolderStatistics

@@ -158,7 +158,7 @@ function Invoke-RemoteEduModule()
 
     Write-Host "Executing EDU script remotely on $LabIpAddress, remote command is $command, output folder is $outputFolder"
 
-    & $PsExec "\\$LabIpAddress" -w $buildFolder -u $Username -p $Password /accepteula cmd /c "powershell -noninteractive -command $command $outputFolder;"
+    & $PsExec "\\$LabIpAddress" -w $buildFolder -u $Username -p $Password /accepteula cmd /c "powershell -noninteractive -command $command $outputFolder -Verbose;"
        
     if ($LastExitCode -ne 0)
     {

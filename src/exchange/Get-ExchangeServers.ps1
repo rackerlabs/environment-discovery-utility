@@ -6,33 +6,26 @@ function Get-ExchangeServers
             Discover all Exchange servers in an Active Directory forest.
 
         .DESCRIPTION
-            Uses LDAP queries run against the Active Directory configuration partition to find all Exchange servers.
+            Uses Exchange PowerShell to enumerate Exchange servers.
 
         .OUTPUTS
             Returns a custom object containing Exchange server settings.
 
         .EXAMPLE
-            Get-ExchangeServers -DomainDN $domainDN
+            Get-ExchangeServers
 
     #>
 
     [CmdletBinding()]
-    param (
-        [string]
-        $DomainDN
-    )
+    param ()
 
     $activity = "Exchange Servers"
     $discoveredExchangeServers = @()
-    $searchRoot = "CN=Configuration,$DomainDN"
-    $ldapFilter = "(&(objectClass=msExchExchangeServer)(msExchCurrentServerRoles=*)(!(objectClass=msExchExchangeTransportServer)))"
-    $context = "LDAP://CN=Configuration,$DomainDN"
-    [array]$properties = "name", "serialNumber", "msExchMDBAvailabilityGroupLink", "msExchCurrentServerRoles", "msExchServerSite", "whenCreated", "distinguishedName"
 
     try
     {
-        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Exchange servers." -WriteProgress
-        $exchangeServers = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        Write-Log -Level "INFO" -Activity $activity -Message "Discovering Exchange servers." -WriteProgress
+        $exchangeServers = Get-ExchangeServer
     }
     catch
     {
@@ -42,19 +35,26 @@ function Get-ExchangeServers
 
     if ($exchangeServers)
     {
-
         foreach ($exchangeServer in $exchangeServers)
         {
-            $currentServer = "" | Select-Object Name, Version, InstalledRoles, Site, DistinguishedName
+            $currentServer = "" | Select-Object Name, Version, Edition, InstalledRoles, Site, Domain, DistinguishedName
             $currentServer.Name = $exchangeServer.name
-            $currentServer.Version = $exchangeServer.serialNumber
-            $currentServer.Site = $exchangeServer.msExchServerSite
-            $currentServer.DistinguishedName = $exchangeServer.distinguishedName
-            $currentServer.InstalledRoles = $exchangeServer.msExchCurrentServerRoles
+            $currentServer.Version = $exchangeServer.AdminDisplayVersion
+            $currentServer.Edition = $exchangeServer.Edition
+            $currentServer.InstalledRoles = $exchangeServer.ServerRole
+            $currentServer.Site = $exchangeServer.Site
+            $currentServer.Domain = $exchangeServer.Domain
+            $currentServer.DistinguishedName = $exchangeServer.DistinguishedName
 
             $discoveredExchangeServers += $currentServer
         }
     }
+    else
+    {
+        Write-Log -Level "WARNING" -Activity $activity -Message "No Exchange servers detected.  This condition should not occur."
+    }
+
+    Write-Log -Level "INFO" -Activity $activity -Message "Exchange Server Count: $($discoveredExchangeServers.Count)"
 
     $discoveredExchangeServers
 }

@@ -4,42 +4,35 @@ function Get-ExchangeDatabaseJournaling
 
         .SYNOPSIS
             Discover Exchange database journaling settings.
-    
+
         .DESCRIPTION
-            Uses LDAP queries to find Exchange database journaling settings.
-    
-        .PARAMETER DomainDN
-            The current forest distinguished name to use in the LDAP query.
+            Query Exchange database journaling settings.
 
         .OUTPUTS
             Returns a custom object containing Exchange database journaling settings.
-    
+
         .EXAMPLE
-            Get-ExchangeDatabaseJournaling -DomainDN $domainDN
-    
+            Get-ExchangeDatabaseJournaling
+
     #>
-    
+
     [CmdletBinding()]
     param (
-        [string]
-        $DomainDN
+        [array]
+        $acceptedDomains
     )
 
     $activity = "Database Journaling"
     $discoveredDatabaseJournaling = @()
-    $searchRoot = "CN=Configuration,$DomainDN"
-    $ldapFilter = "(objectClass=msExchPrivateMDB)"
-    $context = "LDAP://CN=Configuration,$DomainDN"
-    [array] $properties = "objectGUID", "msExchMessageJournalRecipient"
 
     try
     {
-        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Database Journaling." -WriteProgress
-        $databases = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+        Write-Log -Level "INFO" -Activity $activity -Message "Query Exchange for Database Journaling." -WriteProgress
+        $databases = Get-MailboxDatabase -Status
     }
     catch
     {
-        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Database Journaling. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Exchange for Database Journaling. $($_.Exception.Message)"
         return
     }
 
@@ -47,21 +40,32 @@ function Get-ExchangeDatabaseJournaling
     {
         foreach ($database in $databases)
         {
-            $distinguishedName = $database.msExchMessageJournalRecipient
+            $journalRecipientValue = $database.JournalRecipient
 
-            if ($distinguishedName)
+            if ($journalRecipientValue)
             {
-                $ldapFilter = "(distinguishedName=$($distinguishedName))"
-                $context = $null
-                $searchRoot = $domainDN
-                [array]$properties = "objectGUID", "objectClass"
-                $journalingTarget = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $searchRoot
+                $acceptedDomain = $null
+                $journalingTarget = Get-Recipient $journalRecipientValue
+                $journalingTargetSMTP = $journalingTarget.PrimarySmtpAddress.ToString() 
+                $journalRecipientDomain = $journalingTargetSMTP.Split("@")[1]
+
+                $acceptedDomain = $acceptedDomains | where {$_.domain -like $journalRecipientDomain}
+
+                if($acceptedDomain)
+                {
+                    $isLocalAddress = $true
+                }
+                else
+                {
+                    $isLocalAddress = $false
+                }
 
                 $databaseJournaling = $null
-                $databaseJournaling = "" | Select-Object ObjectGuid, TargetGuid, TargetObjectClass
-                $databaseJournaling.ObjectGuid = [GUID]$($database.objectGUID | Select-Object -First 1)
-                $databaseJournaling.TargetGuid = [GUID]$($journalingTarget.objectGUID | Select-Object -First 1)
-                $databaseJournaling.TargetObjectClass = [array]$journalingTarget.objectClass
+                $databaseJournaling = "" | Select-Object ObjectGuid, TargetGuid, TargetObjectClass, IsLocalAddress
+                $databaseJournaling.ObjectGuid = $database.GUID
+                $databaseJournaling.TargetGuid = $journalingTarget.GUID
+                $databaseJournaling.TargetObjectClass = $journalingTarget.RecipientTypeDetails
+                $databaseJournaling.IsLocalAddress = $isLocalAddress
 
                 $discoveredDatabaseJournaling += $DatabaseJournaling
             }

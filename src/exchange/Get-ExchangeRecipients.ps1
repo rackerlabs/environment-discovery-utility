@@ -12,39 +12,25 @@ function Get-ExchangeRecipients
             Returns a custom object containing recipient information.  Personally Identifiable Information (PII) is excluded.
 
         .EXAMPLE
-            Get-ExchangeRecipients -DomainDN $domainDN -ExchangeShellConnected $exchangeShellConnected
+            Get-ExchangeRecipients
 
     #>
 
     [CmdletBinding()]
-    param (
-        [string]
-        $DomainDN,
-
-        [bool]
-        $ExchangeShellConnected
-    )
+    param ()
 
     $activity = "Recipients"
     $discoveredRecipients = @()
-    $ldapFilter = "(&(msexchRecipientDisplayType=*)(mail=*))"
-    $context = "LDAP://$DomainDN"
-    [array]$properties = "msexchRecipientTypeDetails", "msexchRecipientDisplayType", "msExchRemoteRecipientType", "objectGuid", "mail", "userPrincipalName", "objectClass", "userAccountControl"
     Write-Log -Level "INFO" -Activity $activity -Message "Gathering Exchange recipient details." -PercentComplete 0 -WriteProgress
-
-    if (-not $ExchangeShellConnected)
-    {
-        Write-Log -Level "WARNING" -Activity $activity -Message "Skipping Exchange recipient data statistic gathering. No connection to Exchange."
-    }
 
     try
     {
-        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Exchange Recipients." -WriteProgress
-        $recipients = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $DomainDN
+        Write-Log -Level "INFO" -Activity $activity -Message "Discovering Exchange Recipients.  Running Get-Recipient for all recipients, this can take a long time." -WriteProgress
+        $recipients = Get-Recipient -ResultSize Unlimited -IgnoreDefaultScope
     }
     catch
     {
-        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for recipients. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to run Get-Recipient. $($_.Exception.Message)"
         return
     }
 
@@ -58,25 +44,39 @@ function Get-ExchangeRecipients
             if ($x % $progressFrequency -eq 0)
             {
                 $percentComplete = (100 / $recipients.Count) * $x
-                Write-Log -Level "DEBUG" -Activity $activity -Message "Gathering Exchange recipient details $x / $($recipients.Count)" -PercentComplete $percentComplete -WriteProgress
+                Write-Log -Level "VERBOSE" -Activity $activity -Message "Gathering Exchange recipient details $x / $($recipients.Count)" -PercentComplete $percentComplete -WriteProgress
             }
 
             $recipientStatistics = $null
-            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RemoteRecipientType, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, UserAccountControl
-            $currentRecipient.ObjectGuid = [GUID]($recipient.objectGuid | Select-Object -First 1)
-            $currentRecipient.RecipientTypeDetails = $recipient.msexchRecipientTypeDetails | Select-Object -First 1
-            $currentRecipient.RemoteRecipientType = $recipient.msExchRemoteRecipientType | Select-Object -First 1
-            $currentRecipient.RecipientDisplayType = $recipient.msexchRecipientDisplayType | Select-Object -First 1
-            
-            $recipientMail = $recipient.mail | Select-Object -First 1
+            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled
+            $currentRecipient.ObjectGuid = [GUID]($recipient.guid)
+            $currentRecipient.RecipientTypeDetails = $recipient.RecipientTypeDetails.ToString()
+            $currentRecipient.RecipientDisplayType = $recipient.RecipientType.ToString()
+            $currentRecipient.EmailAddressPolicyEnabled = $recipient.EmailAddressPolicyEnabled
+            $currentRecipient.LitigationHoldEnabled = $recipient.LitigationHoldEnabled
+            $currentRecipient.ArchiveGuid = $recipient.ArchiveGuid
+
+            $recipientMail = $recipient.PrimarySmtpAddress.ToString()
+
             if ($recipientMail.Contains("@"))
             {
-                $currentRecipient.PrimarySmtpDomain = $recipientMail.Split("@")[1]
+                $smtpParts = $currentRecipient.PrimarySmtpDomain = $recipientMail.Split("@")
+
+                if ($smtpParts.Count -gt 0)
+                {
+                    $currentRecipient.PrimarySmtpDomain = $recipientMail.Split("@")[1]
+                }
+                else
+                {
+                    Write-Log -Level "WARNING" -Activity $activity -Message "Recipient $($currentRecipient.ObjectGuid) doesn't have a valid primary SMTP address, no @ symbol found." -PercentComplete $percentComplete -WriteProgress
+                    $currentRecipient.PrimarySmtpDomain = $null
+                }
             }
 
             if ([array]$recipient.ObjectClass -contains "user")
             {
-                $userPrincipalName = $recipient.userPrincipalName | Select-Object -First 1
+                $currentUser = Get-User $recipient.distinguishedName
+                $userPrincipalName = $currentUser.userPrincipalName
 
                 if (-not [String]::IsNullOrEmpty($userPrincipalName))
                 {
@@ -91,21 +91,20 @@ function Get-ExchangeRecipients
                         Write-Warning "The User Principal Name attribute for $($currentRecipient.ObjectGuid). doesn't have a domain suffix."
                     }
 
-                    $currentRecipient.PrimaryMatchesUPN = ($recipient.mail | Select-Object -First 1) -eq $userPrincipalName
+                    $currentRecipient.PrimaryMatchesUPN = ($recipient.PrimarySmtpAddress.ToString()) -eq $userPrincipalName
                 }
-
-                $currentRecipient.UserAccountControl = $recipient.userAccountControl | Select-Object -First 1
             }
 
-            if ($ExchangeShellConnected)
-            {
-                $recipientStatistics = Get-ExchangeRecipientDataStatistics -Recipient $currentRecipient
+            $recipientStatistics = Get-ExchangeRecipientDataStatistics -Recipient $currentRecipient
 
-                if ($recipientStatistics)
-                {
-                    $currentRecipient.TotalItemSizeKB = $recipientStatistics.TotalItemSize.Value.ToKB()
-                    $currentRecipient.ItemCount = $recipientStatistics.itemCount
-                }
+            if ($recipientStatistics)
+            {
+                $currentRecipient.TotalItemSizeKB = $recipientStatistics.TotalItemSize.Value.ToKB()
+                $currentRecipient.ItemCount = $recipientStatistics.itemCount
+            }
+            else
+            {
+                Write-Log -Level "WARNING" -Activity $activity -Message "Unable to get recipient statistics for $($currentRecipient.ObjectGuid)." -PercentComplete $percentComplete -WriteProgress
             }
 
             $x++

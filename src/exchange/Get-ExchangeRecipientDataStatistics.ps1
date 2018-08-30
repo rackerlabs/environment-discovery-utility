@@ -18,11 +18,12 @@ function Get-ExchangeRecipientDataStatistics
 
     [CmdletBinding()]
     param (
+        # Recipient The recipient to execute Get-MailboxStatistics against
         [object]
         $Recipient
     )
 
-    $mailboxTypeValues = @(1, 2, 4, 8, 16, 32)
+    $mailboxTypeValues = @("UserMailbox", "LinkedMailbox", "SharedMailbox", "LegacyMailbox", "RoomMailbox", "EquipmentMailbox")
 
     if ($mailboxTypeValues -contains $Recipient.RecipientTypeDetails)
     {

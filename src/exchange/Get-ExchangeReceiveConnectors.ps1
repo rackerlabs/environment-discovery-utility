@@ -6,49 +6,48 @@ function Get-ExchangeReceiveConnectors
             Discovers Exchange recieve connector settings.
 
         .DESCRIPTION
-            Run an LDAP queries against the Active Directory configuration partition which finds all Exchange recieve connector settings.
+            Query Exchange to find all Exchange recieve connector settings.
 
         .OUTPUTS
             Returns a custom object containing several key settings for the recieve connectors.
 
         .EXAMPLE
-            Get-ExchangeRecieveConnectors -DomainDN $domainDN
+            Get-ExchangeRecieveConnectors
 
     #>
 
     [CmdletBinding()]
-    param (
-        [string]
-        $DomainDN
-    )
+    param ()
 
     $activity = "Receive Connectors"
     $discoveredReceiveConnectors = @()
-    $ldapFilter = "(objectClass=msExchSmtpReceiveConnector)"
-    $context = "LDAP://CN=Configuration,$DomainDN"
-    [array]$properties = "objectGUID", "msExchSmtpReceiveBindings", "msExchSmtpReceiveConnectionInactivityTimeout", "msExchSmtpReceiveConnectionTimeout", "msExchSmtpReceiveMaxMessageSize", "msExchSmtpReceiveMaxRecipientsPerMessage"
-
     try
     {
-        Write-Log -Level "INFO" -Activity $activity -Message "Searching Active Directory for Receive Connector Settings." -WriteProgress
-        $receiveConnectorSettings = Search-Directory -context $context -Filter $ldapFilter -Properties $properties -SearchRoot $DomainDN
+        Write-Log -Level "INFO" -Activity $activity -Message "Getting Receive Connector Settings." -WriteProgress
+        $receiveConnectorSettings = Get-ReceiveConnector  
     }
     catch
     {
-        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to search Active Directory for Receive Connector Settings. $($_.Exception.Message)"
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to get Receive Connector Settings. $($_.Exception.Message)"
         return
     }
 
     foreach ($receiveConnectorSetting in $receiveConnectorSettings)
     {
         $receiveConnector = $null
-        $receiveConnector = ""| Select-Object ConnectorGuid, SmtpReceiveBindings, SmtpInactivityTimeOut, ConnectionTimeout, MaxMessageSize, MaxRecipientsPerMessage
-        $receiveConnector.ConnectorGuid = [GUID]$($receiveConnectorSetting.objectGUID | Select-Object -First 1)
-        $receiveConnector.SmtpReceiveBindings = $receiveConnectorSetting.msExchSmtpReceiveBindings
-        $receiveConnector.SmtpInactivityTimeOut = $receiveConnectorSetting.msExchSmtpReceiveConnectionInactivityTimeout
-        $receiveConnector.ConnectionTimeout = $receiveConnectorSetting.msExchSmtpReceiveConnectionTimeout
-        $receiveConnector.MaxMessageSize = $receiveConnectorSetting.msExchSmtpReceiveMaxMessageSize
-        $receiveConnector.MaxRecipientsPerMessage = $receiveConnectorSetting.msExchSmtpReceiveMaxRecipientsPerMessage
+        $receiveConnector = ""| Select-Object ConnectorGuid, SmtpReceiveBindings, SmtpInactivityTimeOut, ConnectionTimeout, MaxMessageSize, MaxRecipientsPerMessage, PermissionGroups, AuthMechanism, Enabled, Fqdn, TransportRole, Server
+        $receiveConnector.ConnectorGuid = [GUID]$($receiveConnectorSetting.GUID | Select-Object -First 1)
+        $receiveConnector.SmtpReceiveBindings = $receiveConnectorSetting.Bindings
+        $receiveConnector.SmtpInactivityTimeOut = $receiveConnectorSetting.ConnectionInactivityTimeout
+        $receiveConnector.ConnectionTimeout = $receiveConnectorSetting.ConnectionTimeout
+        $receiveConnector.MaxMessageSize = $receiveConnectorSetting.MaxMessageSize
+        $receiveConnector.MaxRecipientsPerMessage = $receiveConnectorSetting.MaxRecipientsPerMessage
+        $receiveConnector.PermissionGroups = $receiveConnectorSetting.PermissionGroups
+        $receiveConnector.AuthMechanism = $receiveConnectorSetting.AuthMechanism
+        $receiveConnector.Enabled = $receiveConnectorSetting.Enabled
+        $receiveConnector.Fqdn = $receiveConnectorSetting.Fqdn
+        $receiveConnector.TransportRole = $receiveConnectorSetting.TransportRole
+        $receiveConnector.Server = $receiveConnectorSetting.Server
 
         $discoveredReceiveConnectors += $receiveConnector
     }
