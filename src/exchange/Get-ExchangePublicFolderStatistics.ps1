@@ -64,10 +64,12 @@ function Get-ExchangePublicFolderStatistics
         {
             $publicFolder = Get-PublicFolder -Identity ($publicFolderStatistic.EntryID.tostring())
             $publicFolderStats = $null
-            $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB, IsMailEnabled
+            $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB, IsMailEnabled, LastModificationTime
             $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
             $publicFolderStats.Identity = $publicFolderStatistic.entryID
             $publicFolderStats.IsMailEnabled = [bool]$publicFolder.MailEnabled
+            $publicFolderStats.LastModificationTime =  $publicFolderStatistic.LastModificationTime
+
             if ($version -like "*14.*")
             {
                 $publicFolderStats.TotalItemSizeKB = Convert-ExchangeDataStatisticToKB -Property $publicFolderStatistic.totalItemSize.value
