@@ -83,7 +83,8 @@ function Get-ExchangeImapPopSettings
                     $exchangeServer = $serverName
                 }
 
-                $PortStatus = Check-RemotePort -Server $exchangeServer -Port $exchangeServiceConfig.Port
+                $PortStatus = $null
+                $PortStatus = Test-TcpConnection -Host $exchangeServer -Port $exchangeServiceConfig.Port
 
                 $remotePortResult = $null
                 $remotePortResult = "" | Select-Object Address, Port, Protocol, TCPResponse
@@ -101,57 +102,4 @@ function Get-ExchangeImapPopSettings
     }
 
     $discoveredImapPopSettings
-}
-
-function Check-RemotePort
-{
-    <#
-
-        .SYNOPSIS
-            Check port on remote computer.
-
-        .DESCRIPTION
-            Verify Connectivity on remote port.
-
-        .OUTPUTS
-            Returns a boolean option for status of connectivity to remote port.
-
-        .EXAMPLE
-            Check-RemotePort -Server $Server -Port $Port
-
-    #>
-
-    [CmdletBinding()]
-    param (
-        # Servers An array of server objects to run discovery against
-        [String]
-        $Server,
-
-        [String]
-        $Port
-    )
-    
-    $activity = "Pop/IMAP Settings"
-
-    $portCheck = New-Object Net.Sockets.TcpClient
-    
-    try
-    {
-        $portCheck.Connect($Server, $Port)
-    }
-    catch
-    {
-        Write-Log -Level "VERBOSE" -Activity $activity -Message "Failed to connect to Port $Port on Server $Server. $($_.Exception.Message)"
-    }
-    
-    if ($portCheck.Connected) {
-        return $true
-        $portCheck.Close()
-    }
-    else {
-        return $false
-    }
-        
-    $portCheck.Dispose()
-    $portCheck = $null
 }

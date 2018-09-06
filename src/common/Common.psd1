@@ -66,7 +66,8 @@ FormatsToProcess = @()
 NestedModules = @(
     "SerializeTo-Json.ps1",
     "Search-Directory.ps1",
-    "New-ZipFile.ps1"
+    "New-ZipFile.ps1",
+    "Test-TcpConnection.ps1"
 )
 
 # Functions to export from this module
