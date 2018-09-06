@@ -64,7 +64,7 @@ function Get-ExchangePublicFolderStatistics
         {
             $publicFolder = Get-PublicFolder -Identity ($publicFolderStatistic.EntryID.tostring())
             $publicFolderStats = $null
-            $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB, IsMailEnabled, LastAccessTime
+            $publicFolderStats = "" | Select-Object Identity, ItemCount, TotalItemSizeKB, IsMailEnabled, LastModificationTime
             $publicFolderStats.ItemCount = $publicFolderStatistic.itemCount
             $publicFolderStats.Identity = $publicFolderStatistic.entryID
             $publicFolderStats.IsMailEnabled = [bool]$publicFolder.MailEnabled
