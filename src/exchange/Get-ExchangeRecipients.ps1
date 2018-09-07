@@ -38,6 +38,8 @@ function Get-ExchangeRecipients
     {
         $progressFrequency = 25
         $x = 0
+        
+        $retentionPolicies = Get-RetentionPolicy  
 
         foreach ($recipient in $recipients)
         {
@@ -48,13 +50,16 @@ function Get-ExchangeRecipients
             }
 
             $recipientStatistics = $null
-            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols
+
+            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy
+
             $currentRecipient.ObjectGuid = [GUID]($recipient.guid)
             $currentRecipient.RecipientTypeDetails = $recipient.RecipientTypeDetails.ToString()
             $currentRecipient.RecipientDisplayType = $recipient.RecipientType.ToString()
             $currentRecipient.EmailAddressPolicyEnabled = $recipient.EmailAddressPolicyEnabled
             $currentRecipient.LitigationHoldEnabled = $recipient.LitigationHoldEnabled
             $currentRecipient.ArchiveGuid = $recipient.ArchiveGuid
+            $currentRecipient.RetentionPolicy = ($retentionPolicies | where {$_.Name -eq $recipient.RetentionPolicy}).Guid.ToString()
 
             $recipientMail = $recipient.PrimarySmtpAddress.ToString()
 

@@ -47,6 +47,7 @@ function Start-ExchangeDiscovery
             $exchangeEnvironment.Add("EmailAddressPolicies", [array]$(Get-ExchangeEmailAddressPolicies))
             $exchangeEnvironment.Add("OrganizationConfig", $(Get-ExchangeOrganizationConfig))
             $exchangeEnvironment.Add("ClientAccessServerSettings", [array]$(Get-ExchangeClientAccessConfig))
+            $exchangeEnvironment.Add("RetentionPolicies", [array]$(Get-ExchangeRetentionPolicies))
 
             Write-Log -Level "INFO" -Activity  $activity -Message "Completed Exchange Discovery." -WriteProgress
         }
