@@ -25,7 +25,7 @@ function Get-ExchangeOrganizationConfig
     try
     {
         Write-Log -Level "INFO" -Activity $activity -Message "Query Exchange for Organization Config." -WriteProgress
-        [array]$exchangeOrganizationConfig = Get-OrganizationConfig
+        $exchangeOrganizationConfig = Get-OrganizationConfig
     }
     catch
     {
