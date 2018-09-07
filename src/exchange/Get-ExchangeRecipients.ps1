@@ -48,7 +48,7 @@ function Get-ExchangeRecipients
             }
 
             $recipientStatistics = $null
-            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled
+            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols
             $currentRecipient.ObjectGuid = [GUID]($recipient.guid)
             $currentRecipient.RecipientTypeDetails = $recipient.RecipientTypeDetails.ToString()
             $currentRecipient.RecipientDisplayType = $recipient.RecipientType.ToString()
@@ -92,6 +92,28 @@ function Get-ExchangeRecipients
                     }
 
                     $currentRecipient.PrimaryMatchesUPN = ($recipient.PrimarySmtpAddress.ToString()) -eq $userPrincipalName
+                }
+
+                try
+                {
+                    Write-Log -Level "VERBOSE" -Activity $activity -Message "Getting recipient connection protocols for object $($recipient.Guid)." -WriteProgress
+                    $casMailbox = Get-CASMailbox $userPrincipalName
+                }
+                catch
+                {
+                    Write-Log -Level "WARNING" -Activity $activity -Message "Failed to run Get-CasMailbox against object $($recipient.Guid). $($_.Exception.Message)"
+                }
+
+                if ($casMailbox)
+                {
+                    $protocols = "" | select ActiveSyncEnabled, OwaEnabled, PopEnabled, ImapEnabled, MapiEnabled
+                    $protocols.ActiveSyncEnabled = $casMailbox.ActiveSyncEnabled
+                    $protocols.OwaEnabled = $casMailbox.OwaEnabled
+                    $protocols.PopEnabled = $casMailbox.PopEnabled
+                    $protocols.ImapEnabled = $casMailbox.ImapEnabled
+                    $protocols.MapiEnabled = $casMailbox.MapiEnabled
+
+                    $currentRecipient.Protocols = $protocols
                 }
             }
 
