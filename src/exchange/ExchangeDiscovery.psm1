@@ -44,6 +44,7 @@ function Start-ExchangeDiscovery
             $exchangeEnvironment.Add("ImapPopSettings", [array]$(Get-ExchangeImapPopSettings -Servers $exchangeServers))
             $exchangeEnvironment.Add("TransportRules", [array]$(Get-ExchangeTransportRules))
             $exchangeEnvironment.Add("TransportSettings", [array]$(Get-ExchangeTransportConfig))
+            $exchangeEnvironment.Add("EmailAddressPolicies", [array]$(Get-ExchangeEmailAddressPolicies))
             $exchangeEnvironment.Add("OrganizationConfig", $(Get-ExchangeOrganizationConfig))
             $exchangeEnvironment.Add("ClientAccessServerSettings", [array]$(Get-ExchangeClientAccessConfig))
 

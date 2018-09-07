@@ -69,6 +69,7 @@ NestedModules = @(
     "Get-ExchangeVirtualDirectories.ps1", 
     "Get-ExchangeRecipients.ps1", 
     "Initialize-ExchangePowershell.ps1", 
+    "Get-ExchangeEmailAddressPolicies.ps1",
     "Get-ExchangeRecipientDataStatistics.ps1", 
     "Get-ExchangePublicFolderStatistics.ps1", 
     "Get-ExchangePublicFolderMailboxes.ps1", 
