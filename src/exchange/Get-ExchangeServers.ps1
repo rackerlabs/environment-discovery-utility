@@ -37,7 +37,7 @@ function Get-ExchangeServers
     {
         foreach ($exchangeServer in $exchangeServers)
         {
-            $currentServer = "" | Select-Object Name, Version, Edition, InstalledRoles, Site, Domain, DistinguishedName
+            $currentServer = "" | Select-Object Name, Version, Edition, InstalledRoles, Site, Domain, DistinguishedName, InternetWebProxy
             $currentServer.Name = $exchangeServer.name
             $currentServer.Version = $exchangeServer.AdminDisplayVersion
             $currentServer.Edition = $exchangeServer.Edition
@@ -45,6 +45,7 @@ function Get-ExchangeServers
             $currentServer.Site = $exchangeServer.Site
             $currentServer.Domain = $exchangeServer.Domain
             $currentServer.DistinguishedName = $exchangeServer.DistinguishedName
+            $currentServer.InternetWebProxy = $exchangeServer.InternetWebProxy
 
             $discoveredExchangeServers += $currentServer
         }
