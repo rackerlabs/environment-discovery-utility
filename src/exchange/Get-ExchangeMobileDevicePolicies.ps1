@@ -6,13 +6,13 @@ function Get-MobileDevicePolicies
             Discover Exchange Mobile Device Policies.
 
         .DESCRIPTION
-            Uses native Exchange cmdlets to discover Mobile Device Policies.
+            Uses native Exchange cmdlets to discover Mobile / ActiveSync Device Policies.
 
         .OUTPUTS
             Returns a custom object containing Mobile Device Policies.
 
         .EXAMPLE
-            Get-MobileDevicePolicies
+            Get-ExchangeMobileDevicePolicies
 
     #>
 
@@ -25,7 +25,17 @@ function Get-MobileDevicePolicies
     try
     {
         Write-Log -Level "INFO" -Activity $activity -Message "Gathering Exchange Mobile Device Policies." -WriteProgress
-        $MobileDevicePolicies = Get-MobileDeviceMailboxPolicy
+
+        $version = Get-ExchangeServer $server | Select-Object AdminDisplayVersion
+        if ($version -like "*15.*")
+        {
+            $MobileDevicePolicies = Get-MobileDeviceMailboxPolicy
+        }
+        else
+        {
+            $MobileDevicePolicies = Get-ActiveSyncMailboxPolicy
+        }
+        
     }
     catch
     {
