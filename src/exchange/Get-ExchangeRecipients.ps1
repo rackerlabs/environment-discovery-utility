@@ -38,8 +38,7 @@ function Get-ExchangeRecipients
     {
         $progressFrequency = 25
         $x = 0
-        
-        $retentionPolicies = Get-RetentionPolicy  
+        $retentionPolicies = Get-RetentionPolicy
 
         foreach ($recipient in $recipients)
         {
@@ -52,14 +51,27 @@ function Get-ExchangeRecipients
             $recipientStatistics = $null
 
             $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy
-
             $currentRecipient.ObjectGuid = [GUID]($recipient.guid)
             $currentRecipient.RecipientTypeDetails = $recipient.RecipientTypeDetails.ToString()
             $currentRecipient.RecipientDisplayType = $recipient.RecipientType.ToString()
             $currentRecipient.EmailAddressPolicyEnabled = $recipient.EmailAddressPolicyEnabled
             $currentRecipient.LitigationHoldEnabled = $recipient.LitigationHoldEnabled
             $currentRecipient.ArchiveGuid = $recipient.ArchiveGuid
-            $currentRecipient.RetentionPolicy = ($retentionPolicies | where {$_.Name -eq $recipient.RetentionPolicy}).Guid.ToString()
+
+            if ($recipient.RetentionPolicy -notlike $null)
+            {
+                $retentionPolicy = $retentionPolicies | Where-Object {$_.Name -eq $recipient.RetentionPolicy}
+
+                if ($retentionPolicy -notlike $null)
+                {
+                    $retentionPolicyGuid = $retentionPolicy.Guid
+                    $currentRecipient.RetentionPolicy = $retentionPolicyGuid.ToString()
+                }
+                else
+                {
+                    Write-Warning "Recipient $($currentRecipient.ObjectGuid) has a retention policy but it couldn't be matched to an existing policy.  This could be a permissions issue."
+                }
+            }
 
             $recipientMail = $recipient.PrimarySmtpAddress.ToString()
 
