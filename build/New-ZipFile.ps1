@@ -36,7 +36,7 @@ function Add-ZipFiles
     }
 }
 
-function Zip-Scripts()
+function Add-Scripts()
 {
     Get-ChildItem "$rootDir\*.*" -Recurse | Add-ZipFiles
 }
@@ -45,11 +45,11 @@ Set-Location -Path "$PSScriptRoot\..\src"
 $rootDir = (Get-Location).Path
 Set-Location -Path "$PSScriptRoot"
 
-Add-Type -Path "$PSScriptRoot\Ionic.Zip.dll"
+Add-Type -Path "$PSScriptRoot\lib\Ionic.Zip.dll"
 $zipFile = New-Object Ionic.Zip.ZipFile
 $zipPath = "$PSScriptRoot\edu.v$BuildNumber.zip"
 
-Zip-Scripts
+Add-Scripts
 
 if (Test-Path $zipPath)
 {

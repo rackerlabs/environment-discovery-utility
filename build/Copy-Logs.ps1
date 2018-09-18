@@ -51,7 +51,7 @@ $ErrorActionPreference = "Stop"
 $remoteBaseFolder = "\\$LabIpAddress\c$\edu_ci"
 $remoteBuildFolder = "$remoteBaseFolder\$BuildNumber"
 
-function Map-PSDrive()
+function Set-PSDrive()
 {
     $securePassword = ConvertTo-SecureString $Password -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential $Username, $securePassword
@@ -62,10 +62,10 @@ function Map-PSDrive()
 
     New-PSDrive -Name "EDU_CI_$labName" -PSProvider FileSystem -Root $remoteBaseFolder -Credential $credential 
 
-    Prepare-OutputDirectory
+    Confirm-OutputDirectory
 }
 
-function Prepare-OutputDirectory()
+function Confirm-OutputDirectory()
 {
      New-Item -ItemType Directory -Force -Path "$PSScriptRoot\$LabIpAddress"
 
@@ -93,7 +93,7 @@ function Comfirm-Logs()
 {
     if (Test-Path -Path "$PSScriptRoot\$LabIpAddress\$LabIpAddress.log" -PathType Leaf)
     {
-        Write-Host "Verified logs were copied from $LabIpAddress"
+        Write-Host "Verified logs were copied from $LabIpAddress, running log analysis"
     }
     else
     {
@@ -102,4 +102,4 @@ function Comfirm-Logs()
     }
 }
 
-Map-PSDrive
+Set-PSDrive
