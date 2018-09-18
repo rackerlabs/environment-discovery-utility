@@ -27,31 +27,35 @@ function Test-TcpConnection
         $Port
     )
 
-    $portCheck = New-Object Net.Sockets.TcpClient
+    $tcpClient = New-Object Net.Sockets.TcpClient
     $result = $false
 
     try
     {
-        $portCheck.Connect($Host, $Port)
+        $tcpClient.Connect($Host, $Port)
     }
     catch
     {
         Write-Verbose "Failed to connect to Port $Port on Server $Host. $($_.Exception.Message)"
     }
 
-    if ($portCheck.Connected)
+    if ($tcpClient.Connected)
     {
         Write-Verbose "Successfully connected to Port $Port on Server $Host."
         $result = $true
+        $tcpClient.Close()
+
+        if ($tcpClient | Get-Member Dispose)
+        {
+            $tcpClient.Dispose()
+        }
+
+        $tcpClient = $null
     }
     else
     {
         $result = $false
     }
-
-    $portCheck.Close()
-    $portCheck.Dispose()
-    $portCheck = $null
 
     $result
 }
