@@ -48,7 +48,7 @@
 
         $logPath = "$($OutputFolder)\edu-$environmentName.log"
         $jsonPath = "$($OutputFolder)\edu-$environmentName.json"
-
+        
         try
         {
             Enable-Logging $logPath -Verbose:$VerbosePreference -Debug:$DebugPreference
