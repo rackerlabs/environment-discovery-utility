@@ -64,9 +64,10 @@ FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in ModuleToProcess
 NestedModules = @(
-    "Get-ExchangeServers.ps1", 
-    "Get-ExchangeAcceptedDomains.ps1", 
-    "Get-ExchangeVirtualDirectories.ps1", 
+    "Get-ExchangeServers.ps1",
+    "Get-ExchangeAcceptedDomains.ps1",
+    "Get-ExchangeManagementShellVersion",
+    "Get-ExchangeVirtualDirectories.ps1",
     "Get-ExchangeRecipients.ps1", 
     "Initialize-ExchangePowershell.ps1", 
     "Get-ExchangeEmailAddressPolicies.ps1",

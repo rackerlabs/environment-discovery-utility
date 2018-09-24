@@ -24,10 +24,10 @@ function Get-ExchangeMobileDevicePolicies
 
     try
     {
-        $exchangeManagementShellVersion = Get-Command Exsetup.exe
+        $exchangeManagementShellVersion = Get-ExchangeManagementShellVersion
         Write-Log -Level "INFO" -Activity $activity -Message "Gathering Exchange Mobile Device Policies." -WriteProgress
 
-        if (($exchangeManagementShellVersion | where {$_.fileversioninfo.productversion -like "15*"}) -ne $null)
+        if ($exchangeManagementShellVersion -like "15*")
         {
             $MobileDevicePolicies = Get-MobileDeviceMailboxPolicy
         }
