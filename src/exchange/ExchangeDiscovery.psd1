@@ -66,7 +66,7 @@ FormatsToProcess = @()
 NestedModules = @(
     "Get-ExchangeServers.ps1",
     "Get-ExchangeAcceptedDomains.ps1",
-    "Get-ExchangeManagementShellVersion",
+    "Get-ExchangeManagementShellVersion.ps1",
     "Get-ExchangeVirtualDirectories.ps1",
     "Get-ExchangeRecipients.ps1", 
     "Initialize-ExchangePowershell.ps1", 
