@@ -87,6 +87,7 @@ NestedModules = @(
     "Get-ExchangeSendConnectors.ps1",
     "Get-ExchangeOrganizationConfig.ps1",
     "Get-ExchangeClientAccessConfig.ps1",
+    "Get-ExchangePartnerApplications.ps1",
     "Start-PublicFolderDiscovery.ps1",
     "Convert-ExchangeDataStatisticToKb.ps1",
     "Get-ExchangeRetentionPolicies.ps1",
