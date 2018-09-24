@@ -3,16 +3,16 @@ function Get-ExchangeReceiveConnectors
     <#
 
         .SYNOPSIS
-            Discovers Exchange recieve connector settings.
+            Discovers Exchange receive connector settings.
 
         .DESCRIPTION
-            Query Exchange to find all Exchange recieve connector settings.
+            Query Exchange to find all Exchange receive connector settings.
 
         .OUTPUTS
-            Returns a custom object containing several key settings for the recieve connectors.
+            Returns a custom object containing several key settings for the receive connectors.
 
         .EXAMPLE
-            Get-ExchangeRecieveConnectors
+            Get-ExchangereceiveConnectors
 
     #>
 
