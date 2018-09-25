@@ -49,6 +49,7 @@ function Start-ExchangeDiscovery
             $exchangeEnvironment.Add("ClientAccessServerSettings", [array]$(Get-ExchangeClientAccessConfig))
             $exchangeEnvironment.Add("RetentionPolicies", [array]$(Get-ExchangeRetentionPolicies))
             $exchangeEnvironment.Add("MobileDevicePolicies", [array]$(Get-ExchangeMobileDevicePolicies))
+            $exchangeEnvironment.Add("PartnerApplications", [array]$(Get-ExchangePartnerApplications -Servers $exchangeServers))
 
             Write-Log -Level "INFO" -Activity  $activity -Message "Completed Exchange Discovery." -WriteProgress
         }

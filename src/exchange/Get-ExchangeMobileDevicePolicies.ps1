@@ -1,6 +1,6 @@
 function Get-ExchangeMobileDevicePolicies
 {
-        <#
+    <#
 
         .SYNOPSIS
             Discover Exchange Mobile Device Policies.
@@ -34,8 +34,7 @@ function Get-ExchangeMobileDevicePolicies
         else
         {
             $MobileDevicePolicies = Get-ActiveSyncMailboxPolicy
-        }
-        
+        }        
     }
     catch
     {
@@ -43,12 +42,12 @@ function Get-ExchangeMobileDevicePolicies
         return
     }
     
-    foreach ($MobileDevicePolicy in $MobileDevicePolicies)
+    foreach ($mobileDevicePolicy in $mobileDevicePolicies)
     {
         $currentMobileDevicePolicy = "" | Select-Object Guid, Name, Default
-        $currentMobileDevicePolicy.Name = $MobileDevicePolicy.Name
-        $currentMobileDevicePolicy.Guid = [guid]$MobileDevicePolicy.Guid
-        $currentMobileDevicePolicy.Default = $MobileDevicePolicy.isDefault
+        $currentMobileDevicePolicy.Name = $mobileDevicePolicy.Name
+        $currentMobileDevicePolicy.Guid = [guid]$mobileDevicePolicy.Guid
+        $currentMobileDevicePolicy.Default = $mobileDevicePolicy.isDefault
         $discoveredMobileDevicePolicies += $currentMobileDevicePolicy
     }
 

@@ -1,6 +1,6 @@
 function Get-ExchangeManagementShellVersion
 {
-        <#
+    <#
 
         .SYNOPSIS
             Discover Exchange Management Shell Version.
@@ -21,15 +21,14 @@ function Get-ExchangeManagementShellVersion
 
     try
     {
-        $exchangeManagementShellVersion = Get-Command Exsetup.exe
+        $exchangeManagementShellVersion = (Get-Command Exsetup.exe).FileVersionInfo.Productversion
         Write-Log -Level "INFO" -Activity $activity -Message "Gathering Exchange Management Shell Version." -WriteProgress        
     }
-    
     catch
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to run Get-Command. $($_.Exception.Message)"
         return
     }
 
-    $exchangeManagementShellVersion.FileVersionInfo.Productversion
+    $exchangeManagementShellVersion
 }
