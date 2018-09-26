@@ -31,7 +31,7 @@ function Start-ExchangeDiscovery
         {
             [array]$exchangeServers = Get-ExchangeServers
             [array]$acceptedDomains = Get-ExchangeAcceptedDomains
-
+            
             $exchangeEnvironment.Add("Servers", $exchangeServers)
             $exchangeEnvironment.Add("AcceptedDomains", $acceptedDomains)
             $exchangeEnvironment.Add("VirtualDirectories", [array](Get-ExchangeVirtualDirectories -Servers $exchangeServers))
@@ -48,6 +48,7 @@ function Start-ExchangeDiscovery
             $exchangeEnvironment.Add("OrganizationConfig", $(Get-ExchangeOrganizationConfig))
             $exchangeEnvironment.Add("ClientAccessServerSettings", [array]$(Get-ExchangeClientAccessConfig))
             $exchangeEnvironment.Add("RetentionPolicies", [array]$(Get-ExchangeRetentionPolicies))
+            $exchangeEnvironment.Add("HybridConfiguration", [array]$(Get-ExchangeHybridConfig))
             $exchangeEnvironment.Add("PartnerApplications", [array]$(Get-ExchangePartnerApplications -Servers $exchangeServers))
 
             Write-Log -Level "INFO" -Activity  $activity -Message "Completed Exchange Discovery." -WriteProgress
