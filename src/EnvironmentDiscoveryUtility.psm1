@@ -124,11 +124,67 @@
     }
     end
     {
+        Write-EduSummary
         Disable-Logging
         Write-Output "Removing files from temp location."
         Remove-Item $logPath -Force
         Remove-Item $jsonPath -Force
         Write-Output "Cleanup completed."
+    }
+}
+
+function Write-EduSummary
+{
+    $activities = @()
+
+    $logItems = Get-LogEntries | Where-Object {$_.Activity -ne "StreamInterception"}
+
+    foreach ($item in $logItems)
+    {
+        if ($activities -notcontains $item.Activity)
+        {
+            $activities += $item.Activity
+        }
+    }
+
+    Write-Host "=== Activity Summary ==="
+    foreach ($activity in $activities)
+    {
+        [array]$activityLogs = $logEntries | Where-Object {$_.Activity -eq $activity}
+        [array]$errors = $activityLogs | Where-Object {$_.Level -eq "ERROR"}
+        [array]$warnings = $activityLogs | Where-Object {$_.Level -eq "WARNING"}
+
+        if ($errors)
+        {
+            Write-Host "[ERROR]   " -ForegroundColor Red -NoNewline
+        }
+        elseif ($warnings)
+        {
+            Write-Host "[WARNING] " -ForegroundColor Yellow -NoNewline
+        }
+        else
+        {
+            Write-Host "[SUCCESS] " -ForegroundColor Green -NoNewline
+        }
+
+        Write-Host $activity -NoNewline
+
+        if ($warnings)
+        {
+            Write-Host " (Warnings: $($warnings.Count))"
+        }
+        else
+        {
+            Write-Host
+        }
+
+        if ($errors)
+        {
+            foreach ($lineError in $errors)
+            {
+                Write-Host "`t`t$($lineError.Message)"
+            }
+        }
     }
 }
 
