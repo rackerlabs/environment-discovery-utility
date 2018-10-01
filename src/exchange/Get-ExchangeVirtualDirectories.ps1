@@ -29,6 +29,7 @@ function Get-ExchangeVirtualDirectories
     $discoveredVirtualDirectories.EAS = @()
     $discoveredVirtualDirectories.ECP = @()
     $discoveredVirtualDirectories.OWA = @()
+    $discoveredVirtualDirectories.OAB = @()
     $discoveredVirtualDirectories.MAPI = @()
     $discoveredVirtualDirectories.AutoDiscover = @()
 
@@ -61,15 +62,15 @@ function Get-ExchangeVirtualDirectories
             $discoveredVirtualDirectories["OWA"] += $owaVirtualDirectories
             $discoveredVirtualDirectories["OAB"] += $oabVirtualDirectories
             $discoveredVirtualDirectories["AutoDiscover"] += $autoDiscoverVirtualDirectories
-
-            if ($server.AdminDisplayVersion -like "*15.*")
+            
+            if ($server.Version.Major -ge 15)
             {
                 [array]$mapiVirtualDirectories = Get-VirtualDirectories -ServerName $serverName -Command $mapiCommand -Session $exchSession
                 $discoveredVirtualDirectories["MAPI"] += $mapiVirtualDirectories
             }
             else
             {
-                Write-Log -Level "DEBUG" -Activity $activity -Message "Skipping MAPI Virtual Directory discovery because of the exchange version older than 2013."
+                Write-Log -Level "VERBOSE" -Activity $activity -Message "Skipping MAPI Virtual Directory discovery because of the exchange version older than 2013."
             }
         }
     }
