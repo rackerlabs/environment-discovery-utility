@@ -48,6 +48,7 @@ function Start-ExchangeDiscovery
             $exchangeEnvironment.Add("OrganizationConfig", $(Get-ExchangeOrganizationConfig))
             $exchangeEnvironment.Add("ClientAccessServerSettings", [array]$(Get-ExchangeClientAccessConfig))
             $exchangeEnvironment.Add("RetentionPolicies", [array]$(Get-ExchangeRetentionPolicies))
+            $exchangeEnvironment.Add("MobileDevicePolicies", [array]$(Get-ExchangeMobileDevicePolicies))
             $exchangeEnvironment.Add("HybridConfiguration", [array]$(Get-ExchangeHybridConfig))
             $exchangeEnvironment.Add("PartnerApplications", [array]$(Get-ExchangePartnerApplications -Servers $exchangeServers))
 
