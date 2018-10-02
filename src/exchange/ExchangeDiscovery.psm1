@@ -34,7 +34,7 @@ function Start-ExchangeDiscovery
 
             $exchangeEnvironment.Add("Servers", $exchangeServers)
             $exchangeEnvironment.Add("AcceptedDomains", $acceptedDomains)
-            $exchangeEnvironment.Add("VirtualDirectories", [array](Get-ExchangeVirtualDirectories -Servers $exchangeServers))
+            $exchangeEnvironment.Add("VirtualDirectories", $(Get-ExchangeVirtualDirectories -Servers $exchangeServers))
             $exchangeEnvironment.Add("Recipients", [array]$(Get-ExchangeRecipients))
             $exchangeEnvironment.Add("PublicFolders", $(Start-PublicFolderDiscovery))
             $exchangeEnvironment.Add("DynamicGroups", [array]$(Get-ExchangeDynamicGroups))
@@ -43,12 +43,13 @@ function Start-ExchangeDiscovery
             $exchangeEnvironment.Add("DatabaseJournaling", [array]$(Get-ExchangeDatabaseJournaling -AcceptedDomains $acceptedDomains))
             $exchangeEnvironment.Add("ImapPopSettings", [array]$(Get-ExchangeImapPopSettings -Servers $exchangeServers))
             $exchangeEnvironment.Add("TransportRules", [array]$(Get-ExchangeTransportRules))
-            $exchangeEnvironment.Add("TransportSettings", [array]$(Get-ExchangeTransportConfig))
+            $exchangeEnvironment.Add("TransportSettings", $(Get-ExchangeTransportConfig))
             $exchangeEnvironment.Add("EmailAddressPolicies", [array]$(Get-ExchangeEmailAddressPolicies))
             $exchangeEnvironment.Add("OrganizationConfig", $(Get-ExchangeOrganizationConfig))
             $exchangeEnvironment.Add("ClientAccessServerSettings", [array]$(Get-ExchangeClientAccessConfig))
             $exchangeEnvironment.Add("RetentionPolicies", [array]$(Get-ExchangeRetentionPolicies))
             $exchangeEnvironment.Add("MobileDevicePolicies", [array]$(Get-ExchangeMobileDevicePolicies))
+            $exchangeEnvironment.Add("HybridConfiguration", [array]$(Get-ExchangeHybridConfig))
             $exchangeEnvironment.Add("PartnerApplications", [array]$(Get-ExchangePartnerApplications -Servers $exchangeServers))
 
             Write-Log -Level "INFO" -Activity  $activity -Message "Completed Exchange Discovery." -WriteProgress
