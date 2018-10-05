@@ -45,10 +45,12 @@
         $netVersion = [string]$PSVersionTable.CLRVersion
         $tempFolder = "$env:USERPROFILE\AppData\Local\Temp"
         $sessionGuid = [GUID]::NewGuid()
+        $environmentDiscoveryUtilityModule = Get-Module -Name EnvironmentDiscoveryUtility
 
         $logPath = "$($OutputFolder)\edu-$environmentName.log"
         $jsonPath = "$($OutputFolder)\edu-$environmentName.json"
         
+
         try
         {
             Enable-Logging $logPath -Verbose:$VerbosePreference -Debug:$DebugPreference
@@ -61,6 +63,7 @@
         $environment = @{}
         $environment.Add("SessionId", $sessionGuid)
         $environment.Add("TimeStamp", $(([DateTime]::UtcNow | Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")))
+        $environment.Add("Version",$environmentDiscoveryUtilityModule.Version)
 
         Write-Log -Level "INFO" -Activity "Setup" -Message "Modules: $Modules"
         Write-Log -Level "INFO" -Activity "Setup" -Message "Output Folder: $OutputFolder"
@@ -77,7 +80,7 @@
     process
     {
         $allModules = @("ad","exchange")
-        Write-Log -Level "INFO" -Message "Initializing EDU Module" -Activity "Environment Discovery Utility" -WriteProgress
+        Write-Log -Level "INFO" -Message "Initializing EDU Module $environmentDiscoveryUtilityDetails.Version" -Activity "Environment Discovery Utility" -WriteProgress
 
         foreach ($module in $allModules)
         {
