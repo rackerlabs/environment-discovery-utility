@@ -51,6 +51,7 @@ function Start-ExchangeDiscovery
             $exchangeEnvironment.Add("MobileDevicePolicies", [array]$(Get-ExchangeMobileDevicePolicies))
             $exchangeEnvironment.Add("HybridConfiguration", [array]$(Get-ExchangeHybridConfig))
             $exchangeEnvironment.Add("PartnerApplications", [array]$(Get-ExchangePartnerApplications -Servers $exchangeServers))
+            $exchangeEnvironment.Add("SslCertificates", [array]$(Get-ExchangeSslCerts -Servers $exchangeServers))
 
             Write-Log -Level "INFO" -Activity  $activity -Message "Completed Exchange Discovery." -WriteProgress
         }

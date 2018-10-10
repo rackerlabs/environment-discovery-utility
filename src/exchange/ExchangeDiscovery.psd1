@@ -93,6 +93,7 @@ NestedModules = @(
     "Convert-ExchangeDataStatisticToKb.ps1",
     "Get-ExchangeRetentionPolicies.ps1",
     "Invoke-RemoteExchangeCommand.ps1",
+    "Get-ExchangeSslCerts.ps1",
     "..\Common\Common.psd1",
     "..\Logging\Logging.psd1"
 )
