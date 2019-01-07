@@ -26,8 +26,12 @@ function Get-ExchangeTransportConfig
     }
     process
     {
-        $transportSettings.Add("ReceiveConnectors", $(Get-ExchangeReceiveConnectors))
-        $transportSettings.Add("SendConnectors", $(Get-ExchangeSendConnectors))
+        [array]$receiveConnectors = Get-ExchangeReceiveConnectors
+        [array]$sendConnectors = Get-ExchangeSendConnectors
+
+        $transportSettings.Add("ReceiveConnectors", $receiveConnectors)
+        $transportSettings.Add("SendConnectors", $sendConnectors)
+        
         Write-Log -Level "INFO" -Activity "Transport Configuration Discovery" -Message "Completed Transport Configuration Discovery." -WriteProgress
 
         $transportSettings
