@@ -49,20 +49,19 @@ function Get-ExchangeVirtualDirectories
             $mapiCommand = "Get-MapiVirtualDirectory -Server $serverName"
             $autoDiscoverCommand = "Get-AutodiscoverVirtualDirectory -Server $serverName"
 
-            [array]$ewsVirtualDirectories = Get-VirtualDirectories -ServerName $serverName -Command $ewsCommand -Session $exchSession
-            [array]$easVirtualDirectories = Get-VirtualDirectories -ServerName $serverName -Command $easCommand -Session $exchSession
-            [array]$ecpVirtualDirectories = Get-VirtualDirectories -ServerName $serverName -Command $ecpCommand -Session $exchSession
-            [array]$owaVirtualDirectories = Get-VirtualDirectories -ServerName $serverName -Command $owaCommand -Session $exchSession
-            [array]$oabVirtualDirectories = Get-VirtualDirectories -ServerName $serverName -Command $oabCommand -Session $exchSession
-            [array]$autoDiscoverVirtualDirectories = Get-VirtualDirectories -ServerName $serverName -Command $autoDiscoverCommand -Session $exchSession
-
-            $discoveredVirtualDirectories["EWS"] += $ewsVirtualDirectories
-            $discoveredVirtualDirectories["EAS"] += $easVirtualDirectories
-            $discoveredVirtualDirectories["ECP"] += $ecpVirtualDirectories
-            $discoveredVirtualDirectories["OWA"] += $owaVirtualDirectories
-            $discoveredVirtualDirectories["OAB"] += $oabVirtualDirectories
-            $discoveredVirtualDirectories["AutoDiscover"] += $autoDiscoverVirtualDirectories
+            $defaultDirectoryTypes = @("EWS", "EAS", "ECP", "OWA", "OAB", "AutoDiscover")
             
+            foreach ($directoryType in $defaultDirectoryTypes)
+            {
+                $discoveryCommand = Get-Variable -Name "$directoryType`Command" -ValueOnly
+                [array]$directoriesOfType = Get-VirtualDirectories -ServerName $serverName -Command $discoveryCommand -Session $exchSession
+
+                if ($directoriesOfType.Count -gt 0)
+                {
+                    $discoveredVirtualDirectories[$directoryType] += $directoriesOfType
+                }
+            }
+
             if ($server.Version.Major -ge 15)
             {
                 [array]$mapiVirtualDirectories = Get-VirtualDirectories -ServerName $serverName -Command $mapiCommand -Session $exchSession
