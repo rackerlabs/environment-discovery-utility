@@ -19,7 +19,7 @@ For an overview of the data collected, please see the [included document](/src/e
 
 ### Running the EDU Module
 
-1. Download and extract the [latest release of EDU](https://github.com/rackerlabs/environment-discovery-utility/releases/latest) to a local directory.
+1. Download and extract the [latest release of EDU](https://github.com/rackerlabs/environment-discovery-utility/releases/latest) to your desktop.
 2. Open PowerShell.
 3. Run *Set-ExecutionPolicy RemoteSigned*. 
 2. Browse to the directory, run *Invoke-Discovery.ps1*.
