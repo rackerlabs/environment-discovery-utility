@@ -67,7 +67,9 @@ NestedModules = @(
     "SerializeTo-Json.ps1",
     "Search-Directory.ps1",
     "New-ZipFile.ps1",
-    "Test-TcpConnection.ps1"
+    "Test-TcpConnection.ps1",
+    "Export-DnsRecord.ps1",
+    "lib\dns\JHSoftware.DnsClient.dll"
 )
 
 # Functions to export from this module

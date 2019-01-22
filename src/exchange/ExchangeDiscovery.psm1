@@ -17,7 +17,13 @@ function Start-ExchangeDiscovery
     #>
 
     [CmdletBinding()]
-    param ()
+    param (
+        # SkipDnsLookups Switch used to skip performing DNS lookups
+        [Parameter(Mandatory=$false)]
+        [switch]
+        $SkipDnsLookups
+    )
+
     begin
     {
         $activity = "Exchange Discovery"
@@ -31,10 +37,11 @@ function Start-ExchangeDiscovery
         {
             [array]$exchangeServers = Get-ExchangeServers
             [array]$acceptedDomains = Get-ExchangeAcceptedDomains
+            $virtualDirectories = Get-ExchangeVirtualDirectories -Servers $exchangeServers
 
             $exchangeEnvironment.Add("Servers", $exchangeServers)
             $exchangeEnvironment.Add("AcceptedDomains", $acceptedDomains)
-            $exchangeEnvironment.Add("VirtualDirectories", $(Get-ExchangeVirtualDirectories -Servers $exchangeServers))
+            $exchangeEnvironment.Add("VirtualDirectories", $virtualDirectories)
             $exchangeEnvironment.Add("Recipients", [array]$(Get-ExchangeRecipients))
             $exchangeEnvironment.Add("PublicFolders", $(Start-PublicFolderDiscovery))
             $exchangeEnvironment.Add("DynamicGroups", [array]$(Get-ExchangeDynamicGroups))
@@ -52,6 +59,15 @@ function Start-ExchangeDiscovery
             $exchangeEnvironment.Add("HybridConfiguration", [array]$(Get-ExchangeHybridConfig))
             $exchangeEnvironment.Add("PartnerApplications", [array]$(Get-ExchangePartnerApplications -Servers $exchangeServers))
             $exchangeEnvironment.Add("SslCertificates", [array]$(Get-ExchangeSslCerts -Servers $exchangeServers))
+
+            if ($SkipDnsLookups -eq $false)
+            {
+                $exchangeEnvironment.Add("DnsRecords", [array]$(Get-ExchangeDnsRecords -VirtualDirectories $virtualDirectories -AcceptedDomains $acceptedDomains))
+            }
+            else
+            {
+                Write-Log -Level "INFO" -Activity  $activity -Message "Skipping Exchange DNS Lookups due to the SkipDnsLookups parameter being provided." -WriteProgress
+            }
 
             Write-Log -Level "INFO" -Activity  $activity -Message "Completed Exchange Discovery." -WriteProgress
         }

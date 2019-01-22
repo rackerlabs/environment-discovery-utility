@@ -12,6 +12,9 @@
     .PARAMETER BuildNumber
         Used to generate the final zip file name.
         
+    .PARAMETER EduZipFile
+        Path to zip file containing EDU module files.
+        
     .PARAMETER LabIpAddress
         Server IP address used to deploy and test the EDU module.
         
@@ -21,12 +24,12 @@
     .PARAMETER PsExec
         Path to PsExec executable, default to .\build\PsExec.exe.
         
+    .PARAMETER SkipDnsLookups
+        Passed into EDU SkipDnsLookups parameter.
+
     .PARAMETER Username
         Username used to log onto the server specified by LabIpAddress.
 
-    .PARAMETER EduZipFile
-        Path to zip file containing EDU module files.
-        
     .PARAMETER ZipLibrary
         Path to Ionic.Zip.Dll library, used to decompress zip file on remote server.
         
@@ -61,6 +64,10 @@ param (
     [ValidateNotNullOrEmpty()]
     $PsExec = ".\build\lib\PsExec.exe",
         
+    [string]
+    [ValidateNotNullOrEmpty()]
+    $SkipDnsLookups,
+    
     [string]
     [ValidateNotNullOrEmpty()]
     $Username,
@@ -157,9 +164,14 @@ function Invoke-RemoteModule()
     $command = "$buildFolder\Invoke-Discovery.ps1";
     $outputFolder = "-OutputFolder $buildFolder";
 
+    if ($SkipDnsLookups -eq $true)
+    {
+        $skipDns = "-SkipDnsLookups";
+    }
+
     Write-Host "Executing EDU script remotely on $LabIpAddress, remote command is $command, output folder is $outputFolder"
 
-    & $PsExec "\\$LabIpAddress" -w $buildFolder -u $Username -p $Password /accepteula cmd /c "powershell -noninteractive -command $command $outputFolder -Verbose;"
+    & $PsExec "\\$LabIpAddress" -w $buildFolder -u $Username -p $Password /accepteula cmd /c "powershell -noninteractive -command $command $outputFolder $skipDns -Verbose;"
        
     if ($LastExitCode -ne 0)
     {

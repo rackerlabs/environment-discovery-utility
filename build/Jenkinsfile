@@ -25,7 +25,8 @@ def handleLabFailure = {
 def invokeTest = {
     credentialsId,
     environment,
-    ipAddress ->
+    ipAddress,
+	skipDnsLookups ->
 
     def labPrefix = "${env.SLACK_PREFIX} - ${environment}"
     
@@ -43,7 +44,7 @@ def invokeTest = {
         withCredentials(
             [usernamePassword(credentialsId: credentialsId, passwordVariable: 'password', usernameVariable: 'username')
         ]) {
-            output = bat(script: "powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Invoke-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress ${ipAddress} -Password %password% -Username %username% -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip", returnStdout: true)
+            output = bat(script: "powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Invoke-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress ${ipAddress} -Password %password% -Username %username% -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip -skipDnsLookups ${skipDnsLookups}", returnStdout: true)
         }
     } catch (e) {
         handleLabFailure(credentialsId, ipAddress, labPrefix)
@@ -68,6 +69,7 @@ pipeline {
     parameters {
         string(name: 'branch', defaultValue: 'develop', description: '')
         string(name: 'slackChannel', defaultValue: 'edu-cicd', description: '')
+        booleanParam(name: 'skipDnsLookups', defaultValue: false, description: '')
         booleanParam(name: 'testOneEnabled', defaultValue: true, description: 'SingleDomain:2010:v2')
         booleanParam(name: 'testTwoEnabled', defaultValue: true, description: 'SingleDomain:2013/2016:v4:JML')
         booleanParam(name: 'testThreeEnabled', defaultValue: true, description: 'MultiDomain:2013:v4')
@@ -85,6 +87,12 @@ pipeline {
         stage('Setup') {
             steps {
                 slackSend channel: "${slackChannel}", message: "${SLACK_PREFIX} Starting new job."
+				
+                slackSend channel: "${slackChannel}", message: "${SLACK_PREFIX} Skip DNS Lookups: ${skipDnsLookups}."
+                slackSend channel: "${slackChannel}", message: "${SLACK_PREFIX} ${env.TEST_1} lab enabled: ${testOneEnabled}."
+                slackSend channel: "${slackChannel}", message: "${SLACK_PREFIX} ${env.TEST_2} lab enabled: ${testTwoEnabled}."
+                slackSend channel: "${slackChannel}", message: "${SLACK_PREFIX} ${env.TEST_3} lab enabled: ${testThreeEnabled}."
+				
                 slackSend channel: "${slackChannel}", message: "${SLACK_PREFIX} <${env.BUILD_URL}|View build output>."
 
                 checkout (
@@ -127,7 +135,7 @@ pipeline {
                         expression { params.testOneEnabled == true }
                     }
                     steps {
-                        script { invokeTest("03bbc260-f717-48f0-b16a-c97ba14e6d85", env.TEST_1, env.TEST_1_IP) }
+                        script { invokeTest("03bbc260-f717-48f0-b16a-c97ba14e6d85", env.TEST_1, env.TEST_1_IP, params.skipDnsLookups) }
                     }
                 }
                 stage('SingleDomain:2013/2016:v4:JML') {
@@ -135,7 +143,7 @@ pipeline {
                         expression { params.testTwoEnabled == true }
                     }
                     steps {                    
-                        script { invokeTest("5de43889-57c2-41ad-a17b-06cf6eb92ffd", env.TEST_2, env.TEST_2_IP) }
+                        script { invokeTest("5de43889-57c2-41ad-a17b-06cf6eb92ffd", env.TEST_2, env.TEST_2_IP, params.skipDnsLookups) }
                     }
                 }
                 stage('MultiDomain:2013:v4') {
@@ -143,7 +151,7 @@ pipeline {
                         expression { params.testThreeEnabled == true }
                     }
                     steps {
-                        script { invokeTest("f344bfd0-63dd-4426-92dd-4e9016e0c526", env.TEST_3, env.TEST_3_IP) }
+                        script { invokeTest("f344bfd0-63dd-4426-92dd-4e9016e0c526", env.TEST_3, env.TEST_3_IP, params.skipDnsLookups) }
                     }
                 }
             }
