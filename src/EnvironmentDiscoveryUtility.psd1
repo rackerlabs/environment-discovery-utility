@@ -12,7 +12,7 @@
 ModuleToProcess = 'EnvironmentDiscoveryUtility.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.5.4'
+ModuleVersion = '1.5.5'
 
 # ID used to uniquely identify this module
 GUID = '7007d003-ad2d-4a57-a257-270b636b1f55'
@@ -24,7 +24,7 @@ Author = 'Rackspace'
 CompanyName = 'Rackspace'
 
 # Copyright statement for this module
-Copyright = 'Rackspace 2018'
+Copyright = 'Rackspace 2019'
 
 # Description of the functionality provided by this module
 Description = 'Environment Discovery Utility (EDU)'
