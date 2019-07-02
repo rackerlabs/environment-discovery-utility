@@ -59,6 +59,7 @@ function Start-ExchangeDiscovery
             $exchangeEnvironment.Add("HybridConfiguration", [array]$(Get-ExchangeHybridConfig))
             $exchangeEnvironment.Add("PartnerApplications", [array]$(Get-ExchangePartnerApplications -Servers $exchangeServers))
             $exchangeEnvironment.Add("SslCertificates", [array]$(Get-ExchangeSslCerts -Servers $exchangeServers))
+            $exchangeEnvironment.Add("Dags", [array]$(Get-ExchangeDags -Servers $exchangeServers))
 
             if ($SkipDnsLookups -eq $false)
             {
