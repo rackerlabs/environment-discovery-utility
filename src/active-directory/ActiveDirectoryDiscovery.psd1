@@ -67,6 +67,7 @@ NestedModules = @(
     "Get-ActiveDirectoryCurrentForest.ps1",
     "Get-ActiveDirectoryDomains.ps1",
     "Get-ActiveDirectorySites.ps1",
+    "Get-OrganizationalUnits.ps1",
     "..\Logging\Logging.psd1"
 )
 
