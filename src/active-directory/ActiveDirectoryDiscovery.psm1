@@ -33,7 +33,7 @@ function Start-ActiveDirectoryDiscovery
             [array]$sites = Get-ActiveDirectorySites $forest.Sites
             [array]$organizationalUnits = Get-OrganizationalUnits $domains
             [array]$applicationPartitions = @()
-            [array]$groups = Get-Groups $domains
+            [array]$groups = Get-ADGroups $domains
             [array]$users = Get-ADUsers $domains
 
             foreach ($applicationPartition in $forest.ApplicationPartitions)

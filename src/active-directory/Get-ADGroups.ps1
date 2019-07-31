@@ -1,4 +1,4 @@
-﻿function Get-Groups
+﻿function Get-ADGroups
 {
 
     <# 
@@ -13,7 +13,7 @@
             Returns the Name, DistinguishedName, GroupType, and Member Count of all Groups within Active Directory. 
   
         .EXAMPLE 
-            Get-Groups
+            Get-ADGroups
   
     #> 
 
