@@ -70,6 +70,7 @@ NestedModules = @(
     "Get-OrganizationalUnits.ps1",
     "Get-ADGroups.ps1",
     "Get-ADUsers.ps1",
+    "Get-ADComputers.ps1",
     "..\Logging\Logging.psd1"
 )
 
