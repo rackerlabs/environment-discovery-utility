@@ -25,8 +25,7 @@
     )
 
     $activity = "Active Directory Users"
-    Write-Log -Level "INFO" -Activity $activity -Message "Discovering Active Directory Users."
-   
+    Write-Log -Level "INFO" -Activity $activity -Message "Discovering Active Directory Users." -WriteProgress
     $allUsers = @()
 
     if ($null -ne $domains)
@@ -43,25 +42,55 @@
             {
                 foreach ($user in $users)
                 {
-                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, CannotChangePassword, LastLogon
-                    $userProperties = $user.GetDirectoryEntry() | Select DistinguishedName, UserAccountControl, msExchGenericForwardingAddress, altRecipient, DeliverAndRedirect, WhenCreated, WhenChanged
-                    $userObject.DistinguishedName = $userProperties | Select -ExpandProperty DistinguishedName
-                    $userObject.UserAccountControl = $userProperties | Select -ExpandProperty UserAccountControl
-                    $userObject.ForwardingSMTPAddress = $userProperties | Select -ExpandProperty msExchGenericForwardingAddress
-                    $userObject.ForwardingAddress = $userProperties | Select -ExpandProperty altRecipient
-                    $userObject.DeliverAndRedirect = $userProperties | Select -ExpandProperty DeliverAndRedirect
-                    $userObject.WhenCreated = $userProperties | Select -ExpandProperty WhenCreated
-                    $userObject.WhenChanged = $userProperties | Select -ExpandProperty WhenChanged
-                    
-                    Add-Type -AssemblyName System.DirectoryServices.AccountManagement
-                    $contextType = [System.DirectoryServices.AccountManagement.ContextType]::Domain
-                    $context = New-Object -TypeName System.DirectoryServices.AccountManagement.PrincipalContext -ArgumentList $contextType, $domain.Name
-                    $idType = [System.DirectoryServices.AccountManagement.IdentityType]::DistinguishedName         
-                    $otherUserProperties = [System.DirectoryServices.AccountManagement.UserPrincipal]::FindByIdentity($context, $idType, $userObject.DistinguishedName) | Select UserCannotChangePassword, LastPasswordSet, AccountExpirationDate, LastLogon
-                    $userObject.CannotChangePassword = $otherUserProperties.UserCannotChangePassword
-                    $userObject.LastLogon = $otherUserProperties.LastLogon
+                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, LastLogon
+                    $userProperties = $user.Properties
 
-                    if ($null -eq $otherUserProperties.LastPasswordSet)
+                    if ($null -notlike $userProperties.distinguishedname)
+                    {
+                        $userObject.DistinguishedName = $userProperties.distinguishedname[0]
+                    }
+
+                    if ($null -notlike $userProperties.useraccountcontrol)
+                    {
+                        $userObject.UserAccountControl = $userProperties.useraccountcontrol[0]
+                    }
+
+                    if ($null -notlike $userProperties.msexchgenericforwardingaddress)
+                    {
+                        $userObject.ForwardingSMTPAddress = $userProperties.msexchgenericforwardingaddress[0]
+                    }
+
+                    if ($null -notlike $userProperties.altrecipient)
+                    {
+                        $userObject.ForwardingAddress = $userProperties.altrecipient[0]
+                    }
+
+                    if ($null -notlike $userProperties.deliverandredirect)
+                    {
+                        $userObject.DeliverAndRedirect = $userProperties.deliverandredirect[0]
+                    }
+
+                    if ($null -notlike $userProperties.whencreated)
+                    {
+                        $userObject.WhenCreated = $userProperties.whencreated[0]
+                    }
+
+                    if ($null -notlike $userProperties.whenchanged)
+                    {
+                        $userObject.WhenChanged = $userProperties.whenchanged[0]
+                    }
+
+                    if ($null -notlike $userProperties.lastlogon -and $userProperties.lastlogon[0] -notlike 0)
+                    {
+                        $userObject.LastLogon = [datetime]::FromFileTime($userProperties.lastlogon[0])
+                    }
+
+                    if ($null -notlike $userProperties.accountexpires -and $userProperties.accountexpires[0] -notlike 9223372036854775807 -and $userProperties.accountexpires[0] -notlike 0)
+                    {
+                        $userObject.AccountExpires = [datetime]::FromFileTime($userProperties.accountexpires[0])
+                    }
+
+                    if ($null -eq $userProperties.pwdlastset -or $userProperties.pwdlastset[0] -eq 0)
                     {
                         $userObject.MustChangePassword = "True"
                     }
@@ -70,21 +99,12 @@
                         $userObject.MustChangePassword = "False"
                     }
 
-                    if ($null -eq $otherUserProperties.AccountExpirationDate)
-                    {
-                        $userObject.AccountExpires = "Never"
-                    }
-                    else
-                    {
-                        $userObject.AccountExpires = $otherUserProperties.AccountExpirationDate
-                    }
-                   
                     $allUsers += $userObject
-                }   
+                }
             }
         }
     }
-       
+
     if ($null -ne $allUsers)
     {
         $allUsers
@@ -93,4 +113,4 @@
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to find Active Directory Users."
     }
-}   
+}

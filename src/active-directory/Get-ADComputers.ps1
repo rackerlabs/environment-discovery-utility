@@ -25,8 +25,8 @@
     )
 
     $activity = "Active Directory Domain Joined Computers"
-    Write-Log -Level "INFO" -Activity $activity -Message "Discovering Domain Joined Computers."
-   
+    Write-Log -Level "INFO" -Activity $activity -Message "Discovering Domain Joined Computers." -WriteProgress
+
     $allComputers = @()
 
     if ($null -ne $domains)
@@ -44,27 +44,25 @@
                 foreach ($computer in $computers)
                 {
                     $computerObject = "" | Select-Object DistinguishedName, OperatingSystem, OperatingSystemServicePack, OperatingSystemVersion, PwdLastSet, WhenCreated, WhenChanged
-                    $computerProperties = $computer.GetDirectoryEntry() | Select DistinguishedName, OperatingSystem, OperatingSystemServicePack, OperatingSystemVersion, WhenCreated, WhenChanged
-                    $computerObject.DistinguishedName = $computerProperties | Select -ExpandProperty DistinguishedName
-                    $computerObject.OperatingSystem = $computerProperties | Select -ExpandProperty OperatingSystem
-                    $computerObject.OperatingSystemServicePack = $computerProperties | Select -ExpandProperty OperatingSystemServicePack
-                    $computerObject.OperatingSystemVersion = $computerProperties | Select -ExpandProperty OperatingSystemVersion
-                    $computerObject.WhenCreated = $computerProperties | Select -ExpandProperty WhenCreated
-                    $computerObject.WhenChanged = $computerProperties | Select -ExpandProperty WhenChanged
-                    
-                    Add-Type -AssemblyName System.DirectoryServices.AccountManagement
-                    $contextType = [System.DirectoryServices.AccountManagement.ContextType]::Domain
-                    $context = New-Object -TypeName System.DirectoryServices.AccountManagement.PrincipalContext -ArgumentList $contextType, $domain.Name
-                    $idType = [System.DirectoryServices.AccountManagement.IdentityType]::DistinguishedName         
-                    $otherComputerProperties = [System.DirectoryServices.AccountManagement.ComputerPrincipal]::FindByIdentity($context, $idType, $computerObject.DistinguishedName) | Select LastPasswordSet
-                    $computerObject.PwdLastSet = $otherComputerProperties.LastPasswordSet
-                   
+                    $computerProperties = $computer.Properties
+                    $computerObject.DistinguishedName = $computerProperties.distinguishedname
+                    $computerObject.OperatingSystem = $computerProperties.operatingsystem
+                    $computerObject.OperatingSystemServicePack = $computerProperties.operatingsystemservicepack
+                    $computerObject.OperatingSystemVersion = $computerProperties.operatingsystemversion
+                    $computerObject.WhenCreated = $computerProperties.whencreated
+                    $computerObject.WhenChanged = $computerProperties.whenchanged
+
+                    if ($null -notlike $computerProperties.pwdlastset)
+                    {
+                        $computerObject.PwdLastSet = [datetime]::FromFileTime($computerProperties.pwdlastset[0])
+                    }
+
                     $allComputers += $ComputerObject
-                }   
+                }
             }
         }
     }
-       
+
     if ($null -ne $allComputers)
     {
         $allComputers
@@ -73,4 +71,4 @@
     {
         Write-Log -Level "ERROR" -Activity $activity -Message "Failed to find domain joined computers."
     }
-}   
+}
