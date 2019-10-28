@@ -93,12 +93,20 @@
                     "ad"
                     {
                         $activeDirectoryObject = Start-ActiveDirectoryDiscovery
-                        $environment.Add("ActiveDirectory",$activeDirectoryObject)
+
+                        if ($activeDirectoryObject.Count -ne 0)
+                        {
+                            $environment.Add("ActiveDirectory",$activeDirectoryObject)
+                        }
                     }
                     "exchange"
                     {
                         $exchangeObject = Start-ExchangeDiscovery -SkipDnsLookups:$SkipDnsLookups
-                        $environment.Add("Exchange",$exchangeObject)
+
+                        if ($exchangeObject.Count -ne 0)
+                        {
+                            $environment.Add("Exchange",$exchangeObject)
+                        }
                     }
                 }
             }
