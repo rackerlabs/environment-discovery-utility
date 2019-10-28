@@ -12,7 +12,7 @@
 ModuleToProcess = 'EnvironmentDiscoveryUtility.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.6'
+ModuleVersion = '2.0'
 
 # ID used to uniquely identify this module
 GUID = '7007d003-ad2d-4a57-a257-270b636b1f55'
