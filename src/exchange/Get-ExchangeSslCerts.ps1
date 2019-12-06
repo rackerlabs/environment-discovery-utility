@@ -58,7 +58,7 @@ function Get-ExchangeSslCerts
         {
             foreach ($sslCertificate in $sslCertificates)
             {
-                $currentCert = "" | Select-Object Server, Status, CommonName, Services, Issuer, NotAfter, NotBefore
+                $currentCert = "" | Select-Object Server, Status, CommonName, Services, Issuer, NotAfter, NotBefore, Thumbprint
                 $currentCert.Server = $serverName
                 $currentCert.Status = $sslCertificate.Status
                 $currentCert.CommonName = $sslCertificate.Subject
@@ -66,6 +66,7 @@ function Get-ExchangeSslCerts
                 $currentCert.Issuer = $sslCertificate.Issuer
                 $currentCert.NotAfter = $sslCertificate.NotAfter
                 $currentCert.NotBefore = $sslCertificate.NotBefore
+                $currentCert.Thumbprint = $sslCertificate.Thumbprint
 
                 $discoveredSslCertificates += $currentCert
             }
