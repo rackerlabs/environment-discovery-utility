@@ -42,8 +42,10 @@
             {
                 foreach ($user in $users)
                 {
-                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, LastLogon
+                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, LastLogon, ObjectClass
                     $userProperties = $user.Properties
+
+                    $userObject.ObjectClass = [array] $userProperties.objectclass
 
                     if ($null -notlike $userProperties.distinguishedname)
                     {
