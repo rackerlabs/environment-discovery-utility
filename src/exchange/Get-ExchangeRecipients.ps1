@@ -50,13 +50,14 @@ function Get-ExchangeRecipients
 
             $recipientStatistics = $null
 
-            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy
+            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy, PrimarySmtpAddress
             $currentRecipient.ObjectGuid = [GUID]($recipient.guid)
             $currentRecipient.RecipientTypeDetails = $recipient.RecipientTypeDetails.ToString()
             $currentRecipient.RecipientDisplayType = $recipient.RecipientType.ToString()
             $currentRecipient.EmailAddressPolicyEnabled = $recipient.EmailAddressPolicyEnabled
             $currentRecipient.LitigationHoldEnabled = $recipient.LitigationHoldEnabled
             $currentRecipient.ArchiveGuid = $recipient.ArchiveGuid
+            $currentRecipient.PrimarySmtpAddress = $recipient.PrimarySmtpAddress
 
             if ($recipient.RetentionPolicy -notlike $null)
             {
