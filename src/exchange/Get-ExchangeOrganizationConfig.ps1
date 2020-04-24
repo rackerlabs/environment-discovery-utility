@@ -36,7 +36,7 @@ function Get-ExchangeOrganizationConfig
     if ($exchangeOrganizationConfig)
     {
         $organizationConfig = $null
-        $organizationConfig = "" | Select-Object ObjectGuid, MaxConcurrentMigrations, MapiHttpEnabled, OAuth2ClientProfileEnabled, WACDiscoveryEndpoint, AdfsIssuer, AdfsAudienceUris
+        $organizationConfig = "" | Select-Object ObjectGuid, MaxConcurrentMigrations, MapiHttpEnabled, OAuth2ClientProfileEnabled, WACDiscoveryEndpoint, AdfsIssuer, AdfsAudienceUris, MailTipsAllTipsEnabled, MailTipsExternalRecipientsTipsEnabled, MailTipsGroupMetricsEnabled, MailTipsLargeAudienceThreshold, MailTipsMailboxSourcedTipsEnabled
         $organizationConfig.ObjectGuid = $exchangeOrganizationConfig.GUID
         $organizationConfig.MaxConcurrentMigrations = $exchangeOrganizationConfig.MaxConcurrentMigrations
         $organizationConfig.MapiHttpEnabled = $exchangeOrganizationConfig.MapiHttpEnabled
@@ -44,6 +44,11 @@ function Get-ExchangeOrganizationConfig
         $organizationConfig.WACDiscoveryEndpoint = $exchangeOrganizationConfig.WACDiscoveryEndpoint
         $organizationConfig.AdfsIssuer = $exchangeOrganizationConfig.AdfsIssuer
         $organizationConfig.AdfsAudienceUris = $exchangeOrganizationConfig.AdfsAudienceUris
+        $organizationConfig.MailTipsAllTipsEnabled = $exchangeOrganizationConfig.MailTipsAllTipsEnabled
+        $organizationConfig.MailTipsExternalRecipientsTipsEnabled = $exchangeOrganizationConfig.MailTipsExternalRecipientsTipsEnabled
+        $organizationConfig.MailTipsGroupMetricsEnabled = $exchangeOrganizationConfig.MailTipsGroupMetricsEnabled
+        $organizationConfig.MailTipsLargeAudienceThreshold = $exchangeOrganizationConfig.MailTipsLargeAudienceThreshold
+        $organizationConfig.MailTipsMailboxSourcedTipsEnabled = $exchangeOrganizationConfig.MailTipsMailboxSourcedTipsEnabled        
 
         $discoveredOrganizationConfig += $organizationConfig
     }
