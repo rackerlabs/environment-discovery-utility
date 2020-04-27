@@ -46,7 +46,14 @@ function Get-ExchangePublicFolderStatistics
             }
             else
             {
-                $publicFolderStatistics += Get-PublicFolderStatistics -Server $server
+                try 
+                {
+                    $publicFolderStatistics += Get-PublicFolderStatistics -Server $server
+                }
+                catch 
+                {
+                    Write-Log -Level "ERROR" -Activity $activity -Message "Failed to query Exchange for Public Folder statistics. $($_.Exception.Message)"
+                }
             }
         }
 

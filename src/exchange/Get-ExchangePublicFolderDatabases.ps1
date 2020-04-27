@@ -17,20 +17,32 @@ function Get-ExchangePublicFolderDatabases
     #>
 
     [CmdletBinding()]
-    param ()
+    param (
+        # Servers An array of servers to run discovery against
+        [array]
+        $exchangeServers
+    )
 
     $activity = "Public Folder Databases"
     $discoveredLegacyPublicFolders = @()
+    $mailboxServers = $exchangeServers | Where-Object {$_.ServerRole -like "*Mailbox*"}
 
-    try
+    if ($mailboxServers.Count -ge 1)
     {
         Write-Log -Level "INFO" -Activity $activity -Message "Query Exchange for Public Folder databases." -WriteProgress
-        $legacyPublicFolders = Get-PublicFolderDatabase
-    }
-    catch
-    {
-        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to query Exchange for Public Folder databases. $($_.Exception.Message)"
-        return
+
+        foreach ($mailboxServer in $mailboxServers)
+        {
+            try
+            {
+                $legacyPublicFolders = Get-PublicFolderDatabase -Server $mailboxServer.Name
+            }
+            catch
+            {
+                Write-Log -Level "ERROR" -Activity $activity -Message "Failed to query Exchange for Public Folder databases. $($_.Exception.Message)"
+                return
+            }
+        }
     }
 
     if ($legacyPublicFolders)

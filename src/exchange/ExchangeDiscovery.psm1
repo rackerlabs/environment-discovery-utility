@@ -43,7 +43,7 @@ function Start-ExchangeDiscovery
             $exchangeEnvironment.Add("AcceptedDomains", $acceptedDomains)
             $exchangeEnvironment.Add("VirtualDirectories", $virtualDirectories)
             $exchangeEnvironment.Add("Recipients", [array]$(Get-ExchangeRecipients))
-            $exchangeEnvironment.Add("PublicFolders", $(Start-PublicFolderDiscovery))
+            $exchangeEnvironment.Add("PublicFolders", $(Start-PublicFolderDiscovery -Servers $exchangeServers))
             $exchangeEnvironment.Add("DynamicGroups", [array]$(Get-ExchangeDynamicGroups))
             $exchangeEnvironment.Add("FederationTrusts", [array]$(Get-ExchangeFederationTrust))
             $exchangeEnvironment.Add("OrganizationalRelationships", [array]$(Get-ExchangeOrganizationalRelationship))
