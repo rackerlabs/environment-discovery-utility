@@ -42,6 +42,14 @@ param (
     $SkipDnsLookups
 )
 
+$environmentDiscoveryUtilityModule = Get-Module -Name EnvironmentDiscoveryUtility
+
+if ($environmentDiscoveryUtilityModule)
+{
+    Write-Warning "Removing existing EDU module."
+    Remove-Module EnvironmentDiscoveryUtility
+}
+
 Import-Module .\EnvironmentDiscoveryUtility.psd1 -Force
 
 Start-EnvironmentDiscovery -Modules $Modules -OutputFolder $OutputFolder -Verbose:$VerbosePreference -Debug:$DebugPreference -SkipDnsLookups:$SkipDnsLookups

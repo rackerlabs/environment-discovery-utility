@@ -18,7 +18,7 @@ function Get-ExchangeImapPopSettings
 
     [CmdletBinding()]
     param (
-        # Servers An array of server objects to run discovery against
+        # An array of server objects to run discovery against
         [array]
         $Servers
     )

@@ -19,7 +19,7 @@ function Start-PublicFolderDiscovery
 
     [CmdletBinding()]
     param (
-        # Servers An array of servers to run discovery against
+        # An array of servers to run discovery against
         [array]
         $Servers
     )
