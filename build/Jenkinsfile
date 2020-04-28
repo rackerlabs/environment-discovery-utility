@@ -66,6 +66,9 @@ def invokeTest = {
 
 pipeline {
     agent any
+    options { 
+        disableConcurrentBuilds() 
+    }
     parameters {
         string(name: 'branch', defaultValue: 'develop', description: '')
         string(name: 'slackChannel', defaultValue: 'edu-cicd', description: '')
