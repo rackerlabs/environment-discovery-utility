@@ -42,7 +42,7 @@
             {
                 foreach ($user in $users)
                 {
-                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, LastLogon, ObjectClass
+                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, LastLogon, ObjectClass, AdminDescription
                     $userProperties = $user.Properties
 
                     $userObject.ObjectClass = [array] $userProperties.objectclass
@@ -99,6 +99,11 @@
                     else
                     {
                         $userObject.MustChangePassword = "False"
+                    }
+
+                    if ($null -notlike $userProperties.AdminDescription)
+                    {
+                        $userObject.AdminDescription = $userProperties.AdminDescription[0]
                     }
 
                     $allUsers += $userObject
