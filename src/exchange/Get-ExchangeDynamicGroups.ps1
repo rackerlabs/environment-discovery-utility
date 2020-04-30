@@ -38,10 +38,11 @@ function Get-ExchangeDynamicGroups
         foreach ($exchangeDynamicGroup in $exchangeDynamicGroups)
         {
             $dynamicGroup = $null
-            $dynamicGroup = "" | Select-Object ObjectGuid, HiddenFromAddressListsEnabled
+            $dynamicGroup = "" | Select-Object ObjectGuid, HiddenFromAddressListsEnabled, RecipientFilter, O365CompliantFilter
             $dynamicGroup.ObjectGuid = $exchangeDynamicGroup.GUID
             $dynamicGroup.HiddenFromAddressListsEnabled = $exchangeDynamicGroup.HiddenFromAddressListsEnabled
-
+            $dynamicGroup.RecipientFilter = $exchangeDynamicGroup.RecipientFilter
+            
             $discoveredDynamicGroups += $dynamicGroup
         }
     }
