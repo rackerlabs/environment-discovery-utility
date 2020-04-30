@@ -17,15 +17,7 @@ The following is a set of guidelines for contributing to EDU.
 * Branch names should be short and concise.
 
 ### **Testing**
-* Once work in your branch is complete, merge your branch into the [develop branch](https://github.rackspace.com/MicrosoftEng/environment-discovery-utility/tree/develop).
-* Our build server (BUILD01-ORD1.mgmt.mlsrvr.com) runs [Jenkins](https://jenkins.io/) which monitors the develop branch, any changes to this branch will kick off a new CI build.
-* The CI build will automatically deploy and test the updated to code using our lab automation infrastructure.
-* It is important to monitor the results of the CI build.  If there are any errors, the build will fail.  
-    - This first place to check is in the #edu Slack channel.  
-    - If your build failed or no output is showing in Slack, please log into our [Jenkins instance](https://jenkins.mseng.mlsrvr.com/job/edu_ci/) using MGMT credentials.  
-    - Once logged in, you can view the build output directly using [this link](https://jenkins.mseng.mlsrvr.com/job/edu_ci)
-    - To view detailed logs, click your build number in the left pane, then click Console Output in the left menu. 
-* If your build fails, switch back to the original branch, correct the errors and restart the testing procedure.
+* Microsoft Productivity Team Wiki: [EDU Testing Code in Jenkins](https://one.rackspace.com/display/MPT/EDU+Testing+Code+in+Jenkins)
 
 ### **Pull Requests**
 * Once ready to merge, initiate a pull request.
