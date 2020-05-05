@@ -42,7 +42,7 @@
             {
                 foreach ($user in $users)
                 {
-                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, LastLogon, ObjectClass, AdminDescription
+                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, LastLogon, ObjectClass, AdminDescription, msRTCSIP-PrimaryUserAddress, msRTCSIP-DeploymentLocator
                     $userProperties = $user.Properties
 
                     $userObject.ObjectClass = [array] $userProperties.objectclass
@@ -104,6 +104,16 @@
                     if ($null -notlike $userProperties.AdminDescription)
                     {
                         $userObject.AdminDescription = $userProperties.AdminDescription[0]
+                    }
+
+                    if ($null -notlike $userProperties.'msRTCSIP-PrimaryUserAddress')
+                    {
+                        $userObject.'msRTCSIP-PrimaryUserAddress' = $userProperties.'msRTCSIP-PrimaryUserAddress'[0]
+                    }
+
+                    if ($null -notlike $userProperties.'msRTCSIP-DeploymentLocator')
+                    {
+                        $userObject.'msRTCSIP-DeploymentLocator' = $userProperties.'msRTCSIP-DeploymentLocator'[0]
                     }
 
                     $allUsers += $userObject
