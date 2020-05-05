@@ -96,6 +96,7 @@ NestedModules = @(
     "Get-ExchangeSslCerts.ps1",
     "Get-ExchangeDnsRecords.ps1",
     "Get-ExchangeDags.ps1",
+    "Get-ExchangeDatabases.ps1",
     "..\Common\Common.psd1",
     "..\Logging\Logging.psd1"
 )

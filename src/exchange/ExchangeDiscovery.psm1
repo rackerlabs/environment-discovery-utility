@@ -60,6 +60,7 @@ function Start-ExchangeDiscovery
             $exchangeEnvironment.Add("PartnerApplications", [array]$(Get-ExchangePartnerApplications -Servers $exchangeServers))
             $exchangeEnvironment.Add("SslCertificates", [array]$(Get-ExchangeSslCerts -Servers $exchangeServers))
             $exchangeEnvironment.Add("Dags", [array]$(Get-ExchangeDags -Servers $exchangeServers))
+            $exchangeEnvironment.Add("Databases", [array]$(Get-ExchangeDatabases))
 
             if ($SkipDnsLookups -eq $false)
             {
