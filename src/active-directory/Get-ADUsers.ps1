@@ -106,14 +106,15 @@
                         $userObject.AdminDescription = $userProperties.AdminDescription[0]
                     }
 
-                    if ($null -notlike $userProperties.'msRTCSIP-PrimaryUserAddress')
+                    if ($null -notlike $userProperties.'msrtcsip-primaryuseraddress')
                     {
-                        $userObject.'msRTCSIP-PrimaryUserAddress' = $userProperties.'msRTCSIP-PrimaryUserAddress'[0]
+                        $userObject.'msRTCSIP-PrimaryUserAddress' = $userProperties.'msrtcsip-primaryuseraddress'[0]
                     }
 
-                    if ($null -notlike $userProperties.'msRTCSIP-DeploymentLocator')
+                    if ($null -notlike $userProperties.'msrtcsip-deploymentlocator')
                     {
-                        $userObject.'msRTCSIP-DeploymentLocator' = $userProperties.'msRTCSIP-DeploymentLocator'[0]
+                        $userObject.'msRTCSIP-DeploymentLocator' = $userProperties.'msrtcsip-deploymentlocator'[0]
+
                     }
 
                     $allUsers += $userObject
