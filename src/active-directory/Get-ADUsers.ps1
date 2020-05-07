@@ -42,7 +42,7 @@
             {
                 foreach ($user in $users)
                 {
-                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, LastLogon, ObjectClass, AdminDescription, msRTCSIP-PrimaryUserAddress, msRTCSIP-DeploymentLocator
+                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, LastLogon, ObjectClass, AdminDescription, msRTCSIP-PrimaryUserAddress, msRTCSIP-DeploymentLocator, displayName, givenName, mail, mailNickname, proxyAddresses, sAMAccountName, targetAddress, userPrincipalName, AdminCount
                     $userProperties = $user.Properties
 
                     $userObject.ObjectClass = [array] $userProperties.objectclass
@@ -101,9 +101,54 @@
                         $userObject.MustChangePassword = "False"
                     }
 
-                    if ($null -notlike $userProperties.AdminDescription)
+                    if ($null -notlike $userProperties.displayname)
                     {
-                        $userObject.AdminDescription = $userProperties.AdminDescription[0]
+                        $userObject.displayName = $userProperties.displayname[0]
+                    }
+
+                    if ($null -notlike $userProperties.givenname)
+                    {
+                        $userObject.givenName = $userProperties.givenname[0]
+                    }
+
+                    if ($null -notlike  $userProperties.mail)
+                    {
+                        $userObject.mail = $userProperties.mail[0]
+                    }
+
+                    if ($null -notlike $userProperties.mailnickname)
+                    {
+                        $userObject.mailNickname = $userProperties.mailnickname[0]
+                    }
+
+                    if ($null -notlike $userProperties.proxyaddresses)
+                    {
+                        $userObject.proxyAddresses = [array] $userProperties.proxyaddresses
+                    }
+
+                    if ($null -notlike $userProperties.samaccountname)
+                    {
+                        $userObject.sAMAccountName = $userProperties.samaccountname[0]
+                    }
+
+                    if ($null -notlike $userProperties.targetaddress)
+                    {
+                        $userObject.targetAddress = $userProperties.targetaddress[0]
+                    }
+
+                    if ($null -notlike $userProperties.userprincipalname)
+                    {
+                        $userObject.userPrincipalName = $userProperties.userprincipalname[0]
+                    }
+
+                    if ($null -notlike $userProperties.admincount)
+                    {
+                        $userObject.AdminCount = $userProperties.admincount[0]
+                    }
+
+                    if ($null -notlike $userProperties.admindescription)
+                    {
+                        $userObject.AdminDescription = $userProperties.admindescription[0]
                     }
 
                     if ($null -notlike $userProperties.'msrtcsip-primaryuseraddress')

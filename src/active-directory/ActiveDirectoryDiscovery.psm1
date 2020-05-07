@@ -35,6 +35,7 @@ function Start-ActiveDirectoryDiscovery
             [array]$applicationPartitions = @()
             [array]$groups = Get-ADGroups $domains
             [array]$users = Get-ADUsers $domains
+            [array]$contacts = Get-ADContacts $domains
             [array]$computers = Get-ADComputers $domains
 
             foreach ($applicationPartition in $forest.ApplicationPartitions)
@@ -42,7 +43,7 @@ function Start-ActiveDirectoryDiscovery
                 $applicationPartitions += $applicationPartition.Name
             }
 
-            $forestDetails = "" | Select-Object Name, Mode, RootDomain, SchemaRoleOwner, NamingRoleOwner, Schema, ApplicationPartitions, SiteLinks, Domains, Sites, OrganizationalUnits, Groups, Users, Computers
+            $forestDetails = "" | Select-Object Name, Mode, RootDomain, SchemaRoleOwner, NamingRoleOwner, Schema, ApplicationPartitions, SiteLinks, Domains, Sites, OrganizationalUnits, Groups, Users, Contacts, Computers
             $forestDetails.Name = $forest.Name
             $forestDetails.Mode = $forest.ForestMode.ToString()
             $forestDetails.RootDomain = $forest.RootDomain.ToString()
@@ -56,6 +57,7 @@ function Start-ActiveDirectoryDiscovery
             $forestDetails.OrganizationalUnits = $organizationalUnits
             $forestDetails.Groups = $groups
             $forestDetails.Users = $users
+            $forestDetails.Contacts = $contacts
             $forestDetails.Computers = $computers
         }
 

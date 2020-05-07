@@ -43,7 +43,7 @@
             {
                 foreach ($group in $groups)
                 {
-                    $groupObject = "" | Select-Object Name, DistinguishedName, Type, MemberCount, FSPMemberCount
+                    $groupObject = "" | Select-Object Name, DistinguishedName, Type, MemberCount, FSPMemberCount, displayName, givenName, mail, mailNickname, proxyAddresses, targetAddress
                     $groupProperties = $group.Properties
                     $groupObject.Name = $groupProperties.name
                     $groupObject.DistinguishedName = $groupProperties.distinguishedname
@@ -73,6 +73,37 @@
                     }
 
                     $groupObject.MemberCount = $groupMembers.count
+
+                    if ($null -notlike $groupProperties.displayname)
+                    {
+                        $groupObject.displayName = $groupProperties.displayname[0]
+                    }
+
+                    if ($null -notlike $groupProperties.givenname)
+                    {
+                        $groupObject.givenName = $groupProperties.givenname[0]
+                    }
+
+                    if ($null -notlike $groupProperties.mail)
+                    {
+                        $groupObject.mail = $groupProperties.mail[0]
+                    }
+
+                    if ($null -notlike $groupProperties.mailnickname)
+                    {
+                        $groupObject.mailNickname = $groupProperties.mailnickname[0]
+                    }
+
+                    if ($null -notlike $groupProperties.proxyaddresses)
+                    {
+                        $groupObject.proxyAddresses = [array] $groupProperties.proxyaddresses
+                    }
+
+                    if ($null -notlike $groupProperties.targetaddress)
+                    {
+                        $groupObject.targetAddress = $groupProperties.targetaddress[0]
+                    }
+
                     $allGroups += $groupObject
                 }
             }
