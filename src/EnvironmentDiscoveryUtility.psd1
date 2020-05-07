@@ -76,7 +76,7 @@ NestedModules = @(
 FunctionsToExport = 'Start-EnvironmentDiscovery'
 
 # Cmdlets to export from this module
-CmdletsToExport = '*'
+CmdletsToExport = @()
 
 # Variables to export from this module
 VariablesToExport = '*'
