@@ -45,6 +45,12 @@ param (
     [string]
     $BuildNumber,
     
+    [string]
+    $CloudPassword,
+
+    [string]
+    $CloudUsername,
+
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [string]
@@ -55,6 +61,10 @@ param (
     [string]
     $LabIpAddress,
     
+    [ValidateSet("ad","exchange","exchangeonline","azuread","all")]
+    [array]
+    $Modules = @("all"),
+
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [string]
@@ -83,6 +93,9 @@ $Script:errorCount = 0
 
 $securePassword = ConvertTo-SecureString $Password -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential $Username, $securePassword
+
+$testScriptFilename = "Start-Test.ps1"
+$testScript = "$PSScriptRoot\$LabIpAddress\$testScriptFilename"
 
 $remoteBaseFolder = "\\$LabIpAddress\c$\edu_ci"
 $remoteBuildFolder = "$remoteBaseFolder\$BuildNumber"
@@ -116,6 +129,44 @@ function Confirm-RemoteFolders()
         New-Item -ItemType Directory -Path $remoteBuildFolder
     }
 
+    Confirm-OutputDirectory
+}
+
+function Confirm-OutputDirectory()
+{
+    Write-Host "Preparing output directory $PSScriptRoot\$LabIpAddress"
+
+    New-Item -ItemType Directory -Force -Path "$PSScriptRoot\$LabIpAddress"
+
+    Remove-Item "$PSScriptRoot\$LabIpAddress\*.*" -Force | Out-Null
+
+    New-TestScript
+}
+
+function New-TestScript()
+{
+    if (Test-Path -Path $testScript)
+    {
+        Remove-Item $testScript -Force
+    }
+
+    $discoveryCommand = "$buildFolder\Invoke-Discovery.ps1"
+    $outputFolder = "-OutputFolder $buildFolder"
+
+    if ($SkipDnsLookups -eq $true)
+    {
+        Write-Host "Enabling DNS lookups"
+        $skipDns = "-SkipDnsLookups"
+    }
+
+    $commandModules = $Modules -join ","
+
+    Write-Host "Writing new batch file to $testScript"
+
+    Set-Content $testScript -Value "`$SecurePassword = ConvertTo-SecureString `"$CloudPassword`" -AsPlainText -Force `n"
+    Add-Content $testScript -Value "`$CloudCredential = New-Object System.Management.Automation.PSCredential `"$CloudUsername`", `$SecurePassword `n"
+    Add-Content $testScript -Value "$discoveryCommand $outputFolder -Modules $commandModules -CloudCredential `$CloudCredential $skipDns -Verbose"
+
     Copy-Files
 }
 
@@ -127,6 +178,9 @@ function Copy-Files()
     Write-Host "Copying $ZipLibrary to $remoteBuildFolder"
     Copy-Item $ZipLibrary -Destination $remoteBuildFolder
     
+    Write-Host "Copying $testScript to $remoteBuildFolder"
+    Copy-Item $testScript -Destination $remoteBuildFolder
+
     Install-RemoteModule
 }
 
@@ -160,34 +214,20 @@ function Install-RemoteModule()
 }
 
 function Invoke-RemoteModule()
-{
-    $command = "$buildFolder\Invoke-Discovery.ps1";
-    $outputFolder = "-OutputFolder $buildFolder";
+{    
+    Write-Host "Executing EDU script remotely on $LabIpAddress, remote command is $testScriptFilename, output folder is $outputFolder"
 
-    if ($SkipDnsLookups -eq $true)
-    {
-        $skipDns = "-SkipDnsLookups";
-    }
-
-    Write-Host "Executing EDU script remotely on $LabIpAddress, remote command is $command, output folder is $outputFolder"
-
-    & $PsExec "\\$LabIpAddress" -w $buildFolder -u $Username -p $Password /accepteula cmd /c "powershell -noninteractive -command $command $outputFolder $skipDns -Verbose;"
+    & $PsExec "\\$LabIpAddress" `
+        -w $buildFolder `
+        -u $Username `
+        -p $Password `
+        /accepteula `
+        cmd /c "powershell -noninteractive -file c:\edu_ci\$BuildNumber\$testScriptFilename"
        
     if ($LastExitCode -ne 0)
     {
 	    throw "Detected failure condition when running EDU in PsExec session"
     }
-
-    Confirm-OutputDirectory
-}
-
-function Confirm-OutputDirectory()
-{
-    Write-Host "Preparing output directory $PSScriptRoot\$LabIpAddress"
-
-    New-Item -ItemType Directory -Force -Path "$PSScriptRoot\$LabIpAddress"
-
-    Remove-Item "$PSScriptRoot\$LabIpAddress\*.*" -Force | Out-Null
 
     Get-Results
 }

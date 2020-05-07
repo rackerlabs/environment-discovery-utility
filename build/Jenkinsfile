@@ -24,6 +24,7 @@ def handleLabFailure = {
 
 def invokeTest = {
     credentialsId,
+    cloudCredentialsId,
     environment,
     ipAddress,
 	skipDnsLookups ->
@@ -37,14 +38,39 @@ def invokeTest = {
        
     def output
     def errors = 0
+
+    def modules
                          
     slackSend(channel: "${slackChannel}", message: "${labPrefix} Beginning test run.")
 
+    if (environment == '[SingleDomain:2013/2016:v4:JML]')
+    {
+        modules = 'all'
+    }
+    else
+    {
+        modules = 'ad,exchange'
+    }
+        
+    slackSend channel: "${slackChannel}", color: 'good', message: "${labPrefix} Modules set to ${modules}."
+
     try {
-        withCredentials(
-            [usernamePassword(credentialsId: credentialsId, passwordVariable: 'password', usernameVariable: 'username')
+        withCredentials([
+            usernamePassword(credentialsId: credentialsId, passwordVariable: 'password', usernameVariable: 'username'),
+            usernamePassword(credentialsId: cloudCredentialsId, passwordVariable: 'cloudPassword', usernameVariable: 'cloudUsername'),
         ]) {
-            output = bat(script: "powershell.exe -ExecutionPolicy Unrestricted -Command .\\build\\Invoke-RemoteTesting.ps1 -BuildNumber %BUILD_NUMBER% -LabIpAddress ${ipAddress} -Password %password% -Username %username% -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip -skipDnsLookups ${skipDnsLookups}", returnStdout: true)
+            output = bat(script: """powershell.exe \
+                -ExecutionPolicy Unrestricted \
+                -Command .\\build\\Invoke-RemoteTesting.ps1 \
+                -BuildNumber %BUILD_NUMBER% \
+                -CloudPassword %cloudPassword% \
+                -CloudUsername %cloudUsername% \
+                -LabIpAddress ${ipAddress} \
+                -Modules ${modules} \
+                -Password %password% \
+                -Username %username% \
+                -EduZipFile .\\build\\edu.v%BUILD_NUMBER%.zip \
+                -skipDnsLookups ${skipDnsLookups}""", returnStdout: true)
         }
     } catch (e) {
         handleLabFailure(credentialsId, ipAddress, labPrefix)
@@ -138,7 +164,7 @@ pipeline {
                         expression { params.testOneEnabled == true }
                     }
                     steps {
-                        script { invokeTest("03bbc260-f717-48f0-b16a-c97ba14e6d85", env.TEST_1, env.TEST_1_IP, params.skipDnsLookups) }
+                        script { invokeTest("03bbc260-f717-48f0-b16a-c97ba14e6d85", "9535efd9-02a7-46ee-8763-763fd56efc2f", env.TEST_1, env.TEST_1_IP, params.skipDnsLookups) }
                     }
                 }
                 stage('SingleDomain:2013/2016:v4:JML') {
@@ -146,7 +172,7 @@ pipeline {
                         expression { params.testTwoEnabled == true }
                     }
                     steps {                    
-                        script { invokeTest("5de43889-57c2-41ad-a17b-06cf6eb92ffd", env.TEST_2, env.TEST_2_IP, params.skipDnsLookups) }
+                        script { invokeTest("5de43889-57c2-41ad-a17b-06cf6eb92ffd", "9535efd9-02a7-46ee-8763-763fd56efc2f", env.TEST_2, env.TEST_2_IP, params.skipDnsLookups) }
                     }
                 }
                 stage('MultiDomain:2013:v4') {
@@ -154,7 +180,7 @@ pipeline {
                         expression { params.testThreeEnabled == true }
                     }
                     steps {
-                        script { invokeTest("f344bfd0-63dd-4426-92dd-4e9016e0c526", env.TEST_3, env.TEST_3_IP, params.skipDnsLookups) }
+                        script { invokeTest("f344bfd0-63dd-4426-92dd-4e9016e0c526", "9535efd9-02a7-46ee-8763-763fd56efc2f", env.TEST_3, env.TEST_3_IP, params.skipDnsLookups) }
                     }
                 }
             }

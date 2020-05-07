@@ -44,6 +44,10 @@ function Get-ExchangePublicFolderStatistics
             {
                 $publicFolderStatistics += Get-PublicFolderStatistics -Server $server -ResultSize Unlimited
             }
+            elseif ($version -like "*15.*")
+            {
+                $publicFolderStatistics += Get-PublicFolderStatistics
+            }
             else
             {
                 try 

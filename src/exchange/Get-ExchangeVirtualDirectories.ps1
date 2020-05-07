@@ -40,6 +40,14 @@ function Get-ExchangeVirtualDirectories
         foreach ($server in $Servers)
         {
             $serverName = $server.Name
+            $serverRole = $server.InstalledRoles
+            
+            if ($serverRole -eq "Edge")
+            {
+                Write-Log -Level "INFO" -Activity $activity -Message "$serverName is an $serverRole Server - Skipping Virtual Directories." -WriteProgress
+                continue
+            }
+
             $exchSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$serverName/PowerShell/ -Authentication Kerberos -ErrorAction SilentlyContinue
             $ewsCommand = "Get-WebServicesVirtualDirectory -Server $serverName"
             $easCommand = "Get-ActiveSyncVirtualDirectory -Server $serverName"

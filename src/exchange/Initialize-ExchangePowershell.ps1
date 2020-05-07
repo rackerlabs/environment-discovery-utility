@@ -21,6 +21,7 @@ function Initialize-ExchangePowershell
 
     $connectedToExchange = $false
     $activity = "Initialize Exchange PowerShell"
+    $currentLocation = Get-Location
 
     if (-not (Get-Command Get-ExchangeServer -ErrorAction SilentlyContinue))
     {
@@ -67,5 +68,6 @@ function Initialize-ExchangePowershell
         Write-Log -Level "ERROR" -Activity $MyInvocation.MyCommand.Name -Message "Failed to Initialize Exchange PowerShell."
     }
 
+    Set-Location $currentLocation
     $connectedToExchange
 }

@@ -128,7 +128,7 @@ function Get-ExchangeRecipients
 
                     if ($casMailbox)
                     {
-                        $protocols = "" | select ActiveSyncEnabled, OwaEnabled, PopEnabled, ImapEnabled, MapiEnabled
+                        $protocols = "" | Select-Object ActiveSyncEnabled, OwaEnabled, PopEnabled, ImapEnabled, MapiEnabled
                         $protocols.ActiveSyncEnabled = $casMailbox.ActiveSyncEnabled
                         $protocols.OwaEnabled = $casMailbox.OwaEnabled
                         $protocols.PopEnabled = $casMailbox.PopEnabled
