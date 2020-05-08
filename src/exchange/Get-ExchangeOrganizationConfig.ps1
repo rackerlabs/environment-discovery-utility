@@ -36,7 +36,8 @@ function Get-ExchangeOrganizationConfig
     if ($exchangeOrganizationConfig)
     {
         $organizationConfig = $null
-        $organizationConfig = "" | Select-Object ObjectGuid, MaxConcurrentMigrations, MapiHttpEnabled, OAuth2ClientProfileEnabled, WACDiscoveryEndpoint, AdfsIssuer, AdfsAudienceUris, MailTipsAllTipsEnabled, MailTipsExternalRecipientsTipsEnabled, MailTipsGroupMetricsEnabled, MailTipsLargeAudienceThreshold, MailTipsMailboxSourcedTipsEnabled, ACLableSyncedObjectEnabled
+
+        $organizationConfig = "" | Select-Object ObjectGuid, MaxConcurrentMigrations, MapiHttpEnabled, OAuth2ClientProfileEnabled, WACDiscoveryEndpoint, AdfsIssuer, AdfsAudienceUris, MailTipsAllTipsEnabled, MailTipsExternalRecipientsTipsEnabled, MailTipsGroupMetricsEnabled, MailTipsLargeAudienceThreshold, MailTipsMailboxSourcedTipsEnabled, DistributionGroupDefaultOU, DistributionGroupNameBlockedWordsList, DistributionGroupNamingPolicy, ACLableSyncedObjectEnabled 
         $organizationConfig.ObjectGuid = $exchangeOrganizationConfig.GUID
         $organizationConfig.MaxConcurrentMigrations = $exchangeOrganizationConfig.MaxConcurrentMigrations
         $organizationConfig.MapiHttpEnabled = $exchangeOrganizationConfig.MapiHttpEnabled
@@ -48,8 +49,12 @@ function Get-ExchangeOrganizationConfig
         $organizationConfig.MailTipsExternalRecipientsTipsEnabled = $exchangeOrganizationConfig.MailTipsExternalRecipientsTipsEnabled
         $organizationConfig.MailTipsGroupMetricsEnabled = $exchangeOrganizationConfig.MailTipsGroupMetricsEnabled
         $organizationConfig.MailTipsLargeAudienceThreshold = $exchangeOrganizationConfig.MailTipsLargeAudienceThreshold
-        $organizationConfig.MailTipsMailboxSourcedTipsEnabled = $exchangeOrganizationConfig.MailTipsMailboxSourcedTipsEnabled        
+        $organizationConfig.MailTipsMailboxSourcedTipsEnabled = $exchangeOrganizationConfig.MailTipsMailboxSourcedTipsEnabled 
+        $organizationConfig.DistributionGroupDefaultOU = $exchangeOrganizationConfig.DistributionGroupDefaultOU
+        $organizationConfig.DistributionGroupNameBlockedWordsList = [array]$exchangeOrganizationConfig.DistributionGroupNameBlockedWordsList  
+        $organizationConfig.DistributionGroupNamingPolicy = $exchangeOrganizationConfig.DistributionGroupNamingPolicy           
         $organizationConfig.ACLableSyncedObjectEnabled = $exchangeOrganizationConfig.ACLableSyncedObjectEnabled 
+
 
         $discoveredOrganizationConfig += $organizationConfig
     }
