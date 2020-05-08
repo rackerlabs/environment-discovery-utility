@@ -36,6 +36,7 @@ function Start-ExchangeOnlineDiscovery
             $transportConfig = Get-ExoTransportConfig
             $organizationConfig = Get-ExoOrganizationConfig
             [array]$emailAddressPolicies = Get-ExoEmailAddressPolicies
+            [array]$malwareFilterPolicies = Get-ExoMalwareFilterPolicies
 
             $exoEnvironment.Add("AcceptedDomains", $acceptedDomains)
             $exoEnvironment.Add("Recipients", $recipients)
@@ -45,6 +46,7 @@ function Start-ExchangeOnlineDiscovery
             $exoEnvironment.Add("TransportConfig", $transportConfig)
             $exoEnvironment.Add("EmailAddressPolicies", [array]$emailAddressPolicies)
             $exoEnvironment.Add("OrganizationConfig", [array]$organizationConfig)
+            $exoEnvironment.Add("MalwareFilterPolicies", $malwareFilterPolicies)
 
             Write-Log -Level "INFO" -Activity  $activity -Message "Completed Exchange Online Discovery." -WriteProgress
         }

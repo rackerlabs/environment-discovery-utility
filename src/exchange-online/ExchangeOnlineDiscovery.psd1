@@ -74,6 +74,7 @@ NestedModules = @(
     "Get-ExoTransportConfig.ps1",
     "Get-ExoEmailAddressPolicies.ps1",
     "Get-ExoOrganizationConfig.ps1",
+    "Get-ExoMalwareFilterPolicies.ps1",
     "..\Common\Common.psd1",
     "..\Logging\Logging.psd1"
 )
