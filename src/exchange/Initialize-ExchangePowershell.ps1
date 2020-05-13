@@ -31,7 +31,6 @@ function Initialize-ExchangePowershell
 
         if (Test-Path $v15Path)
         {
-
             . $v15Path -RedirectStandardOutput $null | Out-Null
             Connect-ExchangeServer -Auto -RedirectStandardOutput $null | Out-Null
             Set-AdServerSettings -ViewEntireForest $true
@@ -54,6 +53,13 @@ function Initialize-ExchangePowershell
         {
             Write-Log -Level "WARNING" -Activity $activity -Message "Failed to find method to connect to Exchange PowerShell."
         }
+    }
+
+    $session = Get-PSSession | Where-Object {$_.ConfigurationName -like 'Microsoft.Exchange'} | Select-Object -First 1
+    
+    if ($null -notlike $session)
+    {
+        Import-PSSession $session -AllowClobber -ErrorAction SilentlyContinue | Out-Null
     }
 
     $testCommand = Get-Command Get-ExchangeServer -ErrorAction SilentlyContinue

@@ -170,3 +170,28 @@ function Import-ExchangeOnlineModernModule
 
     Set-Location $currentLocation -ErrorAction SilentlyContinue
 }
+
+function Remove-ExchangeOnlineSession
+{
+        <#
+
+        .SYNOPSIS
+            Used to dispose of the Exchange Online PowerShell session.
+
+        .DESCRIPTION
+            Looks for an open Exchange Online PowerShell session and disposes of it.
+
+        .OUTPUTS
+            None
+
+        .EXAMPLE
+            Remove-ExchangeOnlineSession
+
+    #>
+    
+    [CmdletBinding()]
+    param()
+
+    Disconnect-ExchangeOnline -Confirm:$false  
+    Get-PSSession | Where-Object {$_.Name -like "ExchangeOnlineInternalSession_*"} | Remove-PSSession
+}

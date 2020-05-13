@@ -48,6 +48,7 @@ function Start-ExchangeOnlineDiscovery
             $exoEnvironment.Add("OrganizationConfig", [array]$organizationConfig)
             $exoEnvironment.Add("MalwareFilterPolicies", $malwareFilterPolicies)
 
+            Remove-ExchangeOnlineSession
             Write-Log -Level "INFO" -Activity  $activity -Message "Completed Exchange Online Discovery." -WriteProgress
         }
         else
