@@ -36,16 +36,22 @@ function Start-ExchangeOnlineDiscovery
             $transportConfig = Get-ExoTransportConfig
             $organizationConfig = Get-ExoOrganizationConfig
             [array]$emailAddressPolicies = Get-ExoEmailAddressPolicies
+            $atpPolicy = Get-ExoATPPolicy
+            [array]$safeLinksPolicies = Get-ExoSafeLinksPolicy
+            [array]$safeAttachmentPolicies = Get-ExoSafeAttachmentPolicy
             [array]$malwareFilterPolicies = Get-ExoMalwareFilterPolicies
 
             $exoEnvironment.Add("AcceptedDomains", $acceptedDomains)
             $exoEnvironment.Add("Recipients", $recipients)
-            $exoEnvironment.Add("OrganizationRelationships", [array]$organizationRelationships)
-            $exoEnvironment.Add("FederationTrusts", [array]$federationTrusts)
-            $exoEnvironment.Add("TransportRules", [array]$transportRules)
+            $exoEnvironment.Add("OrganizationRelationships", $organizationRelationships)
+            $exoEnvironment.Add("FederationTrusts", $federationTrusts)
+            $exoEnvironment.Add("TransportRules", $transportRules)
             $exoEnvironment.Add("TransportConfig", $transportConfig)
-            $exoEnvironment.Add("EmailAddressPolicies", [array]$emailAddressPolicies)
-            $exoEnvironment.Add("OrganizationConfig", [array]$organizationConfig)
+            $exoEnvironment.Add("EmailAddressPolicies", $emailAddressPolicies)
+            $exoEnvironment.Add("OrganizationConfig", $organizationConfig)
+            $exoEnvironment.Add("ATPPolicy", $atpPolicy)
+            $exoEnvironment.Add("SafeLinksPolicies", $safeLinksPolicies)
+            $exoEnvironment.Add("SafeAttachmentPolicies", $safeAttachmentPolicies)
             $exoEnvironment.Add("MalwareFilterPolicies", $malwareFilterPolicies)
 
             Remove-ExchangeOnlineSession
