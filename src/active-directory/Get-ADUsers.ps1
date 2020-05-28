@@ -19,9 +19,9 @@
 
     [CmdletBinding()] 
     param (
-       #An array of domains.
-       [array]
-       $Domains
+        #An array of domains.
+        [array]
+        $Domains
     )
 
     $activity = "Active Directory Users"
@@ -32,7 +32,7 @@
     {
         foreach ($domain in $domains)
         {
-            $domainDistinguishedName = "DC="+($domain.Name.Replace(".",",DC="))
+            $domainDistinguishedName = "DC="+($domain.Name.Replace(".", ",DC="))
             $userSearcher = [ADSISearcher]'ObjectClass=User'
             $userSearcher.PageSize = 1000
             $userSearcher.SearchRoot = "LDAP://"+$domainDistinguishedName
@@ -42,7 +42,10 @@
             {
                 foreach ($user in $users)
                 {
-                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, LastLogon, ObjectClass, AdminDescription, msRTCSIP-PrimaryUserAddress, msRTCSIP-DeploymentLocator, displayName, givenName, mail, mailNickname, proxyAddresses, sAMAccountName, targetAddress, userPrincipalName, AdminCount
+                    $userObject = "" | Select-Object DistinguishedName, UserAccountControl, AccountExpires, MustChangePassword, ForwardingSMTPAddress, ForwardingAddress, DeliverAndRedirect, WhenCreated, WhenChanged, `
+                        LastLogon, ObjectClass, AdminDescription, msRTCSIP-PrimaryUserAddress, msRTCSIP-DeploymentLocator, displayName, givenName, mail, mailNickname, proxyAddresses, sAMAccountName, `
+                        targetAddress, userPrincipalName, AdminCount, UserCertificate, HomeDirectory, msDS-ExternalDirectoryObjectId, mS-DS-ConsistencyGuid
+                    
                     $userProperties = $user.Properties
 
                     $userObject.ObjectClass = [array] $userProperties.objectclass
@@ -111,7 +114,7 @@
                         $userObject.givenName = $userProperties.givenname[0]
                     }
 
-                    if ($null -notlike  $userProperties.mail)
+                    if ($null -notlike $userProperties.mail)
                     {
                         $userObject.mail = $userProperties.mail[0]
                     }
@@ -160,6 +163,32 @@
                     {
                         $userObject.'msRTCSIP-DeploymentLocator' = $userProperties.'msrtcsip-deploymentlocator'[0]
 
+                    }
+
+                    if ($null -ne $userProperties.usercertificate)
+                    {
+                        $userObject.UserCertificate = "True"
+                    }
+                    else
+                    {
+                        $userObject.UserCertificate = "False"
+                    }
+
+                    if ($null -notlike $userProperties.homedirectory)
+                    {
+                        $userObject.HomeDirectory = $userProperties.homedirectory
+                    }
+
+                    if ($null -notlike $userProperties.'msds-externaldirectoryobjectid')
+                    {
+                        $userObject.'msDS-ExternalDirectoryObjectId' = $userProperties.'msds-externaldirectoryobjectid'
+                    }
+
+                    if ($null -ne $userProperties.'ms-ds-consistencyguid')
+                    {
+                        $byteArray = ($userProperties.'ms-ds-consistencyguid' -split ' ' | ForEach-Object { [System.Convert]::ToByte($_) })
+                        [guid]$consistencyGuid = [System.Convert]::FromBase64String(([System.Convert]::ToBase64String($byteArray)))
+                        $userObject.'mS-DS-ConsistencyGuid' = $consistencyGuid
                     }
 
                     $allUsers += $userObject
