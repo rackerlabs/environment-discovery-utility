@@ -50,7 +50,7 @@ function Get-ExchangeRecipients
 
             $recipientStatistics = $null
 
-            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy, PrimarySmtpAddress
+            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy, PrimarySmtpAddress, InPlaceHoldEnabled, AuditEnabled
             $currentRecipient.ObjectGuid = [GUID]($recipient.guid)
             $currentRecipient.RecipientTypeDetails = $recipient.RecipientTypeDetails.ToString()
             $currentRecipient.RecipientDisplayType = $recipient.RecipientType.ToString()
@@ -137,6 +137,33 @@ function Get-ExchangeRecipients
 
                         $currentRecipient.Protocols = $protocols
                     }
+                }
+
+                if ($currentRecipient.RecipientTypeDetails -eq "UserMailbox" -or $currentRecipient.RecipientTypeDetails -eq "SharedMailbox")
+                {
+                    try
+                    {
+                        Write-Log -Level "VERBOSE" -Activity $activity -Message "Getting mailbox properties for object $($recipient.Guid)." -WriteProgress
+                        $mailboxObject = Get-Mailbox -Identity $recipient.Guid.ToString() | Select-Object AuditEnabled, InPlaceHolds
+                    }
+                    catch
+                    {
+                        Write-Log -Level "WARNING" -Activity $activity -Message "Failed to run Get-Mailbox against object $($recipient.Guid). $($_.Exception.Message)"
+                    }                    
+
+                    if ($mailboxObject)
+                    {
+                        $currentRecipient.AuditEnabled = $mailboxObject.AuditEnabled
+
+                        if ($mailboxObject.InPlaceHolds.Count -gt 0)
+                        {
+                            $currentRecipient.InPlaceHoldEnabled = $true
+                        }
+                        else
+                        {
+                            $currentRecipient.InPlaceHoldEnabled = $false    
+                        }
+                    }                    
                 }
             }
 

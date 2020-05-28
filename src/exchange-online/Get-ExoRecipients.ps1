@@ -28,7 +28,7 @@ function Get-ExoRecipients
     {
         Write-Log -Level "INFO" -Activity $activity -Message "Discovering Exchange Online Recipients.  Running Get-Recipient for all recipients, this can take a long time." -WriteProgress
         Get-ExchangeOnlineSession | Out-Null
-        $recipients = Get-ExoRecipient -ResultSize unlimited -Properties "Guid", "PrimarySmtpAddress", "RecipientTypeDetails","RecipientType", "ArchiveGuid", "EmailAddressPolicyEnabled", "LitigationHoldEnabled", "ObjectClass"
+        $recipients = Get-ExoRecipient -ResultSize unlimited -Properties "Guid", "PrimarySmtpAddress", "RecipientTypeDetails", "RecipientType", "ArchiveGuid", "EmailAddressPolicyEnabled", "LitigationHoldEnabled", "ObjectClass"
         Write-Log -Level "INFO" -Activity $activity -Message "Discovering Exchange Online Recipient Statistics.  Running Get-ExoMailboxStatistics for all recipients, this can take a long time." -WriteProgress
         $recipientStats = $recipients | Where-Object {$_.RecipientTypeDetails -in $mailboxTypeValues} `
             | Get-EXOMailboxStatistics -Properties OwnerADGuid -ErrorAction SilentlyContinue
@@ -52,7 +52,7 @@ function Get-ExoRecipients
 
         $recipientStatistics = $null
 
-        $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, RecipientTypeDetails, RecipientDisplayType, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy
+        $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, RecipientTypeDetails, RecipientDisplayType, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy, InPlaceHoldEnabled, AuditEnabled
         $currentRecipient.ObjectGuid = [GUID]($recipient.guid)
         $currentRecipient.RecipientTypeDetails = $recipient.RecipientTypeDetails.ToString()
         $currentRecipient.RecipientDisplayType = $recipient.RecipientType.ToString()
@@ -123,6 +123,33 @@ function Get-ExoRecipients
                 {
                     Write-Log -Level "WARNING" -Activity $activity -Message "Get-CasMailbox result null for $($recipient.Guid)."
                 }
+            }
+
+            if ($currentRecipient.RecipientTypeDetails -eq "UserMailbox" -or $currentRecipient.RecipientTypeDetails -eq "SharedMailbox")
+            {
+                try
+                {
+                    Write-Log -Level "VERBOSE" -Activity $activity -Message "Getting mailbox properties for object $($recipient.Guid)." -WriteProgress
+                    $mailboxObject = Get-ExoMailbox -Identity $recipient.Guid.ToString() -PropertySets Audit,Hold
+                }
+                catch
+                {
+                    Write-Log -Level "WARNING" -Activity $activity -Message "Failed to run Get-Mailbox against user object $($recipient.Guid). $($_.Exception.Message)"
+                }                    
+
+                if ($mailboxObject)
+                {
+                    $currentRecipient.AuditEnabled = $mailboxObject.AuditEnabled
+
+                    if ($mailboxObject.InPlaceHolds.Count -gt 0)
+                    {
+                        $currentRecipient.InPlaceHoldEnabled = $true
+                    }
+                    else
+                    {
+                        $currentRecipient.InPlaceHoldEnabled = $false    
+                    }
+                }                    
             }
         }
 
