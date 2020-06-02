@@ -52,13 +52,15 @@ function Get-ExoRecipients
 
         $recipientStatistics = $null
 
-        $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, RecipientTypeDetails, RecipientDisplayType, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy, InPlaceHoldEnabled, AuditEnabled
+        $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount,`
+                            ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy, PrimarySmtpAddress, AuditEnabled, InPlaceHoldEnabled
         $currentRecipient.ObjectGuid = [GUID]($recipient.guid)
         $currentRecipient.RecipientTypeDetails = $recipient.RecipientTypeDetails.ToString()
         $currentRecipient.RecipientDisplayType = $recipient.RecipientType.ToString()
         $currentRecipient.EmailAddressPolicyEnabled = $recipient.EmailAddressPolicyEnabled
         $currentRecipient.LitigationHoldEnabled = $recipient.LitigationHoldEnabled
         $currentRecipient.ArchiveGuid = $recipient.ArchiveGuid
+        $currentRecipient.PrimarySmtpAddress = $recipient.PrimarySmtpAddress
 
         if ($recipient.RetentionPolicy -notlike $null)
         {
@@ -125,12 +127,12 @@ function Get-ExoRecipients
                 }
             }
 
-            if ($currentRecipient.RecipientTypeDetails -eq "UserMailbox" -or $currentRecipient.RecipientTypeDetails -eq "SharedMailbox")
+            if ($recipient.RecipientTypeDetails -eq "UserMailbox" -or $recipient.RecipientTypeDetails -eq "SharedMailbox")
             {
                 try
                 {
                     Write-Log -Level "VERBOSE" -Activity $activity -Message "Getting mailbox properties for object $($recipient.Guid)." -WriteProgress
-                    $mailboxObject = Get-ExoMailbox -Identity $recipient.Guid.ToString() -PropertySets Audit,Hold
+                    $mailboxObject = Get-ExoMailbox -Identity $recipient.Guid.ToString() -PropertySets Minimum,Audit,Hold
                 }
                 catch
                 {
@@ -149,7 +151,16 @@ function Get-ExoRecipients
                     {
                         $currentRecipient.InPlaceHoldEnabled = $false    
                     }
-                }                    
+
+                    if ($recipient.RecipientTypeDetails -eq "UserMailbox")
+                    {
+                        $userPrincipalName = $mailboxObject.UserPrincipalName
+                        $splitUserPrincipalName = $userPrincipalName.Split("@")
+                        $domain = $splitUserPrincipalName[1]
+                        $currentRecipient.UserPrincipalNameSuffix = $domain
+                        $currentRecipient.PrimaryMatchesUPN = ($recipient.PrimarySmtpAddress.ToString()) -eq $userPrincipalName
+                    }
+                }
             }
         }
 
