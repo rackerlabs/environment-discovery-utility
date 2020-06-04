@@ -49,8 +49,8 @@ function Get-ExchangeRecipients
             }
 
             $recipientStatistics = $null
-
-            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy, PrimarySmtpAddress, InPlaceHoldEnabled, AuditEnabled
+            $currentRecipient = "" | Select-Object ObjectGuid, PrimarySmtpDomain, UserPrincipalNameSuffix, RecipientTypeDetails, RecipientDisplayType, PrimaryMatchesUPN, TotalItemSizeKB, ItemCount, ArchiveGuid, EmailAddressPolicyEnabled, LitigationHoldEnabled, Protocols, RetentionPolicy, PrimarySmtpAddress, InPlaceHoldEnabled, AuditEnabled, ActiveSyncMailboxPolicy
+            
             $currentRecipient.ObjectGuid = [GUID]($recipient.guid)
             $currentRecipient.RecipientTypeDetails = $recipient.RecipientTypeDetails.ToString()
             $currentRecipient.RecipientDisplayType = $recipient.RecipientType.ToString()
@@ -182,6 +182,12 @@ function Get-ExchangeRecipients
             $x++
 
             $discoveredRecipients += $currentRecipient
+
+            if ($null -notlike $recipient.ActiveSyncMailboxPolicy)
+            {
+                $activeSyncMailboxPolicy = $recipient.ActiveSyncMailboxPolicy
+                $currentRecipient.ActiveSyncMailboxPolicy = $activeSyncMailboxPolicy.Name
+            }
         }
 
         Write-Log -Level "INFO" -Activity $activity -Message "Completed Exchange recipient discovery." -ProgressComplete -WriteProgress
