@@ -68,6 +68,7 @@ NestedModules = @(
     "Get-AzureADDomains.ps1",
     "Get-AzureADApplications.ps1",
     "Get-AzureADDevices.ps1",
+    "Get-AzureADUsers.ps1",
     "..\Common\Common.psd1",
     "..\Logging\Logging.psd1"
 )

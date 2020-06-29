@@ -34,12 +34,14 @@ function Start-AzureADDiscovery
             $sessionInfo = Get-AzureADCurrentSessionInfo
             [array]$applications = Get-AzureADApplications
             [array]$devices = Get-AzureADDevices
+            [array]$users = Get-AzureADUsers
 
             $azureADEnvironment.Add("TenantId", [string]$sessionInfo.TenantId)
             $azureADEnvironment.Add("TenantDomain", [string]$sessionInfo.TenantDomain)
             $azureADEnvironment.Add("Domains", $azureADDomains)
             $azureADEnvironment.Add("Applications", $applications)
             $azureADEnvironment.Add("Devices", $devices)
+            $azureADEnvironment.Add("Users", $users)
 
             Write-Log -Level "INFO" -Activity  $activity -Message "Completed AzureAD Discovery." -WriteProgress
         }
