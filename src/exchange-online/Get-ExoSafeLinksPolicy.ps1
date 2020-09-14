@@ -28,16 +28,20 @@ function Get-ExoSafeLinksPolicy
         try
         {
             Write-Log -Level "INFO" -Activity $activity -Message "Query Exchange Online for ATP SafeLinks Policies for O365." -WriteProgress
-            $policy = Get-SafeLinksPolicy
-            $properties = $policy | Get-Member | Where-Object {$_.MemberType -like "Property" -and $_.Definition -like "System.*"} | Select-Object -ExpandProperty Name
-
-            $policy = $policy | Select-Object $properties
-            $discoveredPolicies += $policy
+            $policy = Get-SafeLinksPolicy            
         }
         catch
         {
             Write-Log -Level "ERROR" -Activity $activity -Message "Failed to query Exchange Online for ATP SafeLinks Policies. $($_.Exception.Message)"
             return
+        }
+
+        if ($policy)
+        {
+            $properties = $policy | Get-Member | Where-Object {$_.MemberType -like "Property" -and $_.Definition -like "System.*"} | Select-Object -ExpandProperty Name
+
+            $policy = $policy | Select-Object $properties
+            $discoveredPolicies += $policy
         }
     }
     else

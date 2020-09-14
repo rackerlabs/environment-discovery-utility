@@ -25,7 +25,16 @@ function Get-ExoOrganizationRelationships
     try
     {
         Write-Log -Level "INFO" -Activity $activity -Message "Query Exchange Online for configured organization relationships." -WriteProgress
-        $organizationRelationships = Get-OrganizationRelationship 
+        $organizationRelationships = Get-OrganizationRelationship
+    }
+    catch
+    {
+        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to query AzureAD for configured organization relationships. $($_.Exception.Message)"
+        return
+    }
+
+    if ($organizationRelationships)
+    {
         $properties = $organizationRelationships | Get-Member | Where-Object {$_.MemberType -like "Property" -and $_.Definition -like "System.*"} | Select-Object -ExpandProperty Name
         $properties += @("DomainNames")
 
@@ -35,11 +44,6 @@ function Get-ExoOrganizationRelationships
             $relationship.DomainNames = [array]$organizationRelationship.DomainNames
             $discoveredRelationships += $relationship
         }
-    }
-    catch
-    {
-        Write-Log -Level "ERROR" -Activity $activity -Message "Failed to query AzureAD for configured organization relationships. $($_.Exception.Message)"
-        return
     }
 
     $discoveredRelationships

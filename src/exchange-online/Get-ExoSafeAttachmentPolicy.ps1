@@ -29,15 +29,19 @@ function Get-ExoSafeAttachmentPolicy
         {
             Write-Log -Level "INFO" -Activity $activity -Message "Query Exchange Online for ATP Safe Attachment Policies." -WriteProgress
             $policy = Get-SafeAttachmentPolicy
-            $properties = $policy | Get-Member | Where-Object {$_.MemberType -like "Property" -and $_.Definition -like "System.*"} | Select-Object -ExpandProperty Name
-    
-            $policy = $policy | Select-Object $properties
-            $discoveredPolicies += $policy
         }
         catch
         {
             Write-Log -Level "ERROR" -Activity $activity -Message "Failed to query Exchange Online for Safe Attachment Policy. $($_.Exception.Message)"
             return
+        }
+
+        if ($policy)
+        {
+            $properties = $policy | Get-Member | Where-Object {$_.MemberType -like "Property" -and $_.Definition -like "System.*"} | Select-Object -ExpandProperty Name
+    
+            $policy = $policy | Select-Object $properties
+            $discoveredPolicies += $policy
         }
     }
     else
