@@ -102,7 +102,7 @@
                     "exchangeonline"
                     {
                         Clear-Host
-                        Write-Output "Initializing Exchange Online Powershell.  Provide provide adminsitrator access if prompted."
+                        Write-Output "Initializing Exchange Online Powershell.  Provide provide administrator access if prompted."
                         $exchangeOnlineObject = Initialize-ExoPowershell -Credential $CloudCredential
                     }
                 }
@@ -120,12 +120,20 @@
                     "azuread"
                     {
                         $azureADObject = Start-AzureADDiscovery
-                        $environment.Add("AzureAD",$azureADObject)
+ 
+                        if ($azureADObject.Count -ne 0)
+                        {
+                            $environment.Add("AzureAD",$azureADObject)
+                        }
                     }
                     "exchangeonline"
                     {
                         $exchangeOnlineObject = Start-ExchangeOnlineDiscovery
-                        $environment.Add("ExchangeOnline",$exchangeOnlineObject)
+ 
+                        if ($exchangeOnlineObject.Count -ne 0)
+                        {
+                            $environment.Add("ExchangeOnline",$exchangeOnlineObject)
+                        }
                     }
                     "ad"
                     {
