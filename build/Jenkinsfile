@@ -101,16 +101,13 @@ pipeline {
         booleanParam(name: 'skipDnsLookups', defaultValue: false, description: '')
         booleanParam(name: 'testOneEnabled', defaultValue: true, description: 'SingleDomain:2010:v2')
         booleanParam(name: 'testTwoEnabled', defaultValue: true, description: 'SingleDomain:2013/2016:v4:JML')
-        booleanParam(name: 'testThreeEnabled', defaultValue: true, description: 'MultiDomain:2013:v4')
     }
     environment {
         SLACK_PREFIX = "#${env.BUILD_NUMBER} - [${branch}]"
         TEST_1 = '[SingleDomain:2010:v2]'
         TEST_2 = '[SingleDomain:2013/2016:v4:JML]'
-        TEST_3 = '[MultiDomain:2013:v4]'
         TEST_1_IP = credentials('feab5ed9-07d6-4425-bf6a-2dca1c133647')
         TEST_2_IP = credentials('1754a6f7-f7d4-47b3-9063-60f4321eaf24')
-        TEST_3_IP = credentials('4eaf24a2-579c-4339-a19a-ecc7634492fa')
     }
     stages {
         stage('Setup') {
@@ -120,7 +117,6 @@ pipeline {
                 slackSend channel: "${slackChannel}", message: "${SLACK_PREFIX} Skip DNS Lookups: ${skipDnsLookups}."
                 slackSend channel: "${slackChannel}", message: "${SLACK_PREFIX} ${env.TEST_1} lab enabled: ${testOneEnabled}."
                 slackSend channel: "${slackChannel}", message: "${SLACK_PREFIX} ${env.TEST_2} lab enabled: ${testTwoEnabled}."
-                slackSend channel: "${slackChannel}", message: "${SLACK_PREFIX} ${env.TEST_3} lab enabled: ${testThreeEnabled}."
 				
                 slackSend channel: "${slackChannel}", message: "${SLACK_PREFIX} <${env.BUILD_URL}|View build output>."
 
@@ -172,15 +168,7 @@ pipeline {
                         expression { params.testTwoEnabled == true }
                     }
                     steps {                    
-                        script { invokeTest("8b0dbb6e-23dd-4a7b-9605-a89c266baead", "9535efd9-02a7-46ee-8763-763fd56efc2f", env.TEST_2, env.TEST_2_IP, params.skipDnsLookups) }
-                    }
-                }
-                stage('MultiDomain:2013:v4') {
-                    when {
-                        expression { params.testThreeEnabled == true }
-                    }
-                    steps {
-                        script { invokeTest("f344bfd0-63dd-4426-92dd-4e9016e0c526", "9535efd9-02a7-46ee-8763-763fd56efc2f", env.TEST_3, env.TEST_3_IP, params.skipDnsLookups) }
+                        script { invokeTest("5de43889-57c2-41ad-a17b-06cf6eb92ffd", "9535efd9-02a7-46ee-8763-763fd56efc2f", env.TEST_2, env.TEST_2_IP, params.skipDnsLookups) }
                     }
                 }
             }
