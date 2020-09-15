@@ -172,7 +172,7 @@ pipeline {
                         expression { params.testTwoEnabled == true }
                     }
                     steps {                    
-                        script { invokeTest("5de43889-57c2-41ad-a17b-06cf6eb92ffd", "9535efd9-02a7-46ee-8763-763fd56efc2f", env.TEST_2, env.TEST_2_IP, params.skipDnsLookups) }
+                        script { invokeTest("8b0dbb6e-23dd-4a7b-9605-a89c266baead", "9535efd9-02a7-46ee-8763-763fd56efc2f", env.TEST_2, env.TEST_2_IP, params.skipDnsLookups) }
                     }
                 }
                 stage('MultiDomain:2013:v4') {
